@@ -14,7 +14,7 @@ private:
 public:
     Sphere();
 
-    Sphere(glm::vec3 mid, float rad);
+    Sphere(glm::vec3 const &mid, float rad);
 
     virtual float area() const override;
 

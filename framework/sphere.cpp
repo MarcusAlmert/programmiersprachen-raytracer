@@ -1,4 +1,5 @@
 #include <math.h>
+#include <iostream>
 #include "sphere.hpp"
 
 Sphere::Sphere() {
@@ -6,13 +7,16 @@ Sphere::Sphere() {
     radius = 0;
 }
 
-Sphere::Sphere(glm::vec3 mid, float rad) {
+Sphere::Sphere(glm::vec3 const &mid, float rad) {
     middlePoint = mid;
-    radius = rad;
+    if (rad < 0) {
+        std::cout << "radius was made positive" << std::endl;
+    }
+    radius = abs(rad);
 }
 
 float Sphere::area() const {
-    return M_PI * 4 * pow(radius, 2);
+    return (M_PI * 4 * pow(radius, 2));
 }
 
 float Sphere::volume() const {
