@@ -3,12 +3,21 @@
 //
 #include "shape.hpp"
 
-std::ostream &operator<<(std::ostream &os, Shape const &s) {
-    os << "Name: " << s.name << std::endl
-       << "Color: " << "[" << s.color.r << ", " << s.color.g << ", " << s.color.b << "]" << std::endl;
+Shape::Shape() {
+    name = "No_name";
+    color = {0.5, 0.5, 0.5};
+}
+
+Shape::Shape(std::string const &name_, Color const &color_) {
+    name = name_;
+    color = color_;
 }
 
 std::ostream &Shape::print(std::ostream &os) const {
-    return std::cout << this << std::endl;
+    return os << name << " (Shape)" << std::endl
+              << "[" << color.r << ", " << color.g << ", " << color.b << "]" << std::endl;
 }
 
+std::ostream &operator<<(std::ostream &os, Shape const &s) {
+    return s.print(os);
+}

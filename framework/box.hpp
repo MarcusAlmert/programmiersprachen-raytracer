@@ -19,6 +19,8 @@ public:
     virtual float area() const override;
 
     virtual float volume() const override;
+
+    virtual std::ostream &print(std::ostream &os) const override;
 };
 
 #endif //RAYTRACER_BOX_HPP

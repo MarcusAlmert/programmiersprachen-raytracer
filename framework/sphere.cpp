@@ -1,6 +1,8 @@
 #include <math.h>
 #include <iostream>
+#include <glm-0.9.5.3/glm/gtx/intersect.hpp>
 #include "sphere.hpp"
+
 
 Sphere::Sphere() {
     middlePoint = {0, 0, 0};
@@ -34,5 +36,20 @@ float Sphere::volume() const {
 }
 
 std::ostream &Sphere::print(std::ostream &os) const {
-    return std::cout << ""
+    return os << "Name: " << name << " (Sphere)" << std::endl
+              << "Color: " << "[" << color.r << ", " << color.g << ", " << color.b << "]" << std::endl
+              << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << "]" << std::endl
+              << "Radius: " << radius << std::endl;
+}
+
+Hitpoint Sphere::intersect(Ray const &r) const {
+    Ray ray_ = r;
+    Hitpoint hitp;
+    float distance;
+    bool hitted = glm::intersectRaySphere(ray_.origin,
+                                          glm::normalize(ray_.direction), middlePoint, pow(radius, 2), distance);
+    if (hitted) {
+        hitp = {true, distance, name, color, ray_.direction};
+    }
+    return hitp;
 }
