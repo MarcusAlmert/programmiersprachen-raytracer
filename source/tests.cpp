@@ -6,7 +6,12 @@
 #include "box.hpp"
 
 int main(int argc, char *argv[]) {
+    Sphere s1 = Sphere();
+    s1.print();
+
     return Catch::Session().run(argc, argv);
+
+
 }
 
 /* Tests for Shapes */
@@ -21,6 +26,17 @@ TEST_CASE("Sphere Constructor", "[Sphere]") {
     Sphere sp1 = Sphere({1, 1, 1}, 10);
     REQUIRE(sp1.area() == Approx(1256.637));
     REQUIRE(sp1.volume() == Approx(4188.79));
+}
+
+TEST_CASE("Sphere Constructor new", "[Sphere]") {
+    Sphere sp1 = Sphere({1, 1, 1}, 10);
+    REQUIRE(sp1.area() == Approx(1256.637));
+    REQUIRE(sp1.volume() == Approx(4188.79));
+    Sphere sp2 = Sphere({1, 1, 1}, 10, "sphere2", {1, 1, 1});
+    REQUIRE(sp2.name == "sphere2");
+    REQUIRE(sp2.color.r == 1);
+    REQUIRE(sp2.color.g == 1);
+    REQUIRE(sp2.color.b == 1);
 }
 
 TEST_CASE("Sphere area()", "[Sphere]") {
@@ -53,6 +69,18 @@ TEST_CASE("Box Constructor", "[Box]") {
     REQUIRE(b1.volume() == Approx(1000));
 }
 
+TEST_CASE("Box Constructor new", "[Box]") {
+    Box b1 = Box({0, 0, 0}, {10, 10, 10});
+    REQUIRE(b1.name == "No_Name");
+    REQUIRE(b1.color.r == 0.5);
+    REQUIRE(b1.color.g == 0.5);
+    REQUIRE(b1.color.b == 0.5);
+    Box b2 = Box({0, 0, 0}, {10, 10, 10}, "box2", {1, 1, 1});
+    REQUIRE(b2.name == "box2");
+    REQUIRE(b2.color.r == 1);
+    REQUIRE(b2.color.g == 1);
+    REQUIRE(b2.color.b == 1);
+}
 TEST_CASE("Box volume()", "[Box]") {
     Box b1 = Box({0, 0, 0}, {10, 10, 10});
     REQUIRE(b1.volume() == Approx(1000));

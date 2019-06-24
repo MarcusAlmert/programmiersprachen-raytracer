@@ -11,6 +11,13 @@ Box::Box(glm::vec3 const &min_, glm::vec3 const &max_) {
     min = min_;
 }
 
+Box::Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name_, Color const &color_) {
+    max = max_;
+    min = min_;
+    name = name_;
+    color = color_;
+}
+
 float Box::area() const {
     return (2 * abs(max.x - min.x) * abs(max.y - min.y) +
             2 * abs(max.x - min.x) * abs(max.z - min.z) +

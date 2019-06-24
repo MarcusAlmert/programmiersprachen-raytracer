@@ -16,9 +16,13 @@ public:
 
     Sphere(glm::vec3 const &mid, float rad);
 
+    Sphere(glm::vec3 const &mid, float rad, std::string const &name, Color const &color);
+
     virtual float area() const override;
 
     virtual float volume() const override;
+
+    virtual std::ostream &print(std::ostream &os) const;
 };
 
 #endif //RAYTRACER_SPHERE_HPP
