@@ -3,7 +3,7 @@
 
 #include "color.hpp"
 
-class Shape{
+class Shape {
 public:
     Shape();
 
@@ -15,6 +15,8 @@ public:
 
     virtual std::ostream &print(std::ostream &os) const = 0;
 
+    virtual ~Shape();
+
 protected:
     Color color = {0.5, 0.5, 0.5};
 
@@ -23,7 +25,6 @@ protected:
 };
 
 std::ostream &operator<<(std::ostream &os, Shape const &s);
-
 
 
 #endif //RAYTRACER_SHAPE_HPP

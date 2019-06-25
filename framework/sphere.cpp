@@ -27,6 +27,10 @@ Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name_, Color 
     color = color_;
 }
 
+Sphere::~Sphere() {
+    std::cout << "Sphere destructor used" << std::endl;
+}
+
 float Sphere::area() const {
     return (M_PI * 4 * pow(radius, 2));
 }

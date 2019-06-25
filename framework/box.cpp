@@ -22,6 +22,10 @@ Box::Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name_,
     color = color_;
 }
 
+Box::~Box() {
+    std::cout << "Box destructor used" << std::endl;
+}
+
 float Box::area() const {
     return (2 * abs(max.x - min.x) * abs(max.y - min.y) +
             2 * abs(max.x - min.x) * abs(max.z - min.z) +

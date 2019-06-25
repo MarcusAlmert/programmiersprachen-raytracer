@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
 
     return Catch::Session().run(argc, argv);
 
-
 }
 
 /* Tests for Shapes */
@@ -28,17 +27,7 @@ TEST_CASE("Sphere Constructor", "[Sphere]") {
     REQUIRE(sp1.area() == Approx(1256.637));
     REQUIRE(sp1.volume() == Approx(4188.79));
 }
-/*
-TEST_CASE("Sphere Constructor new", "[Sphere]") {
-    Sphere sp1 = Sphere({1, 1, 1}, 10);
-    REQUIRE(sp1.area() == Approx(1256.637));
-    REQUIRE(sp1.volume() == Approx(4188.79));
-    Sphere sp2 = Sphere({1, 1, 1}, 10, "sphere2", {1, 1, 1});
-    REQUIRE(sp2.name == "sphere2");
-    REQUIRE(sp2.color.r == 1);
-    REQUIRE(sp2.color.g == 1);
-    REQUIRE(sp2.color.b == 1);
-}*/
+
 
 TEST_CASE("Sphere area()", "[Sphere]") {
     Sphere sp1 = Sphere({3, 4, 10}, 13);
@@ -69,19 +58,7 @@ TEST_CASE("Box Constructor", "[Box]") {
     REQUIRE(b1.area() == Approx(600));
     REQUIRE(b1.volume() == Approx(1000));
 }
-/*
-TEST_CASE("Box Constructor new", "[Box]") {
-    Box b1 = Box({0, 0, 0}, {10, 10, 10});
-    REQUIRE(b1.name == "No_Name");
-    REQUIRE(b1.color.r == 0.5);
-    REQUIRE(b1.color.g == 0.5);
-    REQUIRE(b1.color.b == 0.5);
-    Box b2 = Box({0, 0, 0}, {10, 10, 10}, "box2", {1, 1, 1});
-    REQUIRE(b2.name == "box2");
-    REQUIRE(b2.color.r == 1);
-    REQUIRE(b2.color.g == 1);
-    REQUIRE(b2.color.b == 1);
-}*/
+
 
 TEST_CASE("Box volume()", "[Box]") {
     Box b1 = Box({0, 0, 0}, {10, 10, 10});
@@ -143,6 +120,20 @@ TEST_CASE ("intersect_ray_sphere", "[intersect]") {
     REQUIRE(hit.name == "No_name");
     REQUIRE(!missed.hit);
     REQUIRE(missed.name == "miss");
+}
+
+TEST_CASE("Aufgabe 5.8", "Shape") {
+    Color red{255, 0, 0};
+    glm::vec3 position{0.0f, 0.0f, 0.0f};
+    Sphere *s1 = new Sphere{position, 1.2f, " sphere0 ", red};
+    Shape *s2 = new Sphere{position, 1.2f, " sphere1 ", red,};
+    s1->print(std::cout);
+    s2->print(std::cout);
+    std::cout << "----------here------------\n";
+    delete s1;
+    std::cout << "--------------------------\n";
+    delete s2;
+    std::cout << "--------------------------\n";
 }
 
 

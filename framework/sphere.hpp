@@ -20,6 +20,8 @@ public:
 
     Sphere(glm::vec3 const &mid, float rad, std::string const &name, Color const &color);
 
+    ~Sphere();//override ;
+
     virtual float area() const override;
 
     virtual float volume() const override;
