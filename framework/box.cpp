@@ -6,6 +6,8 @@ Box::Box() {
     min = {0, 0, 0};
     name = "No_name";
     color = {0.5, 0.5, 0.5};
+    std::cout << "Box Konstructor used\n";
+
 }
 
 Box::Box(glm::vec3 const &min_, glm::vec3 const &max_) {
@@ -13,6 +15,8 @@ Box::Box(glm::vec3 const &min_, glm::vec3 const &max_) {
     min = min_;
     name = "No_name";
     color = {0.5, 0.5, 0.5};
+    std::cout << "Box Konstructor used\n";
+
 }
 
 Box::Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name_, Color const &color_) {
@@ -20,6 +24,7 @@ Box::Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name_,
     min = min_;
     name = name_;
     color = color_;
+    std::cout << "Box Konstructor used\n";
 }
 
 Box::~Box() {

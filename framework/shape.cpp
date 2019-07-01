@@ -6,11 +6,14 @@
 Shape::Shape() {
     name = "No_name";
     color = {0.5, 0.5, 0.5};
+    std::cout << "Shape Konstructor used\n";
+
 }
 
 Shape::Shape(std::string const &name_, Color const &color_) {
     name = name_;
     color = color_;
+    std::cout << "Shape Konstructor used\n";
 }
 
 Shape::~Shape() {

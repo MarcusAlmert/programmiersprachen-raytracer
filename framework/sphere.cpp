@@ -7,6 +7,7 @@
 Sphere::Sphere() {
     middlePoint = {0, 0, 0};
     radius = 0;
+    std::cout << "Sphere Konstructor used\n";
 }
 
 Sphere::Sphere(glm::vec3 const &mid, float rad) {
@@ -15,6 +16,7 @@ Sphere::Sphere(glm::vec3 const &mid, float rad) {
         std::cout << "radius was made positive" << std::endl;
     }
     radius = abs(rad);
+    std::cout << "Sphere Konstructor used\n";
 }
 
 Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name_, Color const &color_) {
@@ -25,6 +27,7 @@ Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name_, Color 
     radius = abs(rad);
     name = name_;
     color = color_;
+    std::cout << "Sphere Konstructor used\n";
 }
 
 Sphere::~Sphere() {
