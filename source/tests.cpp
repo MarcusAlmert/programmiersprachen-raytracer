@@ -166,3 +166,15 @@ TEST_CASE("read sdf", "SDF") {
         std::cout << scene1.mat_vector[i]->name << std::endl;
     }
 }
+
+TEST_CASE("find() vec", "vec") {
+    Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
+    auto vec = scene1.mat_vector;
+    auto map = scene1.mat_map;
+    auto set = scene1.mat_set;
+
+    REQUIRE(find(vec, "red")->name == "red");
+    REQUIRE(find(map, "red")->name == "red");
+    //REQUIRE(find(set, "red")->name == "red");
+    find(set, "red");
+}

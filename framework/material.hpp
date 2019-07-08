@@ -20,6 +20,10 @@ struct Material {
     }
 
     Material() {}
+
+    Material(std::string const &name_) {
+        name = name_;
+    }
 };
 
 std::ostream &operator<<(std::ostream &os, Material const &mat);
