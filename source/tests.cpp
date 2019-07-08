@@ -143,4 +143,14 @@ TEST_CASE("Aufgabe 5.8", "Shape") {
     std::cout << "--------------------------\n";
 }
 
-
+TEST_CASE("Aufgabe 6.3 intersect ray-box", "Box") {
+    Box b1{{0,  0,  0},
+           {10, 10, 10}};
+    Ray orig{{20, 5, 5},
+             {-1, 0, 0}};
+    Hitpoint hitp = b1.intersect(orig);
+    REQUIRE(hitp.hit);
+    REQUIRE(hitp.hitpoint.x == 10);
+    REQUIRE(hitp.hitpoint.y == 5);
+    REQUIRE(hitp.hitpoint.z == 5);
+}

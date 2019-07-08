@@ -10,6 +10,7 @@ struct Hitpoint {
     std::string name = "miss";
     std::shared_ptr<Material> material = nullptr;
     glm::vec3 direction;
+    glm::vec3 hitpoint{MAXFLOAT, MAXFLOAT, MAXFLOAT};
 };
 
 #endif //RAYTRACER_HITPOINT_HPP

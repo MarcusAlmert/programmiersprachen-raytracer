@@ -54,7 +54,10 @@ Hitpoint Sphere::intersect(Ray const &ray) const {
     bool hitted = glm::intersectRaySphere(ray_.origin,
                                           glm::normalize(ray_.direction), middlePoint, pow(radius, 2), distance);
     if (hitted) {
-        hitp = {true, distance, name, material, ray_.direction};    // material not working
+        float hitx = ray.origin.x + distance * ray.direction.x;
+        float hity = ray.origin.y + distance * ray.direction.y;
+        float hitz = ray.origin.z + distance * ray.direction.z;
+        hitp = {true, distance, name, material, ray_.direction, {hitx, hity, hitz}};    // material not working
     }
     return hitp;
 }
