@@ -5,14 +5,11 @@
 
 Shape::Shape() {
     name = "No_name";
-    color = {0.5, 0.5, 0.5};
+    material = nullptr;
     std::cout << "Shape Konstructor used\n";
-
 }
 
-Shape::Shape(std::string const &name_, Color const &color_) {
-    name = name_;
-    color = color_;
+Shape::Shape(std::string const &name_, std::shared_ptr<Material> const mat_ptr) : name{name_}, material{mat_ptr} {
     std::cout << "Shape Konstructor used\n";
 }
 
@@ -22,7 +19,7 @@ Shape::~Shape() {
 
 std::ostream &Shape::print(std::ostream &os) const {
     return os << name << " (Shape)" << std::endl
-              << "[" << color.r << ", " << color.g << ", " << color.b << "]" << std::endl;
+              << "[" << *material << "]" << std::endl;
 }
 
 std::ostream &operator<<(std::ostream &os, Shape const &s) {

@@ -4,26 +4,21 @@
 Box::Box() {
     max = {0, 0, 0};
     min = {0, 0, 0};
-    name = "No_name";
-    color = {0.5, 0.5, 0.5};
     std::cout << "Box Konstructor used\n";
-
 }
 
 Box::Box(glm::vec3 const &min_, glm::vec3 const &max_) {
     max = max_;
     min = min_;
-    name = "No_name";
-    color = {0.5, 0.5, 0.5};
     std::cout << "Box Konstructor used\n";
 
 }
 
-Box::Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name_, Color const &color_) {
+Box::Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name_,
+         std::shared_ptr<Material> const mat_ptr) :
+        Shape{name_, mat_ptr} {
     max = max_;
-    min = min_;
-    name = name_;
-    color = color_;
+    min = min_;;
     std::cout << "Box Konstructor used\n";
 }
 
@@ -42,9 +37,19 @@ float Box::volume() const {
 }
 
 std::ostream &Box::print(std::ostream &os) const {
-    return os << "Name: " << name << " (Box)" << std::endl
-              << "Color: " << "[" << color.r << ", " << color.g << ", " << color.b << "]" << std::endl
-              << "Min: " << "[" << min.x << ", " << min.y << "]" << std::endl
-              << "Max: " << "[" << max.x << ", " << max.y << "]" << std::endl;
+    if (material != nullptr) {
+        return os << "Name: " << name << " (Box)" << std::endl
+                  << "Color: " << "[" << *material << "]" << std::endl
+                  << "Min: " << "[" << min.x << ", " << min.y << "]" << std::endl
+                  << "Max: " << "[" << max.x << ", " << max.y << "]" << std::endl;
+    } else {
+        return os << "Name: " << name << " (Box)" << std::endl
+                  << "Color: " << "[" << "No Material" << "]" << std::endl
+                  << "Min: " << "[" << min.x << ", " << min.y << "]" << std::endl
+                  << "Max: " << "[" << max.x << ", " << max.y << "]" << std::endl;
+    }
+}
+
+Hitpoint Box::intersect(Ray const &ray) const {
 
 }

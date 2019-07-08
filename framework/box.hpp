@@ -14,7 +14,7 @@ public:
 
     Box(glm::vec3 const &min_, glm::vec3 const &max_);
 
-    Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name, Color const &color);
+    Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name, std::shared_ptr<Material> const mat_ptr);
 
     ~Box();//override ;
 
@@ -23,6 +23,8 @@ public:
     virtual float volume() const override;
 
     virtual std::ostream &print(std::ostream &os) const override;
+
+    virtual Hitpoint intersect(Ray const &ray) const override;
 };
 
 #endif //RAYTRACER_BOX_HPP

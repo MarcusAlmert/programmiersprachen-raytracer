@@ -18,7 +18,7 @@ public:
 
     Sphere(glm::vec3 const &mid, float rad);
 
-    Sphere(glm::vec3 const &mid, float rad, std::string const &name, Color const &color);
+    Sphere(glm::vec3 const &mid, float rad, std::string const &name, std::shared_ptr<Material> const mat_ptr);
 
     ~Sphere();//override ;
 
@@ -28,7 +28,7 @@ public:
 
     virtual std::ostream &print(std::ostream &os) const override;
 
-    Hitpoint intersect(Ray const &ray_) const;
+    virtual Hitpoint intersect(Ray const &ray) const override;
 };
 
 #endif //RAYTRACER_SPHERE_HPP

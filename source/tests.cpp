@@ -1,12 +1,14 @@
 #define CATCH_CONFIG_RUNNER
 
 #include <catch.hpp>
+#include <memory>
 #include "shape.hpp"
 #include "sphere.hpp"
 #include "box.hpp"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
+#include "material.hpp"
 
 int main(int argc, char *argv[]) {
 
@@ -15,6 +17,11 @@ int main(int argc, char *argv[]) {
 }
 
 /* Tests for Shapes */
+
+TEST_CASE("", "") {
+    Material red{"Red", Color{1, 1, 1}, Color{0, 0, 0}, Color{0.5, 0.5, 0.5}, 1.0f};
+    std::cout << red << std::endl;
+}
 
 TEST_CASE("Sphere standard Constructor", "[Sphere]") {
     Sphere sp1 = Sphere();
@@ -79,7 +86,8 @@ TEST_CASE("Box area()", "[Box]") {
 }
 
 TEST_CASE("Print", "[Shapes]") {
-    Box b1;
+    Box b1{{1, 1, 1},
+           {0, 0, 0}};
     Sphere sp1;
     std::cout << " --------- test ------------\n";
     sp1.print(std::cout) << std::endl;
@@ -123,10 +131,9 @@ TEST_CASE ("intersect_ray_sphere", "[intersect]") {
 }
 
 TEST_CASE("Aufgabe 5.8", "Shape") {
-    Color red{255, 0, 0};
     glm::vec3 position{0.0f, 0.0f, 0.0f};
-    Sphere *s1 = new Sphere{position, 1.2f, " sphere0 ", red};
-    Shape *s2 = new Sphere{position, 1.2f, " sphere1 ", red,};
+    Sphere *s1 = new Sphere{position, 1.2f};
+    Shape *s2 = new Sphere{position, 1.2f};
     s1->print(std::cout);
     s2->print(std::cout);
     std::cout << "----------here------------\n";

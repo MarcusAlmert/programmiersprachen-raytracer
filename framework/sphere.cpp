@@ -4,11 +4,7 @@
 #include "sphere.hpp"
 
 
-Sphere::Sphere() {
-    middlePoint = {0, 0, 0};
-    radius = 0;
-    std::cout << "Sphere Konstructor used\n";
-}
+Sphere::Sphere() {}
 
 Sphere::Sphere(glm::vec3 const &mid, float rad) {
     middlePoint = mid;
@@ -19,14 +15,8 @@ Sphere::Sphere(glm::vec3 const &mid, float rad) {
     std::cout << "Sphere Konstructor used\n";
 }
 
-Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name_, Color const &color_) {
-    middlePoint = mid;
-    if (rad < 0) {
-        std::cout << "radius was made positive" << std::endl;
-    }
-    radius = abs(rad);
-    name = name_;
-    color = color_;
+Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name_, std::shared_ptr<Material> const mat_ptr) :
+        middlePoint{mid}, Shape{name_, mat_ptr}, radius{rad} {
     std::cout << "Sphere Konstructor used\n";
 }
 
@@ -43,20 +33,28 @@ float Sphere::volume() const {
 }
 
 std::ostream &Sphere::print(std::ostream &os) const {
-    return os << "Name: " << name << " (Sphere)" << std::endl
-              << "Color: " << "[" << color.r << ", " << color.g << ", " << color.b << "]" << std::endl
-              << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << "]" << std::endl
-              << "Radius: " << radius << std::endl;
+    if (material != nullptr) {
+        return os << "Name: " << name << " (Sphere)" << std::endl
+                  << "Material: " << "[" << *material << "]" << std::endl
+                  << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << "]" << std::endl
+                  << "Radius: " << radius << std::endl;
+    } else {
+        return os << "Name: " << name << " (Sphere)" << std::endl
+                  << "Material: " << "[" << "No Material" << "]" << std::endl
+                  << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << "]" << std::endl
+                  << "Radius: " << radius << std::endl;
+    }
+
 }
 
-Hitpoint Sphere::intersect(Ray const &r) const {
-    Ray ray_ = r;
-    Hitpoint hitp;
+Hitpoint Sphere::intersect(Ray const &ray) const {
+    Ray ray_ = ray;
+    Hitpoint hitp;  // constructor needed?
     float distance;
     bool hitted = glm::intersectRaySphere(ray_.origin,
                                           glm::normalize(ray_.direction), middlePoint, pow(radius, 2), distance);
     if (hitted) {
-        hitp = {true, distance, name, color, ray_.direction};
+        hitp = {true, distance, name, material, ray_.direction};    // material not working
     }
     return hitp;
 }
