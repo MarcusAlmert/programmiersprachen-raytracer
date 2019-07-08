@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 #include "material.hpp"
+#include "scene.hpp"
 
 int main(int argc, char *argv[]) {
 
@@ -18,7 +19,7 @@ int main(int argc, char *argv[]) {
 
 /* Tests for Shapes */
 
-TEST_CASE("", "") {
+TEST_CASE("Material print", "Material") {
     Material red{"Red", Color{1, 1, 1}, Color{0, 0, 0}, Color{0.5, 0.5, 0.5}, 1.0f};
     std::cout << red << std::endl;
 }
@@ -153,4 +154,15 @@ TEST_CASE("Aufgabe 6.3 intersect ray-box", "Box") {
     REQUIRE(hitp.hitpoint.x == 10);
     REQUIRE(hitp.hitpoint.y == 5);
     REQUIRE(hitp.hitpoint.z == 5);
+}
+
+TEST_CASE("read sdf", "SDF") {
+    Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
+    auto vec = scene1.mat_vector;
+    auto map = scene1.mat_map;
+    auto set = scene1.mat_set;
+
+    for (int i = 0; i < scene1.mat_vector.size(); i++) {
+        std::cout << scene1.mat_vector[i]->name << std::endl;
+    }
 }

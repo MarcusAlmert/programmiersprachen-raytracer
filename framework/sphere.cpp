@@ -4,7 +4,9 @@
 #include "sphere.hpp"
 
 
-Sphere::Sphere() {}
+Sphere::Sphere() {
+    radius = 0;
+}
 
 Sphere::Sphere(glm::vec3 const &mid, float rad) {
     middlePoint = mid;
