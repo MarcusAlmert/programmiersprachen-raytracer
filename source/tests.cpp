@@ -167,7 +167,7 @@ TEST_CASE("read sdf", "SDF") {
     }
 }
 
-TEST_CASE("find() vec", "vec") {
+TEST_CASE("find()", "vec,map,set") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
     auto vec = scene1.mat_vector;
     auto map = scene1.mat_map;
@@ -175,6 +175,7 @@ TEST_CASE("find() vec", "vec") {
 
     REQUIRE(find(vec, "red")->name == "red");
     REQUIRE(find(map, "red")->name == "red");
-    //REQUIRE(find(set, "red")->name == "red");
-    find(set, "red");
+    REQUIRE(set.size() == 3);
+    REQUIRE(find(set, "red")->name == "red");
+
 }

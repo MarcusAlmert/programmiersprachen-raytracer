@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "color.hpp"
+#include <memory>
 
 struct Material {
     std::string name = "No_name";
@@ -27,6 +28,12 @@ struct Material {
 };
 
 std::ostream &operator<<(std::ostream &os, Material const &mat);
+
+bool operator<(std::shared_ptr<Material> const &lhs,
+               std::shared_ptr<Material> const &rhs);
+
+bool operator==(std::shared_ptr<Material> const &lhs,
+                std::shared_ptr<Material> const &rhs);
 
 
 #endif //RAYTRACER_MATERIAL_HPP

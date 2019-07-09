@@ -1,4 +1,5 @@
 #include "material.hpp"
+#include <memory>
 
 std::ostream &operator<<(std::ostream &os, Material const &mat) {
     os << "Name: " << mat.name << std::endl;
@@ -8,3 +9,18 @@ std::ostream &operator<<(std::ostream &os, Material const &mat) {
     os << "M:  " << mat.m << std::endl;
     return os;
 }
+
+bool operator<(std::shared_ptr<Material> const &lhs,
+               std::shared_ptr<Material> const &rhs) {
+    return (lhs->name < rhs->name);
+}
+
+bool operator==(std::shared_ptr<Material> const &lhs,
+                std::shared_ptr<Material> const &rhs) {
+    if (rhs->name == lhs->name) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
