@@ -5,13 +5,11 @@
 Box::Box() {
     max = {0, 0, 0};
     min = {0, 0, 0};
-    std::cout << "Box Konstructor used\n";
 }
 
 Box::Box(glm::vec3 const &min_, glm::vec3 const &max_) {
     max = max_;
     min = min_;
-    std::cout << "Box Konstructor used\n";
 
 }
 
@@ -20,11 +18,9 @@ Box::Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name_,
         Shape{name_, mat_ptr} {
     max = max_;
     min = min_;;
-    std::cout << "Box Konstructor used\n";
 }
 
 Box::~Box() {
-    std::cout << "Box destructor used" << std::endl;
 }
 
 float Box::area() const {
@@ -62,6 +58,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
     float tminz = (min.z - r.origin.x) / glm::normalize(r.direction).x;
     float tmaxz = (max.z - r.origin.x) / glm::normalize(r.direction).x;
 
+    // das war glaube was adrian meint ist egal
     std::vector<float> inBox;
     if (tmaxx >= min.x && tmaxx <= max.x) { inBox.push_back(tmaxx); }
     if (tminx >= min.x && tmaxx <= max.x) { inBox.push_back(tminx); }

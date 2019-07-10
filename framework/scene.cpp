@@ -15,15 +15,11 @@ std::shared_ptr<Material> find(std::vector<std::shared_ptr<Material>> const &mat
 }
 
 std::shared_ptr<Material> find(std::set<std::shared_ptr<Material>> const &mat, std::string const &name) {
-    auto dummy = std::make_shared<Material>();
-    dummy->name = name;
-    std::cout << (dummy == *mat.begin()) << std::endl;   // vergleich funktion geht
-    auto result = mat.find(dummy);  // funktioniert wenn man zb *mat.begin() reinschreibt
-    std::cout << *result << "  " << *mat.end();
-    if (result == mat.end()) {
-        return nullptr;
+    for (auto it : mat) {
+        if (it->name == name)
+            return it;
     }
-    return *result;
+    return nullptr;
 }
 
 std::shared_ptr<Material> find(std::map<std::string, std::shared_ptr<Material>> const &mat, std::string const &name) {

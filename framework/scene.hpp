@@ -14,11 +14,6 @@ struct Scene {
     std::set<std::shared_ptr<Material>> mat_set;
 };
 
-bool operator<(std::shared_ptr<Material> const &lhs,
-               std::shared_ptr<Material> const &rhs);
-
-bool operator==(std::shared_ptr<Material> const &lhs,
-                std::shared_ptr<Material> const &rhs);
 
 Scene read_sdf(std::string const &path);
 

@@ -17,10 +17,6 @@ bool operator<(std::shared_ptr<Material> const &lhs,
 
 bool operator==(std::shared_ptr<Material> const &lhs,
                 std::shared_ptr<Material> const &rhs) {
-    if (rhs->name == lhs->name) {
-        return true;
-    } else {
-        return false;
-    }
+    return (lhs->name == rhs->name);
 }
 

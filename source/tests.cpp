@@ -161,10 +161,9 @@ TEST_CASE("read sdf", "SDF") {
     auto vec = scene1.mat_vector;
     auto map = scene1.mat_map;
     auto set = scene1.mat_set;
-
-    for (int i = 0; i < scene1.mat_vector.size(); i++) {
-        std::cout << scene1.mat_vector[i]->name << std::endl;
-    }
+    REQUIRE(scene1.mat_vector[0]->name == "red");
+    REQUIRE(scene1.mat_vector[1]->name == "green");
+    REQUIRE(scene1.mat_vector[2]->name == "blue");
 }
 
 TEST_CASE("find()", "vec,map,set") {
@@ -175,7 +174,6 @@ TEST_CASE("find()", "vec,map,set") {
 
     REQUIRE(find(vec, "red")->name == "red");
     REQUIRE(find(map, "red")->name == "red");
-    REQUIRE(set.size() == 3);
-    REQUIRE(find(set, "red")->name == "red");
+    REQUIRE(find(set, "green")->name == "green");
 
 }

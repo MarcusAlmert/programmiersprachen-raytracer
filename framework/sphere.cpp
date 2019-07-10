@@ -11,19 +11,15 @@ Sphere::Sphere() {
 Sphere::Sphere(glm::vec3 const &mid, float rad) {
     middlePoint = mid;
     if (rad < 0) {
-        std::cout << "radius was made positive" << std::endl;
     }
     radius = abs(rad);
-    std::cout << "Sphere Konstructor used\n";
 }
 
 Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name_, std::shared_ptr<Material> const mat_ptr) :
         middlePoint{mid}, Shape{name_, mat_ptr}, radius{rad} {
-    std::cout << "Sphere Konstructor used\n";
 }
 
 Sphere::~Sphere() {
-    std::cout << "Sphere destructor used" << std::endl;
 }
 
 float Sphere::area() const {
