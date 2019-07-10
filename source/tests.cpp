@@ -137,13 +137,11 @@ TEST_CASE("Aufgabe 5.8", "Shape") {
     Shape *s2 = new Sphere{position, 1.2f};
     s1->print(std::cout);
     s2->print(std::cout);
-    std::cout << "----------here------------\n";
     delete s1;
-    std::cout << "--------------------------\n";
     delete s2;
-    std::cout << "--------------------------\n";
 }
 
+//TODO more test cases
 TEST_CASE("Aufgabe 6.3 intersect ray-box", "Box") {
     Box b1{{0,  0,  0},
            {10, 10, 10}};
@@ -175,5 +173,4 @@ TEST_CASE("find()", "vec,map,set") {
     REQUIRE(find(vec, "red")->name == "red");
     REQUIRE(find(map, "red")->name == "red");
     REQUIRE(find(set, "green")->name == "green");
-
 }
