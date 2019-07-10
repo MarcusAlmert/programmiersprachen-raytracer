@@ -17,22 +17,24 @@
 // header, project
 #include <pixel.hpp>
 
-class PpmWriter
-{
+class PpmWriter {
 public:
-  PpmWriter(std::size_t w, std::size_t h, std::string const& file);
-  PpmWriter(std::size_t w, std::size_t h);
+    PpmWriter(std::size_t w, std::size_t h, std::string const &file);
+
+    PpmWriter(std::size_t w, std::size_t h);
 
 public:
-  void write(Pixel const& p);
-  void save(std::string const& file);
-  void save();
+    void write(Pixel const &p);
+
+    void save(std::string const &file);
+
+    void save();
 
 private:
-  std::string file_;
-  std::vector<unsigned int> data_;
-  size_t width_;
-  size_t height_;
+    std::string file_;
+    std::vector<unsigned int> data_;
+    size_t width_;
+    size_t height_;
 };
 
 #endif // BUW_PPMWRITER
