@@ -47,7 +47,7 @@ std::ostream &Sphere::print(std::ostream &os) const {
 
 Hitpoint Sphere::intersect(Ray const &ray) const {
     Ray ray_ = ray;
-    Hitpoint hitp;  // constructor needed?
+    Hitpoint hitp;
     float distance;
     bool hitted = glm::intersectRaySphere(ray_.origin,
                                           glm::normalize(ray_.direction), middlePoint, pow(radius, 2), distance);
