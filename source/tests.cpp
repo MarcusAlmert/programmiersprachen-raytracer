@@ -153,7 +153,7 @@ TEST_CASE("Aufgabe 6.3 intersect ray-box", "Box") {
     REQUIRE(hitp.hitpoint.y == 5);
     REQUIRE(hitp.hitpoint.z == 5);
 }
-/*
+
 TEST_CASE("More intersect tests for boxes", "[intersect,Box]"){
     Box b1{glm::vec3{0, 0, 0}, glm::vec3{10, 10, 10}};
     Ray r1{glm::vec3{5, 20, 5}, glm::vec3{0, -1, 0}};
@@ -162,7 +162,7 @@ TEST_CASE("More intersect tests for boxes", "[intersect,Box]"){
     REQUIRE(hitp.hitpoint.x == 5);
     REQUIRE(hitp.hitpoint.y == 10);
     REQUIRE(hitp.hitpoint.z == 5);
-}*/
+}
 
 TEST_CASE("read sdf", "SDF") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
