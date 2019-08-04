@@ -54,10 +54,10 @@ Hitpoint Box::intersect(Ray const &ray) const {
 
     float tmaxx = (max.x - r.origin.x) / glm::normalize(r.direction).x;
     float tminx = (min.x - r.origin.x) / glm::normalize(r.direction).x;
-    float tminy = (min.y - r.origin.x) / glm::normalize(r.direction).x;
-    float tmaxy = (max.y - r.origin.x) / glm::normalize(r.direction).x;
-    float tminz = (min.z - r.origin.x) / glm::normalize(r.direction).x;
-    float tmaxz = (max.z - r.origin.x) / glm::normalize(r.direction).x;
+    float tminy = (min.y - r.origin.y) / glm::normalize(r.direction).y;
+    float tmaxy = (max.y - r.origin.y) / glm::normalize(r.direction).y;
+    float tminz = (min.z - r.origin.z) / glm::normalize(r.direction).z;
+    float tmaxz = (max.z - r.origin.z) / glm::normalize(r.direction).z;
 
     // das war glaube was adrian meint ist egal
     std::vector<float> inBox;
