@@ -1,6 +1,7 @@
 #include "box.hpp"
 #include <cmath>
 #include <vector>
+#include "plane.hpp"
 
 Box::Box() {
     max = {0, 0, 0};

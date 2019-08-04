@@ -167,8 +167,6 @@ TEST_CASE("More intersect tests for boxes", "[intersect,Box]"){
 TEST_CASE("read sdf", "SDF") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
     auto vec = scene1.mat_vector;
-    auto map = scene1.mat_map;
-    auto set = scene1.mat_set;
     REQUIRE(scene1.mat_vector[0]->name == "red");
     REQUIRE(scene1.mat_vector[1]->name == "green");
     REQUIRE(scene1.mat_vector[2]->name == "blue");
@@ -177,10 +175,5 @@ TEST_CASE("read sdf", "SDF") {
 TEST_CASE("find()", "vec,map,set") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
     auto vec = scene1.mat_vector;
-    auto map = scene1.mat_map;
-    auto set = scene1.mat_set;
-
     REQUIRE(find(vec, "red")->name == "red");
-    REQUIRE(find(map, "red")->name == "red");
-    REQUIRE(find(set, "green")->name == "green");
 }
