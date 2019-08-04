@@ -1,7 +1,6 @@
 #include "box.hpp"
 #include <cmath>
 #include <vector>
-#include "plane.hpp"
 #include <glm/vec3.hpp>
 #include <algorithm>
 
