@@ -10,6 +10,7 @@
 #include <glm/gtx/intersect.hpp>
 #include "material.hpp"
 #include "scene.hpp"
+#include "light.hpp"
 
 int main(int argc, char *argv[]) {
 
@@ -182,4 +183,10 @@ TEST_CASE("find()", "vec,map,set") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
     auto vec = scene1.mat_vector;
     CHECK(find(vec, "red")->name == "red");
+}
+
+TEST_CASE("struct Light, print", "[Light]"){
+    Light l1{"Testlicht", glm::vec3{0, 0, 0}, 0.0f, Color{0.0f, 0.0f, 0.0f}};
+    std::cout << l1 << std::endl;
+    CHECK(true);
 }

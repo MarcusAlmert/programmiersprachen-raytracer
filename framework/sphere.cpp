@@ -35,12 +35,12 @@ std::ostream &Sphere::print(std::ostream &os) const {
         return os << "Name: " << name << " (Sphere)" << std::endl
                   << "Material: " << "[" << *material << "]" << std::endl
                   << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << "]" << std::endl
-                  << "Radius: " << radius << std::endl;
+                  << "Radius: " << radius << std::endl << "--------------------" << std::endl;
     } else {
         return os << "Name: " << name << " (Sphere)" << std::endl
                   << "Material: " << "[" << "No Material" << "]" << std::endl
                   << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << "]" << std::endl
-                  << "Radius: " << radius << std::endl;
+                  << "Radius: " << radius << std::endl << "--------------------" << std::endl;
     }
 
 }
