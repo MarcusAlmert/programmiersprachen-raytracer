@@ -46,8 +46,6 @@ Scene read_sdf(std::string const &path) {
                                                                                      {kd_r, kd_g, kd_b},
                                                                                      {ks_r, ks_g, ks_b}, m});
                 scene1.mat_vector.push_back(mat_);
-                scene1.mat_map.emplace(mat_name, mat_);
-                scene1.mat_set.emplace(mat_);
             }
         }
     }

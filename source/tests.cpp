@@ -26,64 +26,64 @@ TEST_CASE("Material print", "Material") {
 
 TEST_CASE("Sphere standard Constructor", "[Sphere]") {
     Sphere sp1 = Sphere();
-    REQUIRE(sp1.area() == 0);
-    REQUIRE(sp1.volume() == 0);
+    CHECK(sp1.area() == 0);
+    CHECK(sp1.volume() == 0);
 }
 
 TEST_CASE("Sphere Constructor", "[Sphere]") {
     Sphere sp1 = Sphere({1, 1, 1}, 10);
-    REQUIRE(sp1.area() == Approx(1256.637));
-    REQUIRE(sp1.volume() == Approx(4188.79));
+    CHECK(sp1.area() == Approx(1256.637));
+    CHECK(sp1.volume() == Approx(4188.79));
 }
 
 
 TEST_CASE("Sphere area()", "[Sphere]") {
     Sphere sp1 = Sphere({3, 4, 10}, 13);
-    REQUIRE(sp1.area() == Approx(2123.717));
+    CHECK(sp1.area() == Approx(2123.717));
     sp1 = Sphere({2, 3, 1}, 2);
-    REQUIRE(sp1.area() == Approx(50.265));
+    CHECK(sp1.area() == Approx(50.265));
     sp1 = Sphere({2, 3, 1}, 0);
-    REQUIRE(sp1.area() == Approx(0));
+    CHECK(sp1.area() == Approx(0));
 }
 
 TEST_CASE("Sphere volume()", "[Sphere]") {
     Sphere sp1 = Sphere({3, 4, 10}, 13);
-    REQUIRE(sp1.volume() == Approx(9202.772));
+    CHECK(sp1.volume() == Approx(9202.772));
     sp1 = Sphere({2, 3, 1}, 2);
-    REQUIRE(sp1.volume() == Approx(33.51));
+    CHECK(sp1.volume() == Approx(33.51));
     sp1 = Sphere({2, 3, 1}, 0);
-    REQUIRE(sp1.volume() == Approx(0));
+    CHECK(sp1.volume() == Approx(0));
 }
 
 TEST_CASE("Box standard Constructor", "[Box]") {
     Box b1 = Box();
-    REQUIRE(b1.area() == 0);
-    REQUIRE(b1.volume() == 0);
+    CHECK(b1.area() == 0);
+    CHECK(b1.volume() == 0);
 }
 
 TEST_CASE("Box Constructor", "[Box]") {
     Box b1 = Box({0, 0, 0}, {10, 10, 10});
-    REQUIRE(b1.area() == Approx(600));
-    REQUIRE(b1.volume() == Approx(1000));
+    CHECK(b1.area() == Approx(600));
+    CHECK(b1.volume() == Approx(1000));
 }
 
 
 TEST_CASE("Box volume()", "[Box]") {
     Box b1 = Box({0, 0, 0}, {10, 10, 10});
-    REQUIRE(b1.volume() == Approx(1000));
+    CHECK(b1.volume() == Approx(1000));
     b1 = Box({10, 10, 10}, {0, 0, 0});
-    REQUIRE(b1.volume() == Approx(1000));
+    CHECK(b1.volume() == Approx(1000));
     b1 = Box({12, 11, 3}, {1, 10, 23});
-    REQUIRE(b1.volume() == Approx(220));
+    CHECK(b1.volume() == Approx(220));
 }
 
 TEST_CASE("Box area()", "[Box]") {
     Box b1 = Box({0, 0, 0}, {10, 10, 10});
-    REQUIRE(b1.area() == Approx(600));
+    CHECK(b1.area() == Approx(600));
     b1 = Box({10, 10, 10}, {0, 0, 0});
-    REQUIRE(b1.area() == Approx(600));
+    CHECK(b1.area() == Approx(600));
     b1 = Box({12, 11, 3}, {1, 10, 23});
-    REQUIRE(b1.area() == Approx(502.0));
+    CHECK(b1.area() == Approx(502.0));
 }
 
 TEST_CASE("Print", "[Shapes]") {
@@ -113,7 +113,7 @@ TEST_CASE ("intersect_ray_sphere", "[intersect]") {
             sphere_center,
             sphere_radius * sphere_radius, // squared radius !!!
             distance);
-    REQUIRE (distance == Approx(4.0f));
+    CHECK (distance == Approx(4.0f));
 
 
     Sphere s1{glm::vec3{5.0f, 5.0f, 5.0f}, 1.0f};
@@ -125,10 +125,10 @@ TEST_CASE ("intersect_ray_sphere", "[intersect]") {
     Hitpoint hit = s1.intersect(ray);
     Hitpoint missed = s2.intersect(raymissed);
 
-    REQUIRE(hit.hit);
-    REQUIRE(hit.name == "No_name");
-    REQUIRE(!missed.hit);
-    REQUIRE(missed.name == "miss");
+    CHECK(hit.hit);
+    CHECK(hit.name == "No_name");
+    CHECK(!missed.hit);
+    CHECK(missed.name == "miss");
 }
 
 TEST_CASE("Aufgabe 5.8", "Shape") {
@@ -148,39 +148,38 @@ TEST_CASE("Aufgabe 6.3 intersect ray-box", "Box") {
     Ray orig{{20, 5, 5},
              {-1, 0, 0}};
     Hitpoint hitp = b1.intersect(orig);
-    REQUIRE(hitp.hit);
-    REQUIRE(hitp.hitpoint.x == 10);
-    REQUIRE(hitp.hitpoint.y == 5);
-    REQUIRE(hitp.hitpoint.z == 5);
+    CHECK(hitp.hit);
+    CHECK(hitp.hitpoint.x == 10);
+    CHECK(hitp.hitpoint.y == 5);
+    CHECK(hitp.hitpoint.z == 5);
 }
- 
+
 TEST_CASE("More intersect tests for boxes", "[intersect,Box]"){
     Box b1{glm::vec3{0, 0, 0}, glm::vec3{10, 10, 10}};
     Ray r1{glm::vec3{5, 20, 5}, glm::vec3{0, -1, 0}};
     Hitpoint hitp = b1.intersect(r1);
-    REQUIRE(hitp.hit);
-    REQUIRE(hitp.hitpoint.x == 5);
-    REQUIRE(hitp.hitpoint.y == 10);
-    REQUIRE(hitp.hitpoint.z == 5);
+    CHECK(hitp.hit);
+    CHECK(hitp.hitpoint.x == 5);
+    CHECK(hitp.hitpoint.y == 10);
+    CHECK(hitp.hitpoint.z == 5);
+    Ray r2{glm::vec3{30, 30, 30}, glm::vec3{-1, -1, -1}};
+    Hitpoint hitp1 = b1.intersect(r2);
+    CHECK(hitp1.hit);
+    CHECK(hitp1.hitpoint.x == 10);
+    CHECK(hitp1.hitpoint.y == 10);
+    CHECK(hitp1.hitpoint.z == 10);
 }
 
 TEST_CASE("read sdf", "SDF") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
     auto vec = scene1.mat_vector;
-    auto map = scene1.mat_map;
-    auto set = scene1.mat_set;
-    REQUIRE(scene1.mat_vector[0]->name == "red");
-    REQUIRE(scene1.mat_vector[1]->name == "green");
-    REQUIRE(scene1.mat_vector[2]->name == "blue");
+    CHECK(scene1.mat_vector[0]->name == "red");
+    CHECK(scene1.mat_vector[1]->name == "green");
+    CHECK(scene1.mat_vector[2]->name == "blue");
 }
 
 TEST_CASE("find()", "vec,map,set") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
     auto vec = scene1.mat_vector;
-    auto map = scene1.mat_map;
-    auto set = scene1.mat_set;
-
-    REQUIRE(find(vec, "red")->name == "red");
-    REQUIRE(find(map, "red")->name == "red");
-    REQUIRE(find(set, "green")->name == "green");
+    CHECK(find(vec, "red")->name == "red");
 }
