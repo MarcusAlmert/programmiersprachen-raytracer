@@ -177,6 +177,8 @@ TEST_CASE("read sdf", "SDF") {
     CHECK(scene1.mat_vector[0]->name == "red");
     CHECK(scene1.mat_vector[1]->name == "green");
     CHECK(scene1.mat_vector[2]->name == "blue");
+    CHECK(scene1.shape_vector[0]->name == "sphere1");
+    CHECK(scene1.shape_vector[1]->name == "box1");
 }
 
 TEST_CASE("find()", "vec,map,set") {

@@ -6,14 +6,14 @@
 
 struct Light{
 
-    std::string name_;
-    glm::vec3 position_;
-    float brightness_;
-    Color color_;
+    std::string name_ = "NoName";
+    glm::vec3 position_ = {0,0,0};
+    float brightness_ = 1;
+    Color color_ = {0,0,0};
 
-};
 
-std::ostream& operator<<(std::ostream& os, Light const& light){
+
+friend std::ostream& operator<<(std::ostream& os, Light const& light){
     os << "name: " << light.name_ << "\nobject type: Light\n" <<
     "brightness: " << light.brightness_ << "\nposition:   x[" << 
     light.position_.x << "] y[" << light.position_.y <<"] z[" 
@@ -23,4 +23,5 @@ std::ostream& operator<<(std::ostream& os, Light const& light){
     return os;
 }
 
+};
 #endif
