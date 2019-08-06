@@ -183,6 +183,20 @@ TEST_CASE("read sdf", "SDF") {
     std::cout << *scene1.shape_vector[0];
     std::cout << *scene1.shape_vector[1];
     CHECK(scene1.shape_vector[1]->name == "box1");
+    CHECK(scene1.lights[0].name_ == "licht");
+    CHECK(scene1.lights[0].brightness_ == 50);
+    CHECK(scene1.lights[0].color_.r == 0.5f);
+    CHECK(scene1.lights[0].color_.g == 0.1f);
+    CHECK(scene1.lights[0].color_.b == 0.3f);
+    CHECK(scene1.lights[0].position_.x == 10);
+    CHECK(scene1.lights[0].position_.y == 10);
+    CHECK(scene1.lights[0].position_.z == 5);
+    CHECK(scene1.cam.name == "eye");
+    CHECK(scene1.cam.fov == 60);
+    CHECK(scene1.cam.position.x == 0);
+    CHECK(scene1.cam.position.y == 0);
+    CHECK(scene1.cam.position.z == 0);
+    CHECK(scene1.ambient == 0.112f);
 }
 
 TEST_CASE("find()", "vec,map,set") {
@@ -192,7 +206,7 @@ TEST_CASE("find()", "vec,map,set") {
 }
 
 TEST_CASE("struct Light, print", "[Light]"){
-    Light l1{"Testlicht", glm::vec3{0, 0, 0}, 0.0f, Color{0.0f, 0.0f, 0.0f}};
+    Light l1{"Testlicht", glm::vec3{0, 0, 0}, Color{0.0f, 0.0f, 0.0f}, 0.0f};
     std::cout << l1 << std::endl;
     CHECK(true);
 }

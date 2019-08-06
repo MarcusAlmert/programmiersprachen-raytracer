@@ -8,8 +8,8 @@ struct Light{
 
     std::string name_ = "NoName";
     glm::vec3 position_ = {0,0,0};
-    float brightness_ = 1;
     Color color_ = {0,0,0};
+    float brightness_ = 1;
 
 
 
