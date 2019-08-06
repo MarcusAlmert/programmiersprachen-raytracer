@@ -91,10 +91,10 @@ TEST_CASE("Print", "[Shapes]") {
     Box b1{{1, 1, 1},
            {0, 0, 0}};
     Sphere sp1;
-    std::cout << " --------- test ------------\n";
+    std::cout << "--------- test ------------\n";
     sp1.print(std::cout) << std::endl;
     b1.print(std::cout);
-    std::cout << " ---------------------------\n";
+    std::cout << "---------test over----------\n";
 }
 
 
@@ -178,6 +178,10 @@ TEST_CASE("read sdf", "SDF") {
     CHECK(scene1.mat_vector[1]->name == "green");
     CHECK(scene1.mat_vector[2]->name == "blue");
     CHECK(scene1.shape_vector[0]->name == "sphere1");
+    CHECK(scene1.shape_vector[0]->material->name == "red");
+    CHECK(scene1.shape_vector[1]->material->name == "blue");
+    std::cout << *scene1.shape_vector[0];
+    std::cout << *scene1.shape_vector[1];
     CHECK(scene1.shape_vector[1]->name == "box1");
 }
 

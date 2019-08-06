@@ -39,14 +39,16 @@ float Box::volume() const {
 std::ostream &Box::print(std::ostream &os) const {
     if (material != nullptr) {
         return os << "Name: " << name << " (Box)" << std::endl
-                  << "Color: " << "[" << *material << "]" << std::endl
-                  << "Min: " << "[" << min.x << ", " << min.y << "]" << std::endl
-                  << "Max: " << "[" << max.x << ", " << max.y << "]" << std::endl;
+                  << "Color: " << "[" << material->name << "]" << std::endl
+                  << "Min: " << "[" << min.x << ", " << min.y << ", " << min.z << "]" << std::endl
+                  << "Max: " << "[" << max.x << ", " << max.y << ", " << max.z << "]" << std::endl
+                  << "--------------------" << std::endl;
     } else {
         return os << "Name: " << name << " (Box)" << std::endl
                   << "Color: " << "[" << "No Material" << "]" << std::endl
-                  << "Min: " << "[" << min.x << ", " << min.y << "]" << std::endl
-                  << "Max: " << "[" << max.x << ", " << max.y << "]" << std::endl;
+                  << "Min: " << "[" << min.x << ", " << min.y << ", " << min.z << "]" << std::endl
+                  << "Max: " << "[" << max.x << ", " << max.y << ", " << max.z << "]" << std::endl
+                  << "--------------------" << std::endl;
     }
 }
 

@@ -68,7 +68,7 @@ Scene read_sdf(std::string const &path) {
                     std::shared_ptr<Shape> sp = std::make_shared<Sphere>(Sphere({centerx,centery,centerz}, radius, shape_name,matptr));
                     scene1.shape_vector.push_back(sp);
 
-                }else if (type == "box"){
+                } else if (type == "box"){
                     std::string shape_name;
                     float p1x;
                     float p2x;

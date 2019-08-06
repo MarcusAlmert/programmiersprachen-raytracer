@@ -33,13 +33,13 @@ float Sphere::volume() const {
 std::ostream &Sphere::print(std::ostream &os) const {
     if (material != nullptr) {
         return os << "Name: " << name << " (Sphere)" << std::endl
-                  << "Material: " << "[" << *material << "]" << std::endl
-                  << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << "]" << std::endl
+                  << "Material: " << "[" << material->name  << "]" << std::endl
+                  << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << ", " << middlePoint.z << "]" << std::endl
                   << "Radius: " << radius << std::endl << "--------------------" << std::endl;
     } else {
         return os << "Name: " << name << " (Sphere)" << std::endl
                   << "Material: " << "[" << "No Material" << "]" << std::endl
-                  << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << "]" << std::endl
+                  << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << ", " << middlePoint.z << "]" << std::endl
                   << "Radius: " << radius << std::endl << "--------------------" << std::endl;
     }
 
