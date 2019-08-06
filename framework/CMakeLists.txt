@@ -9,7 +9,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
 add_library(${FRAMEWORK_NAME} STATIC glew.c
         ${FRAMEWORK_SOURCE}
         ${FRAMEWORK_INLINE}
-        ${FRAMEWORK_HEADER} box.cpp box.hpp)
+        ${FRAMEWORK_HEADER} box.cpp box.hpp camera.hpp)
 target_link_libraries(${FRAMEWORK_NAME}
         ${OPENGL_LIBRARIES}
         ${GLFW_LIBRARIES}
