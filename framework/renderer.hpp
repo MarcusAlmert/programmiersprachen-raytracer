@@ -41,6 +41,10 @@ private:
 
     Color calc_color(std::shared_ptr<Material> material, Scene const& scene);
     Color calc_ambient(std::shared_ptr<Material> material, Scene const& scene);
+
+    Color calc_diffuse(std::shared_ptr<Material> material, Scene const &scene);
+
+    Color calc_reflect(std::shared_ptr<Material> material, Scene const &scene);
     void tone_mapping(Color & color);
 };
 

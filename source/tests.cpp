@@ -8,9 +8,11 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
+#include <renderer.hpp>
 #include "material.hpp"
 #include "scene.hpp"
 #include "light.hpp"
+
 
 int main(int argc, char *argv[]) {
 
@@ -210,3 +212,9 @@ TEST_CASE("struct Light, print", "[Light]"){
     std::cout << l1 << std::endl;
     CHECK(true);
 }
+
+/*TEST_CASE("Simple_renderer Test"){
+    Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
+    Renderer test_renderer(600,600,"./test_ppm_example");
+    test_renderer.render(scene1);
+}*/

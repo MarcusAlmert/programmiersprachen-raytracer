@@ -88,10 +88,26 @@ Color Renderer::calc_color(std::shared_ptr<Material> material, Scene const& scen
     return (raytracer_value + material->kd + calc_ambient(material, scene));
 }
 
+
 // Diese Funktion ist in soweit fertig holt nur ka aus dem Material
 Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const& scene){
     Color ambient = Color{scene.ambient, scene.ambient, scene.ambient};
     return (ambient*=material->ka);
+}
+
+Color Renderer::calc_diffuse(std::shared_ptr<Material> material, Scene const &scene) {
+    Color final{0, 0, 0};
+    std::vector<Color> lights_color;
+    for (auto light: scene.lights) {
+        bool light_visible = true;
+        glm::vec3 cut;
+        glm::vec3 normale;
+        glm::vec3 light_cut = glm::normalize(light.position_ - cut);
+
+        //TODO überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
+        // (verdecken licht)
+        // und beide fälle berechnen (kommt noch)
+    }
 }
 
 // Diese Funktion macht am Ende das tone mapping
