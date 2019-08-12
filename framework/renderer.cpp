@@ -87,10 +87,13 @@ Color Renderer::calc_color(Hitpoint hitpoint, Scene const &scene) {
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
     Color ambient = calc_ambient(hitpoint.material, scene);
     Color diffuse = calc_diffuse(hitpoint, scene);
-    Color reflection = calc_reflect(hitpoint, scene);
-    return (raytracer_value + ambient + diffuse + reflection);
+    Color specular = calc_specular(hitpoint, scene);
+    return (raytracer_value + ambient + diffuse + specular);
 }
 
+//TODO calc_phong
+//TODO calc_reflection
+//TODO calc_refraction
 
 // Diese Funktion ist in soweit fertig holt nur ka aus dem Material
 Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &scene) {
@@ -98,7 +101,7 @@ Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &sc
     return (ambient *= material->ka);
 }
 
-// TODO fix graphical bug
+// TODO fix graphical bug // maybe fixed
 Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
@@ -110,7 +113,7 @@ Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
         for (auto shape : scene.shape_vector) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint + 0.2f * hitpoint.normal, vec_light_cut}).hit;
+            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint + 0.1f * hitpoint.normal, vec_light_cut}).hit;
             if (light_not_visible) {
                 light_not_visible = true;
                 break;  // if there is atleast one shape in between light and current shape light gets blocked
@@ -130,7 +133,7 @@ Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
     return final;
 }
 
-Color Renderer::calc_reflect(Hitpoint hitpoint, Scene const &scene) {
+Color Renderer::calc_specular(Hitpoint hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights) {

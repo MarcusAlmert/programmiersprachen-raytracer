@@ -44,7 +44,7 @@ private:
     Color calc_ambient(std::shared_ptr<Material> material, Scene const& scene);
     Color calc_diffuse(Hitpoint hitpoint, Scene const &scene);
 
-    Color calc_reflect(Hitpoint hitpoint, Scene const &scene);
+    Color calc_specular(Hitpoint hitpoint, Scene const &scene);
 
     void tone_mapping(Color & color);
 };

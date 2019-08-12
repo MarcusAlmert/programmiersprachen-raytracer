@@ -118,13 +118,21 @@ Scene read_sdf(std::string const &path) {
                 float y;
                 float z;
                 float fov;
+                line_string_stream >> fov;
                 line_string_stream >> x;
                 line_string_stream >> y;
                 line_string_stream >> z;
-                line_string_stream >> fov;
                 scene1.cam.name = c_name;
                 scene1.cam.fov = fov;
                 scene1.cam.position = {x, y, z};
+                line_string_stream >> x;
+                line_string_stream >> y;
+                line_string_stream >> z;
+                scene1.cam.direction = {x, y, z};
+                line_string_stream >> x;
+                line_string_stream >> y;
+                line_string_stream >> z;
+                scene1.cam.upVector = {x, y, z};
             } else if (identifier == "ambient") {
                 float amb;
                 line_string_stream >> amb;
