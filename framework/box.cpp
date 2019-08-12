@@ -63,7 +63,8 @@ Hitpoint Box::intersect(Ray const &ray) const {
 
     // erst check ob direction parallel zur Ebene der Seite (dann ignoriert)
     // dann Berechnung des Schnittpunktes und Test ob Lage in Seiten der Box
-    // am Ende push in vector, dieser sortiert und kleinster Wert ist gesuchte Distanz
+    // t und die jeweilige normale werden in vectoren gespeichert
+    // kleinste distanz am ende rausgesucht
     glm::vec3 hinten{-1, 0, 0};
     if (glm::dot(hinten, ray.direction) != 0) {
         auto t = glm::dot(normdirection, hinten);
