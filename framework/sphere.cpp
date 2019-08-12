@@ -55,7 +55,8 @@ Hitpoint Sphere::intersect(Ray const &ray) const {
         float hitx = ray.origin.x + distance * ray.direction.x;
         float hity = ray.origin.y + distance * ray.direction.y;
         float hitz = ray.origin.z + distance * ray.direction.z;
-        hitp = {true, distance, name, material, ray_.direction, {hitx, hity, hitz}};    // material not working
+        glm::vec3 normal = glm::normalize(glm::vec3{hitx, hity, hitz} - middlePoint);
+        hitp = {true, distance, name, material, ray_.direction, {hitx, hity, hitz}, normal};
     }
     return hitp;
 }
