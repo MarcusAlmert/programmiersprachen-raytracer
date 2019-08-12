@@ -20,10 +20,29 @@ struct Color {
         return os;
     }
 
+    friend void boundary_check(Color & color){
+        if (color.r > 1){
+            color.r = 1;
+        } else if (color.r < 0){
+            color.r = 0;
+        }
+        if (color.g > 1){
+            color.g = 1;
+        } else if (color.g < 0){
+            color.g = 0;
+        }
+        if (color.b > 1){
+            color.b = 1;
+        } else if (color.b < 0){
+            color.b = 0;
+        }
+    }
+
     Color &operator+=(Color const &other) {
         r += other.r;
         g += other.g;
         b += other.b;
+        boundary_check(*this);
         return *this;
     }
 
@@ -31,6 +50,7 @@ struct Color {
         r -= other.r;
         g -= other.g;
         b -= other.b;
+        boundary_check(*this);
         return *this;
     }
 
@@ -38,6 +58,7 @@ struct Color {
         r *= other.r;
         g *= other.g;
         b *= other.b;
+        boundary_check(*this);
         return *this;
     }
 
