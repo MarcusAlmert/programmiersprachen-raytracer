@@ -85,6 +85,7 @@ void Renderer::write(Pixel const &p) {
 // Farbwertberechnung, TODO ! Weiter Funktionen für Reflexionen etc. notwendig
 Color Renderer::calc_color(std::shared_ptr<Material> material, Scene const& scene){
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
+
     return (raytracer_value + material->kd + calc_ambient(material, scene));
 }
 
@@ -95,19 +96,35 @@ Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const& sc
     return (ambient*=material->ka);
 }
 
-Color Renderer::calc_diffuse(std::shared_ptr<Material> material, Scene const &scene) {
+Color Renderer::calc_diffuse(std::shared_ptr<Shape> shape, glm::vec3 const &cut,
+                             glm::vec3 const &normal, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights) {
-        bool light_visible = true;
-        glm::vec3 cut;
-        glm::vec3 normale;
-        glm::vec3 light_cut = glm::normalize(light.position_ - cut);
+        bool light_not_visible = false;
+        glm::vec3 cut_point;
+        glm::vec3 new_normal;
+        glm::vec3 vec_light_cut = glm::normalize(light.position_ - cut);
 
-        //TODO überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
-        // (verdecken licht)
-        // und beide fälle berechnen (kommt noch)
+        //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
+        for (auto shapes : scene.shape_vector) {
+            light_not_visible = shapes->intersect(Ray{cut + normal, vec_light_cut}).hit;
+            if (light_not_visible) {
+                break;  // if there is atleast one shape in between light and current shape light gets blocked
+            }
+        }
+        // if there is no light blocking shape
+        if (light_not_visible == false) {
+            float o = glm::dot(vec_light_cut, glm::normalize(normal));
+            Color i_p = light.color_ * Color{light.brightness_, light.brightness_, light.brightness_};
+            Color k_d = shape->material->kd;
+            lights_color.push_back(k_d * i_p * Color{o, o, o});
+        }
     }
+    for (auto color: lights_color) {
+        final += color;
+    }
+    return final;
 }
 
 // Diese Funktion macht am Ende das tone mapping
