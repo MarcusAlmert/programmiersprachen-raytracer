@@ -111,6 +111,7 @@ Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
         for (auto shape : scene.shape_vector) {
             light_not_visible = shape->intersect(Ray{hitpoint.hitpoint + 0.2f * hitpoint.normal, vec_light_cut}).hit;
             if (light_not_visible) {
+                light_not_visible = true;
                 break;  // if there is atleast one shape in between light and current shape light gets blocked
             }
         }
