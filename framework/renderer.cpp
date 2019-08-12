@@ -46,7 +46,7 @@ void Renderer::render(Scene const& scene) {
 
             // Entweder es wurde ein Objekt getroffen oder der Pixel bekommt die Hintergrundfarbe zugewiesen
             if (first_hit.hit){
-                Color raytracer_color = calc_color(first_hit.material, scene);
+                Color raytracer_color = calc_color(first_hit, scene);
                 tone_mapping(raytracer_color);
                 p.color = raytracer_color;
                 //p.color = Color{1.0f, 0.0f, 0.0f};
@@ -83,10 +83,10 @@ void Renderer::write(Pixel const &p) {
 }
 
 // Farbwertberechnung, TODO ! Weiter Funktionen für Reflexionen etc. notwendig
-Color Renderer::calc_color(std::shared_ptr<Material> material, Scene const& scene){
+Color Renderer::calc_color(Hitpoint hitpoint, Scene const &scene) {
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
 
-    return (raytracer_value + material->kd + calc_ambient(material, scene));
+    return (raytracer_value + hitpoint.material->kd + calc_ambient(hitpoint.material, scene));
 }
 
 
@@ -96,28 +96,27 @@ Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const& sc
     return (ambient*=material->ka);
 }
 
-Color Renderer::calc_diffuse(std::shared_ptr<Shape> shape, glm::vec3 const &cut,
-                             glm::vec3 const &normal, Scene const &scene) {
+Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights) {
         bool light_not_visible = false;
         glm::vec3 cut_point;
         glm::vec3 new_normal;
-        glm::vec3 vec_light_cut = glm::normalize(light.position_ - cut);
+        glm::vec3 vec_light_cut = glm::normalize(light.position_ - hitpoint.hitpoint);
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
         for (auto shapes : scene.shape_vector) {
-            light_not_visible = shapes->intersect(Ray{cut + normal, vec_light_cut}).hit;
+            light_not_visible = shapes->intersect(Ray{hitpoint.hitpoint + hitpoint.normal, vec_light_cut}).hit;
             if (light_not_visible) {
                 break;  // if there is atleast one shape in between light and current shape light gets blocked
             }
         }
         // if there is no light blocking shape
         if (light_not_visible == false) {
-            float o = glm::dot(vec_light_cut, glm::normalize(normal));
+            float o = glm::dot(vec_light_cut, glm::normalize(hitpoint.normal));
             Color i_p = light.color_ * Color{light.brightness_, light.brightness_, light.brightness_};
-            Color k_d = shape->material->kd;
+            Color k_d = hitpoint.material->kd;
             lights_color.push_back(k_d * i_p * Color{o, o, o});
         }
     }

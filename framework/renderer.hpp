@@ -39,11 +39,10 @@ private:
     std::string filename_;
     PpmWriter ppm_;
 
-    Color calc_color(std::shared_ptr<Material> material, Scene const& scene);
+    Color calc_color(Hitpoint hitpoint, Scene const &scene);
     Color calc_ambient(std::shared_ptr<Material> material, Scene const& scene);
 
-    Color calc_diffuse(std::shared_ptr<Shape> shape, glm::vec3 const &cut,
-                       glm::vec3 const &normal, Scene const &scene);
+    Color calc_diffuse(Hitpoint hitpoint, Scene const &scene);
 
     Color calc_reflect(std::shared_ptr<Material> material, Scene const &scene);
     void tone_mapping(Color & color);
