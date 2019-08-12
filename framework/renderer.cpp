@@ -85,8 +85,9 @@ void Renderer::write(Pixel const &p) {
 // Farbwertberechnung, TODO ! Weiter Funktionen für Reflexionen etc. notwendig
 Color Renderer::calc_color(Hitpoint hitpoint, Scene const &scene) {
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
-
-    return (raytracer_value + hitpoint.material->kd + calc_ambient(hitpoint.material, scene));
+    Color ambient = calc_ambient(hitpoint.material, scene);
+    Color diffuse = calc_diffuse(hitpoint, scene);
+    return (raytracer_value + ambient + diffuse);
 }
 
 
@@ -96,6 +97,7 @@ Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const& sc
     return (ambient*=material->ka);
 }
 
+// TODO fix graphical bug
 Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
@@ -106,8 +108,8 @@ Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
         glm::vec3 vec_light_cut = glm::normalize(light.position_ - hitpoint.hitpoint);
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
-        for (auto shapes : scene.shape_vector) {
-            light_not_visible = shapes->intersect(Ray{hitpoint.hitpoint + hitpoint.normal, vec_light_cut}).hit;
+        for (auto shape : scene.shape_vector) {
+            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint + 0.2f * hitpoint.normal, vec_light_cut}).hit;
             if (light_not_visible) {
                 break;  // if there is atleast one shape in between light and current shape light gets blocked
             }
