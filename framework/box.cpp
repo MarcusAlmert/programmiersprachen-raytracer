@@ -59,6 +59,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
 
     //das war glaube was adrian meint ist egal
     std::vector<float> inBox;
+    std::vector<glm::vec3> normals;
 
     // erst check ob direction parallel zur Ebene der Seite (dann ignoriert)
     // dann Berechnung des Schnittpunktes und Test ob Lage in Seiten der Box
@@ -70,6 +71,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin + normdirection * t_hinten;
         if (cutP.y >= min.y && cutP.y <= max.y && cutP.z >= min.z && cutP.z <= max.z) {
             inBox.push_back(t_hinten);
+            normals.push_back(glm::vec3{-1, 0, 0});
         }
     }
 
@@ -79,6 +81,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin + normdirection * t_rechts;
         if (cutP.y >= min.y && cutP.y <= max.y && cutP.x >= min.x && cutP.x <= max.x) {
             inBox.push_back(t_rechts);
+            normals.push_back(glm::vec3{0, 0, -1});
         }
     }
 
@@ -88,6 +91,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin + normdirection * t_unten;
         if (cutP.z >= min.z && cutP.z <= max.z && cutP.x >= min.x && cutP.x <= max.x) {
             inBox.push_back(t_unten);
+            normals.push_back(glm::vec3{0, -1, 0});
         }
     }
 
@@ -97,6 +101,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin + normdirection * t_vorne;
         if (cutP.y >= min.y && cutP.y <= max.y && cutP.z >= min.z && cutP.z <= max.z) {
             inBox.push_back(t_vorne);
+            normals.push_back({1, 0, 0});
         }
     }
 
@@ -106,6 +111,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin + normdirection * t_links;
         if (cutP.y >= min.y && cutP.y <= max.y && cutP.x >= min.x && cutP.x <= max.x) {
             inBox.push_back(t_links);
+            normals.push_back(glm::vec3{0, 0, 1});
         }
 
     }
@@ -116,6 +122,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin + normdirection * t_oben;
         if (cutP.z >= min.z && cutP.z <= max.z && cutP.x >= min.x && cutP.x <= max.x) {
             inBox.push_back(t_oben);
+            normals.push_back(glm::vec3{0, 1, 0});
         }
     }
     if (inBox.empty()) {
@@ -123,6 +130,13 @@ Hitpoint Box::intersect(Ray const &ray) const {
     } else {
         std::sort(inBox.begin(), inBox.end());
         float minimal = inBox[0];
+        glm::vec3 minimal_normal = normals[0];
+        for (int i = 1; i < inBox.size(); ++i){
+            if (inBox[i] < minimal){
+                minimal = inBox[i];
+                minimal_normal = normals[i];
+            }
+        }
         hit.material = material;
         hit.name = name;
         hit.distance = minimal;
@@ -132,6 +146,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         float hity = ray.origin.y + minimal * normdirection.y;
         float hitz = ray.origin.z + minimal * normdirection.z;
         hit.hitpoint = {hitx, hity, hitz};
+        hit.normal = minimal_normal;
         return hit;
     }
 
