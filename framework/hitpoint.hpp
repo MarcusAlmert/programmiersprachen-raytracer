@@ -16,18 +16,19 @@ struct Hitpoint {
     glm::vec3 normal{0, 0, 0};
 
     friend std::ostream& operator<<(std::ostream & os, Hitpoint const& hitpoint){
-        os << "name: " << hitpoint.name << "\nobject type: Hitpoint\n" << 
-        "hit: " << hitpoint.hit << std::endl;
+        os << "name:        " << hitpoint.name << "\nobject type: Hitpoint\n" << 
+        "hit:         " << hitpoint.hit << std::endl;
         if (hitpoint.hit == false){
+            os << "--------------------" << std::endl;
             return os;
         } else {
-            os << "distance: " << hitpoint.distance << "\ndirection:   x[" << 
+            os << "distance:    " << hitpoint.distance << "\ndirection:   x[" << 
             hitpoint.direction.x << "] y[" << hitpoint.direction.y <<"] z[" << 
-            hitpoint.direction.z << "]\nhitpoint: x[" << hitpoint.hitpoint.x <<
+            hitpoint.direction.z << "]\nhitpoint:    x[" << hitpoint.hitpoint.x <<
             "] y[" << hitpoint.hitpoint.y << "] z[" << hitpoint.hitpoint.z << 
-            "]\nnormal: x[" << hitpoint.normal.x << "] y[" << hitpoint.normal.y <<
-            "] z[" << hitpoint.normal.z << "]\nmaterial: " << hitpoint.material->name <<
-            std::endl;
+            "]\nnormal:      x[" << hitpoint.normal.x << "] y[" << hitpoint.normal.y <<
+            "] z[" << hitpoint.normal.z << "]\nmaterial:    " << hitpoint.material->name <<
+            "\n--------------------" << std::endl;
             return os;  
         }
 

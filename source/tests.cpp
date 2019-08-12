@@ -213,6 +213,15 @@ TEST_CASE("struct Light, print", "[Light]"){
     CHECK(true);
 }
 
+TEST_CASE("struct Hitpoint, print", "[Hitpoint]"){
+    Hitpoint h1;
+    std::shared_ptr<Material> mat = std::make_shared<Material>(Material{});
+
+    Hitpoint h2{true, 550.0f, "Peter", mat, glm::vec3{1, 1, 1}, glm::vec3{1, 1, 1}, glm::vec3{1, 1, 1}};
+    std::cout << h1 << h2 << std::endl;
+    CHECK(true);
+}
+
 /*TEST_CASE("Simple_renderer Test"){
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
     Renderer test_renderer(600,600,"./test_ppm_example");
