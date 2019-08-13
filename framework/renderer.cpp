@@ -122,9 +122,9 @@ Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
         // if there is no light blocking shape
         if (light_not_visible == false) {
             float o = glm::dot(vec_light_cut, glm::normalize(hitpoint.normal));
-            Color i_p = light.color_ * Color{light.brightness_, light.brightness_, light.brightness_};
+            Color i_p = light.color_ * light.brightness_;
             Color k_d = hitpoint.material->kd;
-            lights_color.push_back(k_d * i_p * Color{o, o, o});
+            lights_color.push_back(k_d * i_p * o);
         }
     }
     for (auto color: lights_color) {
@@ -157,9 +157,9 @@ Color Renderer::calc_specular(Hitpoint hitpoint, Scene const &scene) {
             float p = abs(glm::dot(r, camera_hitpoint));
             float cos = pow(p, hitpoint.material->m);
             float m_pi = (hitpoint.material->m + 2) / (2 * M_PI);
-            Color i_p = light.color_ * Color{light.brightness_, light.brightness_, light.brightness_};
+            Color i_p = light.color_ * light.brightness_;
             Color k_s = hitpoint.material->ks;
-            lights_color.push_back(k_s * Color{m_pi, m_pi, m_pi} * Color{cos, cos, cos} * i_p);
+            lights_color.push_back(k_s * m_pi * cos * i_p);
         }
     }
     for (auto color: lights_color) {
