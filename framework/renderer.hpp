@@ -39,12 +39,14 @@ private:
     std::string filename_;
     PpmWriter ppm_;
 
-    Color calc_color(Hitpoint hitpoint, Scene const &scene);
+    Color calc_color(Hitpoint hitpoint, Scene const &scene, unsigned int reflaction_steps);
 
     Color calc_ambient(std::shared_ptr<Material> material, Scene const& scene);
     Color calc_diffuse(Hitpoint hitpoint, Scene const &scene);
-
     Color calc_specular(Hitpoint hitpoint, Scene const &scene);
+    Color calc_reflection(Hitpoint const& hitpoint, Scene const& scene, unsigned int recursive_boundary);
+
+    Hitpoint fire_ray(Scene const& scene, Ray const& ray);
 
     void tone_mapping(Color & color);
 };

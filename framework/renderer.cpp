@@ -31,22 +31,14 @@ void Renderer::render(Scene const &scene) {
             glm::vec3 pos = scene.cam.position;
             glm::vec3 direction = glm::normalize(scene.cam.direction);
 
-            direction = direction + glm::vec3{x - (0.5f * width_), y - (0.5f * height_), -d};
-
-            Hitpoint first_hit;
-            first_hit.distance = FLT_MAX;
+            direction = direction + glm::vec3{x - (0.5f * width_), y - (0.5f * height_), pos.z - d};
 
             // in dieser Schleife wird der Schnittpunkt mit dem ersten Objekt den der Strahl trifft berechnet
-            for (int i = 0; i < scene.shape_vector.size(); ++i) {
-                Hitpoint hit = scene.shape_vector[i]->intersect(Ray{pos, glm::normalize(direction)});
-                if (hit.hit && hit.distance < first_hit.distance) {
-                    first_hit = hit;
-                }
-            }
+            Hitpoint first_hit = fire_ray(scene, Ray{pos, glm::normalize(direction)});
 
             // Entweder es wurde ein Objekt getroffen oder der Pixel bekommt die Hintergrundfarbe zugewiesen
             if (first_hit.hit) {
-                Color raytracer_color = calc_color(first_hit, scene);
+                Color raytracer_color = calc_color(first_hit, scene, 3);
                 tone_mapping(raytracer_color);
                 p.color = raytracer_color;
                 //p.color = Color{1.0f, 0.0f, 0.0f};
@@ -83,7 +75,7 @@ void Renderer::write(Pixel const &p) {
 }
 
 // Farbwertberechnung, TODO ! Weiter Funktionen für Reflexionen etc. notwendig
-Color Renderer::calc_color(Hitpoint hitpoint, Scene const &scene) {
+Color Renderer::calc_color(Hitpoint hitpoint, Scene const &scene, unsigned int reflaction_steps) {
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
     Color ambient = calc_ambient(hitpoint.material, scene);
     Color diffuse = calc_diffuse(hitpoint, scene);
@@ -166,6 +158,39 @@ Color Renderer::calc_specular(Hitpoint hitpoint, Scene const &scene) {
         final += color;
     }
     return final;
+}
+
+// Berechnung der Spiegelung noch nicht ganz ausgereift.
+Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, unsigned int recursive_boundary){
+    Color final{0, 0, 0};
+    glm::vec3 incoming_direction = glm::normalize(hitpoint.direction);
+    glm::vec3 normal = glm::normalize(hitpoint.normal);
+    glm::vec3 reflaction_ray_direction = incoming_direction - 2 * (glm::dot(normal, incoming_direction)) * normal;
+    Ray reflaction_ray{hitpoint.hitpoint, glm::normalize(reflaction_ray_direction)};
+    Hitpoint next_hit = fire_ray(scene, reflaction_ray);
+
+    if (hitpoint.hit == false){
+        return Color{0, 0, 0};
+    } else {
+        if (recursive_boundary > 0){
+            Color reflected_color = calc_color(next_hit, scene, recursive_boundary - 1) * 0.8;
+            return reflected_color;
+        } else {
+            return Color{0, 0, 0};
+        }
+    }
+}
+
+Hitpoint Renderer::fire_ray(Scene const& scene, Ray const& ray){
+    Hitpoint first_hit;
+    first_hit.distance = FLT_MAX;
+    for (int i = 0; i < scene.shape_vector.size(); ++i) {
+        Hitpoint hit = scene.shape_vector[i]->intersect(ray);
+        if (hit.hit && hit.distance < first_hit.distance) {
+            first_hit = hit;
+        }
+    }
+    return first_hit;
 }
 
 // Diese Funktion macht am Ende das tone mapping

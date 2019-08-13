@@ -5,6 +5,7 @@
 #include <glm/mat4x4.hpp>
 #include <string>
 struct Camera{
+
     std::string name = "NoName";
     glm::vec3 direction = {0,0,-1};
     glm::vec3 position = {0,0,0};

@@ -94,6 +94,12 @@ struct Color {
         return tmp;
     }
 
+    friend Color operator*(float a, Color const& color){
+        auto tmp(color);
+        tmp *= a;
+        return tmp;
+    }
+
     float r;
     float g;
     float b;
