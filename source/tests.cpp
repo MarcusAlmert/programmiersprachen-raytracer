@@ -199,6 +199,12 @@ TEST_CASE("read sdf", "SDF") {
     CHECK(scene1.cam.position.y == 0);
     CHECK(scene1.cam.position.z == 0);
     CHECK(scene1.ambient == 0.112f);
+    CHECK(scene1.cam.direction.x == 0);
+    CHECK(scene1.cam.direction.y == 0);
+    CHECK(scene1.cam.direction.z == -1);
+    CHECK(scene1.cam.upVector.x == 0);
+    CHECK(scene1.cam.upVector.y == 1);
+    CHECK(scene1.cam.upVector.z == 0);
 }
 
 TEST_CASE("find()", "vec,map,set") {
