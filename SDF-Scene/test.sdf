@@ -2,11 +2,12 @@
 define material red 1 0 0 1 0 0 1 0 0 100
 define material blue 0 0 1 0 0 1 0 0 1 10000
 # geometry
-define shape box rbottom 100 10 -600 300 200 -100 red
-define shape sphere bsphere 10 0 -200 50 blue
+define shape box rbottom 100 50 -800 300 200 -100 red
+define shape sphere bsphere 0 0 -200 50 blue
 # lights
 define light sun    500 800 0 1.0 1.0 1.0 10
 define light spot1  100 0 0 0.8 0.8 0.8 10
+define light spot2  1000 -10 0 0.8 0.8 0.8 10
 ambient 0.1 0.1 0.1
 # camera
 define camera eye 60 0 0 0 0 0 -1 0 1 0
