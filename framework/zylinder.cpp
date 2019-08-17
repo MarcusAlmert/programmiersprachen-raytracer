@@ -34,7 +34,7 @@ float Zylinder::volume() const {
 std::ostream &Zylinder::print(std::ostream &os) const {
     if (material_ != nullptr) {
         return os << "Name: " << name_ << " (Sphere)" << std::endl
-                  << "Material: " << "[" << material_->name << "]" << std::endl
+                  << "Material: " << "[" << material_->name_ << "]" << std::endl
                   << "Position: " << "[" << pos_.x << ", " << pos_.y << ", " << pos_.z << "]" << std::endl
                   << "Radius: " << radius_ << std::endl << "--------------------" << std::endl
                   << "Height " << height_ << std::endl;

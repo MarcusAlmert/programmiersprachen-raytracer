@@ -47,7 +47,7 @@ Scene read_sdf(std::string const &path) {
                 std::shared_ptr<Material> mat_ = std::make_shared<Material>(Material{mat_name, {ka_r, ka_g, ka_b},
                                                                                      {kd_r, kd_g, kd_b},
                                                                                      {ks_r, ks_g, ks_b}, m});
-                scene1.mat_vector.push_back(mat_);
+                scene1.mat_vector_.push_back(mat_);
 
             } else if ("shape" == identifier) {
                 std::string type;
@@ -65,10 +65,10 @@ Scene read_sdf(std::string const &path) {
                     line_string_stream >> centerz;
                     line_string_stream >> radius;
                     line_string_stream >> shape_mat_name;
-                    auto matptr = find(scene1.mat_vector, shape_mat_name);
+                    auto matptr = find(scene1.mat_vector_, shape_mat_name);
                     std::shared_ptr<Shape> sp = std::make_shared<Sphere>(
                             Sphere({centerx, centery, centerz}, radius, shape_name, matptr));
-                    scene1.shape_vector.push_back(sp);
+                    scene1.shape_vector_.push_back(sp);
 
                 } else if (type == "box") {
                     std::string shape_name;
@@ -87,10 +87,10 @@ Scene read_sdf(std::string const &path) {
                     line_string_stream >> p2y;
                     line_string_stream >> p2z;
                     line_string_stream >> shape_mat_name;
-                    auto matptr = find(scene1.mat_vector, shape_mat_name);
+                    auto matptr = find(scene1.mat_vector_, shape_mat_name);
                     std::shared_ptr<Shape> box = std::make_shared<Box>(
                             Box({p1x, p1y, p1z}, {p2x, p2y, p2z}, shape_name, matptr));
-                    scene1.shape_vector.push_back(box);
+                    scene1.shape_vector_.push_back(box);
                 }
             } else if (identifier == "light") {
                 std::string l_name;
@@ -110,7 +110,7 @@ Scene read_sdf(std::string const &path) {
                 line_string_stream >> b;
                 line_string_stream >> brightness;
                 Light light{l_name, {px, py, pz}, {r, g, b}, brightness};
-                scene1.lights.push_back(light);
+                scene1.lights_.push_back(light);
             } else if (identifier == "camera") {
                 std::string c_name;
                 line_string_stream >> c_name;
@@ -122,21 +122,21 @@ Scene read_sdf(std::string const &path) {
                 line_string_stream >> x;
                 line_string_stream >> y;
                 line_string_stream >> z;
-                scene1.cam.name = c_name;
-                scene1.cam.fov = fov;
-                scene1.cam.position = {x, y, z};
+                scene1.camera_.name = c_name;
+                scene1.camera_.fov = fov;
+                scene1.camera_.position = {x, y, z};
                 line_string_stream >> x;
                 line_string_stream >> y;
                 line_string_stream >> z;
-                scene1.cam.direction = {x, y, z};
+                scene1.camera_.direction = {x, y, z};
                 line_string_stream >> x;
                 line_string_stream >> y;
                 line_string_stream >> z;
-                scene1.cam.upVector = {x, y, z};
+                scene1.camera_.upVector = {x, y, z};
             } else if (identifier == "ambient") {
                 float amb;
                 line_string_stream >> amb;
-                scene1.ambient = amb;
+                scene1.ambient_ = amb;
             }
         }
     }

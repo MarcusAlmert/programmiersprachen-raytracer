@@ -6,11 +6,11 @@
 #include <memory>
 
 struct Material {
-    std::string name = "No_name";
-    Color ka{1, 1, 1};
-    Color kd{1, 1, 1};
-    Color ks{1, 1, 1};
-    float m = 0.0f;
+    std::string name_ = "No_name";
+    Color ka_{1, 1, 1};
+    Color kd_{1, 1, 1};
+    Color ks_{1, 1, 1};
+    float m_ = 0.0f;
 };
 
 std::ostream &operator<<(std::ostream &os, Material const &mat);

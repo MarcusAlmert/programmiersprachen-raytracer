@@ -12,11 +12,11 @@
 
 
 struct Scene {
-    std::vector<std::shared_ptr<Material>> mat_vector;
-    std::vector<std::shared_ptr<Shape>> shape_vector;
-    Camera cam;
-    std::vector<Light> lights;
-    float ambient;
+    std::vector<std::shared_ptr<Material>> mat_vector_;
+    std::vector<std::shared_ptr<Shape>> shape_vector_;
+    Camera camera_;
+    std::vector<Light> lights_;
+    float ambient_;
 };
 
 

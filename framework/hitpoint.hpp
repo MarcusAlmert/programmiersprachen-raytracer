@@ -7,28 +7,28 @@
 
 struct Hitpoint {
 
-    bool hit = false;
-    float distance = MAXFLOAT;
-    std::string name = "miss";
-    std::shared_ptr<Material> material = nullptr;
-    glm::vec3 direction;
-    glm::vec3 hitpoint{MAXFLOAT, MAXFLOAT, MAXFLOAT};
-    glm::vec3 normal{0, 0, 0};
+    bool hit_ = false;
+    float distance_ = MAXFLOAT;
+    std::string name_ = "miss";
+    std::shared_ptr<Material> material_ = nullptr;
+    glm::vec3 direction_;
+    glm::vec3 hitpoint_{MAXFLOAT, MAXFLOAT, MAXFLOAT};
+    glm::vec3 normal_{0, 0, 0};
 
     friend std::ostream& operator<<(std::ostream & os, Hitpoint const& hitpoint){
-        os << "name:        " << hitpoint.name << "\nobject type: Hitpoint\n" << 
-        "hit:         " << hitpoint.hit << std::endl;
-        if (hitpoint.hit == false){
+        os << "name:        " << hitpoint.name_ << "\nobject type: Hitpoint\n" <<
+           "hit:         " << hitpoint.hit_ << std::endl;
+        if (hitpoint.hit_ == false) {
             os << "--------------------" << std::endl;
             return os;
         } else {
-            os << "distance:    " << hitpoint.distance << "\ndirection:   x[" << 
-            hitpoint.direction.x << "] y[" << hitpoint.direction.y <<"] z[" << 
-            hitpoint.direction.z << "]\nhitpoint:    x[" << hitpoint.hitpoint.x <<
-            "] y[" << hitpoint.hitpoint.y << "] z[" << hitpoint.hitpoint.z << 
-            "]\nnormal:      x[" << hitpoint.normal.x << "] y[" << hitpoint.normal.y <<
-            "] z[" << hitpoint.normal.z << "]\nmaterial:    " << hitpoint.material->name <<
-            "\n--------------------" << std::endl;
+            os << "distance:    " << hitpoint.distance_ << "\ndirection:   x[" <<
+               hitpoint.direction_.x << "] y[" << hitpoint.direction_.y << "] z[" <<
+               hitpoint.direction_.z << "]\nhitpoint:    x[" << hitpoint.hitpoint_.x <<
+               "] y[" << hitpoint.hitpoint_.y << "] z[" << hitpoint.hitpoint_.z <<
+               "]\nnormal:      x[" << hitpoint.normal_.x << "] y[" << hitpoint.normal_.y <<
+               "] z[" << hitpoint.normal_.z << "]\nmaterial:    " << hitpoint.material_->name_ <<
+               "\n--------------------" << std::endl;
             return os;  
         }
 

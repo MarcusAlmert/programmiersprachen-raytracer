@@ -128,10 +128,10 @@ TEST_CASE ("intersect_ray_sphere", "[intersect]") {
     Hitpoint hit = s1.intersect(ray);
     Hitpoint missed = s2.intersect(raymissed);
 
-    CHECK(hit.hit);
-    CHECK(hit.name == "No_name");
-    CHECK(!missed.hit);
-    CHECK(missed.name == "miss");
+    CHECK(hit.hit_);
+    CHECK(hit.name_ == "No_name");
+    CHECK(!missed.hit_);
+    CHECK(missed.name_ == "miss");
 }
 
 TEST_CASE("Aufgabe 5.8", "Shape") {
@@ -151,66 +151,66 @@ TEST_CASE("Aufgabe 6.3 intersect ray-box", "Box") {
     Ray orig{{20, 5, 5},
              {-1, 0, 0}};
     Hitpoint hitp = b1.intersect(orig);
-    CHECK(hitp.hit);
-    CHECK(hitp.hitpoint.x == 10);
-    CHECK(hitp.hitpoint.y == 5);
-    CHECK(hitp.hitpoint.z == 5);
+    CHECK(hitp.hit_);
+    CHECK(hitp.hitpoint_.x == 10);
+    CHECK(hitp.hitpoint_.y == 5);
+    CHECK(hitp.hitpoint_.z == 5);
 }
 
 TEST_CASE("More intersect tests for boxes", "[intersect,Box]"){
     Box b1{glm::vec3{0, 0, 0}, glm::vec3{10, 10, 10}};
     Ray r1{glm::vec3{5, 20, 5}, glm::vec3{0, -1, 0}};
     Hitpoint hitp = b1.intersect(r1);
-    CHECK(hitp.hit);
-    CHECK(hitp.hitpoint.x == 5);
-    CHECK(hitp.hitpoint.y == 10);
-    CHECK(hitp.hitpoint.z == 5);
+    CHECK(hitp.hit_);
+    CHECK(hitp.hitpoint_.x == 5);
+    CHECK(hitp.hitpoint_.y == 10);
+    CHECK(hitp.hitpoint_.z == 5);
     Ray r2{glm::vec3{30, 30, 30}, glm::vec3{-1, -1, -1}};
     Hitpoint hitp1 = b1.intersect(r2);
-    CHECK(hitp1.hit);
-    CHECK(hitp1.hitpoint.x == 10);
-    CHECK(hitp1.hitpoint.y == 10);
-    CHECK(hitp1.hitpoint.z == 10);
+    CHECK(hitp1.hit_);
+    CHECK(hitp1.hitpoint_.x == 10);
+    CHECK(hitp1.hitpoint_.y == 10);
+    CHECK(hitp1.hitpoint_.z == 10);
 }
 
 TEST_CASE("read sdf", "SDF") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
-    auto vec = scene1.mat_vector;
-    CHECK(scene1.mat_vector[0]->name == "red");
-    CHECK(scene1.mat_vector[1]->name == "green");
-    CHECK(scene1.mat_vector[2]->name == "blue");
-    CHECK(scene1.shape_vector[0]->name_ == "sphere1");
-    CHECK(scene1.shape_vector[0]->material_->name == "red");
-    CHECK(scene1.shape_vector[1]->material_->name == "blue");
-    std::cout << *scene1.shape_vector[0];
-    std::cout << *scene1.shape_vector[1];
-    CHECK(scene1.shape_vector[1]->name_ == "box1");
-    CHECK(scene1.lights[0].name_ == "licht");
-    CHECK(scene1.lights[0].brightness_ == 50);
-    CHECK(scene1.lights[0].color_.r == 0.5f);
-    CHECK(scene1.lights[0].color_.g == 0.1f);
-    CHECK(scene1.lights[0].color_.b == 0.3f);
-    CHECK(scene1.lights[0].position_.x == 10);
-    CHECK(scene1.lights[0].position_.y == 10);
-    CHECK(scene1.lights[0].position_.z == 5);
-    CHECK(scene1.cam.name == "eye");
-    CHECK(scene1.cam.fov == 60);
-    CHECK(scene1.cam.position.x == 0);
-    CHECK(scene1.cam.position.y == 0);
-    CHECK(scene1.cam.position.z == 0);
-    CHECK(scene1.ambient == 0.112f);
-    CHECK(scene1.cam.direction.x == 0);
-    CHECK(scene1.cam.direction.y == 0);
-    CHECK(scene1.cam.direction.z == -1);
-    CHECK(scene1.cam.upVector.x == 0);
-    CHECK(scene1.cam.upVector.y == 1);
-    CHECK(scene1.cam.upVector.z == 0);
+    auto vec = scene1.mat_vector_;
+    CHECK(scene1.mat_vector_[0]->name_ == "red");
+    CHECK(scene1.mat_vector_[1]->name_ == "green");
+    CHECK(scene1.mat_vector_[2]->name_ == "blue");
+    CHECK(scene1.shape_vector_[0]->name_ == "sphere1");
+    CHECK(scene1.shape_vector_[0]->material_->name_ == "red");
+    CHECK(scene1.shape_vector_[1]->material_->name_ == "blue");
+    std::cout << *scene1.shape_vector_[0];
+    std::cout << *scene1.shape_vector_[1];
+    CHECK(scene1.shape_vector_[1]->name_ == "box1");
+    CHECK(scene1.lights_[0].name_ == "licht");
+    CHECK(scene1.lights_[0].brightness_ == 50);
+    CHECK(scene1.lights_[0].color_.r == 0.5f);
+    CHECK(scene1.lights_[0].color_.g == 0.1f);
+    CHECK(scene1.lights_[0].color_.b == 0.3f);
+    CHECK(scene1.lights_[0].position_.x == 10);
+    CHECK(scene1.lights_[0].position_.y == 10);
+    CHECK(scene1.lights_[0].position_.z == 5);
+    CHECK(scene1.camera_.name == "eye");
+    CHECK(scene1.camera_.fov == 60);
+    CHECK(scene1.camera_.position.x == 0);
+    CHECK(scene1.camera_.position.y == 0);
+    CHECK(scene1.camera_.position.z == 0);
+    CHECK(scene1.ambient_ == 0.112f);
+    CHECK(scene1.camera_.direction.x == 0);
+    CHECK(scene1.camera_.direction.y == 0);
+    CHECK(scene1.camera_.direction.z == -1);
+    CHECK(scene1.camera_.upVector.x == 0);
+    CHECK(scene1.camera_.upVector.y == 1);
+    CHECK(scene1.camera_.upVector.z == 0);
 }
 
 TEST_CASE("find()", "vec,map,set") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");
-    auto vec = scene1.mat_vector;
-    CHECK(find(vec, "red")->name == "red");
+    auto vec = scene1.mat_vector_;
+    CHECK(find(vec, "red")->name_ == "red");
 }
 
 TEST_CASE("struct Light, print", "[Light]"){
