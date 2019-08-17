@@ -29,7 +29,7 @@ struct Hitpoint {
                "]\nnormal:      x[" << hitpoint.normal_.x << "] y[" << hitpoint.normal_.y <<
                "] z[" << hitpoint.normal_.z << "]\nmaterial:    " << hitpoint.material_->name_ <<
                "\n--------------------" << std::endl;
-            return os;  
+            return os;
         }
 
     }

@@ -2,17 +2,13 @@
 // Created by marcus on 17.08.19.
 //
 
-#ifndef RAYTRACER_ZYLINDER_HPP
-#define RAYTRACER_ZYLINDER_HPP
+#ifndef RAYTRACER_CYLINDER_HPP
+#define RAYTRACER_CYLINDER_HPP
 
 #include "shape.hpp"
 #include <glm/vec3.hpp>
 
 class Zylinder : public Shape {
-private:
-    glm::vec3 pos_;
-    float radius_;
-    float height_;
 
 public:
     Zylinder();
@@ -31,7 +27,12 @@ public:
     virtual std::ostream &print(std::ostream &os) const override;
 
     virtual Hitpoint intersect(Ray const &ray) const override;
+
+private:
+    glm::vec3 pos_;
+    float radius_;
+    float height_;
 };
 
 
-#endif //RAYTRACER_ZYLINDER_HPP
+#endif //RAYTRACER_CYLINDER_HPP

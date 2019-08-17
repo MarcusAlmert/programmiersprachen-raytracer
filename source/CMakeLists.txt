@@ -24,9 +24,9 @@ add_executable(tests
         ../framework/material.cpp
         ../framework/read_sdf.cpp
         ../framework/scene.cpp
-        ../framework/zylinder.cpp
-        ../framework/zylinder.hpp
-        )
+        ../framework/cylinder.cpp
+        ../framework/cone.cpp
+        ../framework/triangle.cpp)
 
 
 target_link_libraries(tests
