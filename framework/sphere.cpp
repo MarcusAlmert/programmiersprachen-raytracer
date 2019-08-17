@@ -1,46 +1,48 @@
 #include <math.h>
 #include <iostream>
-#include <glm-0.9.5.3/glm/gtx/intersect.hpp>
+#include <glm/gtx/intersect.hpp>
 #include "sphere.hpp"
 
 
 Sphere::Sphere() {
-    radius = 0;
+    radius_ = 0;
 }
 
 Sphere::Sphere(glm::vec3 const &mid, float rad) {
-    middlePoint = mid;
+    middlePoint_ = mid;
     if (rad < 0) {
     }
-    radius = abs(rad);
+    radius_ = abs(rad);
 }
 
-Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name_, std::shared_ptr<Material> const mat_ptr) :
-        middlePoint{mid}, Shape{name_, mat_ptr}, radius{rad} {
+Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name, std::shared_ptr<Material> const mat_ptr) :
+        middlePoint_{mid}, Shape{name, mat_ptr}, radius_{rad} {
 }
 
 Sphere::~Sphere() {
 }
 
 float Sphere::area() const {
-    return (M_PI * 4 * pow(radius, 2));
+    return (M_PI * 4 * pow(radius_, 2));
 }
 
 float Sphere::volume() const {
-    return (4.0f / 3.0f) * M_PI * pow(radius, 3);
+    return (4.0f / 3.0f) * M_PI * pow(radius_, 3);
 }
 
 std::ostream &Sphere::print(std::ostream &os) const {
-    if (material != nullptr) {
-        return os << "Name: " << name << " (Sphere)" << std::endl
-                  << "Material: " << "[" << material->name  << "]" << std::endl
-                  << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << ", " << middlePoint.z << "]" << std::endl
-                  << "Radius: " << radius << std::endl << "--------------------" << std::endl;
+    if (material_ != nullptr) {
+        return os << "Name: " << name_ << " (Sphere)" << std::endl
+                  << "Material: " << "[" << material_->name << "]" << std::endl
+                  << "Middle Point: " << "[" << middlePoint_.x << ", " << middlePoint_.y << ", " << middlePoint_.z
+                  << "]" << std::endl
+                  << "Radius: " << radius_ << std::endl << "--------------------" << std::endl;
     } else {
-        return os << "Name: " << name << " (Sphere)" << std::endl
+        return os << "Name: " << name_ << " (Sphere)" << std::endl
                   << "Material: " << "[" << "No Material" << "]" << std::endl
-                  << "Middle Point: " << "[" << middlePoint.x << ", " << middlePoint.y << ", " << middlePoint.z << "]" << std::endl
-                  << "Radius: " << radius << std::endl << "--------------------" << std::endl;
+                  << "Middle Point: " << "[" << middlePoint_.x << ", " << middlePoint_.y << ", " << middlePoint_.z
+                  << "]" << std::endl
+                  << "Radius: " << radius_ << std::endl << "--------------------" << std::endl;
     }
 
 }
@@ -50,13 +52,13 @@ Hitpoint Sphere::intersect(Ray const &ray) const {
     Hitpoint hitp;
     float distance;
     bool hitted = glm::intersectRaySphere(ray_.origin,
-                                          glm::normalize(ray_.direction), middlePoint, pow(radius, 2), distance);
+                                          glm::normalize(ray_.direction), middlePoint_, pow(radius_, 2), distance);
     if (hitted) {
         float hitx = ray.origin.x + distance * ray.direction.x;
         float hity = ray.origin.y + distance * ray.direction.y;
         float hitz = ray.origin.z + distance * ray.direction.z;
-        glm::vec3 normal = glm::normalize(glm::vec3{hitx, hity, hitz} - middlePoint);
-        hitp = {true, distance, name, material, ray_.direction, {hitx, hity, hitz}, normal};
+        glm::vec3 normal = glm::normalize(glm::vec3{hitx, hity, hitz} - middlePoint_);
+        hitp = {true, distance, name_, material_, ray_.direction, {hitx, hity, hitz}, normal};
     }
     return hitp;
 }

@@ -23,7 +23,10 @@ add_executable(tests
         ../framework/shape.cpp
         ../framework/material.cpp
         ../framework/read_sdf.cpp
-        ../framework/scene.cpp)
+        ../framework/scene.cpp
+        ../framework/zylinder.cpp
+        ../framework/zylinder.hpp
+        )
 
 
 target_link_libraries(tests

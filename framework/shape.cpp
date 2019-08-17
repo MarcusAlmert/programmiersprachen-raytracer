@@ -4,11 +4,11 @@
 #include "shape.hpp"
 
 Shape::Shape() {
-    name = "No_name";
-    material = nullptr;
+    name_ = "No_name";
+    material_ = nullptr;
 }
 
-Shape::Shape(std::string const &name_, std::shared_ptr<Material> const mat_ptr) : name{name_}, material{mat_ptr} {
+Shape::Shape(std::string const &name_, std::shared_ptr<Material> const mat_ptr) : name_{name_}, material_{mat_ptr} {
 }
 
 Shape::~Shape() {
@@ -16,8 +16,8 @@ Shape::~Shape() {
 }
 
 std::ostream &Shape::print(std::ostream &os) const {
-    return os << name << " (Shape)" << std::endl
-              << "[" << *material << "]" << std::endl;
+    return os << name_ << " (Shape)" << std::endl
+              << "[" << *material_ << "]" << std::endl;
 }
 
 std::ostream &operator<<(std::ostream &os, Shape const &s) {

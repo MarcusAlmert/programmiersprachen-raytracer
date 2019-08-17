@@ -6,48 +6,48 @@
 
 
 Box::Box() {
-    max = {0, 0, 0};
-    min = {0, 0, 0};
+    max_ = {0, 0, 0};
+    min_ = {0, 0, 0};
 }
 
-Box::Box(glm::vec3 const &min_, glm::vec3 const &max_) {
-    max = max_;
-    min = min_;
+Box::Box(glm::vec3 const &min, glm::vec3 const &max) {
+    max_ = max;
+    min_ = min;
 
 }
 
-Box::Box(glm::vec3 const &min_, glm::vec3 const &max_, std::string const &name_,
+Box::Box(glm::vec3 const &min, glm::vec3 const &max, std::string const &name,
          std::shared_ptr<Material> const mat_ptr) :
-        Shape{name_, mat_ptr} {
-    max = max_;
-    min = min_;;
+        Shape{name, mat_ptr} {
+    max_ = max;
+    min_ = min;;
 }
 
 Box::~Box() {
 }
 
 float Box::area() const {
-    return (2 * abs(max.x - min.x) * abs(max.y - min.y) +
-            2 * abs(max.x - min.x) * abs(max.z - min.z) +
-            2 * abs(max.z - min.z) * abs(max.y - min.y));
+    return (2 * abs(max_.x - min_.x) * abs(max_.y - min_.y) +
+            2 * abs(max_.x - min_.x) * abs(max_.z - min_.z) +
+            2 * abs(max_.z - min_.z) * abs(max_.y - min_.y));
 }
 
 float Box::volume() const {
-    return (abs(max.x - min.x) * abs(max.y - min.y) * abs(max.z - min.z));
+    return (abs(max_.x - min_.x) * abs(max_.y - min_.y) * abs(max_.z - min_.z));
 }
 
 std::ostream &Box::print(std::ostream &os) const {
-    if (material != nullptr) {
-        return os << "Name: " << name << " (Box)" << std::endl
-                  << "Color: " << "[" << material->name << "]" << std::endl
-                  << "Min: " << "[" << min.x << ", " << min.y << ", " << min.z << "]" << std::endl
-                  << "Max: " << "[" << max.x << ", " << max.y << ", " << max.z << "]" << std::endl
+    if (material_ != nullptr) {
+        return os << "Name: " << name_ << " (Box)" << std::endl
+                  << "Color: " << "[" << material_->name << "]" << std::endl
+                  << "Min: " << "[" << min_.x << ", " << min_.y << ", " << min_.z << "]" << std::endl
+                  << "Max: " << "[" << max_.x << ", " << max_.y << ", " << max_.z << "]" << std::endl
                   << "--------------------" << std::endl;
     } else {
-        return os << "Name: " << name << " (Box)" << std::endl
+        return os << "Name: " << name_ << " (Box)" << std::endl
                   << "Color: " << "[" << "No Material" << "]" << std::endl
-                  << "Min: " << "[" << min.x << ", " << min.y << ", " << min.z << "]" << std::endl
-                  << "Max: " << "[" << max.x << ", " << max.y << ", " << max.z << "]" << std::endl
+                  << "Min: " << "[" << min_.x << ", " << min_.y << ", " << min_.z << "]" << std::endl
+                  << "Max: " << "[" << max_.x << ", " << max_.y << ", " << max_.z << "]" << std::endl
                   << "--------------------" << std::endl;
     }
 }
@@ -68,9 +68,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
     glm::vec3 hinten{-1, 0, 0};
     if (glm::dot(hinten, ray.direction) != 0) {
         auto t = glm::dot(normdirection, hinten);
-        float t_hinten = (glm::dot(hinten, min) - glm::dot(ray.origin, hinten)) / glm::dot(normdirection, hinten);
+        float t_hinten = (glm::dot(hinten, min_) - glm::dot(ray.origin, hinten)) / glm::dot(normdirection, hinten);
         glm::vec3 cutP = ray.origin + normdirection * t_hinten;
-        if (cutP.y >= min.y && cutP.y <= max.y && cutP.z >= min.z && cutP.z <= max.z) {
+        if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.z >= min_.z && cutP.z <= max_.z) {
             inBox.push_back(t_hinten);
             normals.push_back(glm::vec3{-1, 0, 0});
         }
@@ -78,9 +78,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
 
     glm::vec3 rechts{0, 0, -1};
     if (glm::dot(rechts, ray.direction) != 0) {
-        float t_rechts = (glm::dot(rechts, min) - glm::dot(ray.origin, rechts)) / glm::dot(normdirection, rechts);
+        float t_rechts = (glm::dot(rechts, min_) - glm::dot(ray.origin, rechts)) / glm::dot(normdirection, rechts);
         glm::vec3 cutP = ray.origin + normdirection * t_rechts;
-        if (cutP.y >= min.y && cutP.y <= max.y && cutP.x >= min.x && cutP.x <= max.x) {
+        if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.x >= min_.x && cutP.x <= max_.x) {
             inBox.push_back(t_rechts);
             normals.push_back(glm::vec3{0, 0, -1});
         }
@@ -88,9 +88,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
 
     glm::vec3 unten{0, -1, 0};
     if (glm::dot(unten, ray.direction) != 0) {
-        float t_unten = (glm::dot(unten, min) - glm::dot(ray.origin, unten)) / glm::dot(normdirection, unten);
+        float t_unten = (glm::dot(unten, min_) - glm::dot(ray.origin, unten)) / glm::dot(normdirection, unten);
         glm::vec3 cutP = ray.origin + normdirection * t_unten;
-        if (cutP.z >= min.z && cutP.z <= max.z && cutP.x >= min.x && cutP.x <= max.x) {
+        if (cutP.z >= min_.z && cutP.z <= max_.z && cutP.x >= min_.x && cutP.x <= max_.x) {
             inBox.push_back(t_unten);
             normals.push_back(glm::vec3{0, -1, 0});
         }
@@ -98,9 +98,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
 
     glm::vec3 vorne{1, 0, 0};
     if (glm::dot(vorne, ray.direction) != 0) {
-        float t_vorne = (glm::dot(vorne, max) - glm::dot(ray.origin, vorne)) / glm::dot(normdirection, vorne);
+        float t_vorne = (glm::dot(vorne, max_) - glm::dot(ray.origin, vorne)) / glm::dot(normdirection, vorne);
         glm::vec3 cutP = ray.origin + normdirection * t_vorne;
-        if (cutP.y >= min.y && cutP.y <= max.y && cutP.z >= min.z && cutP.z <= max.z) {
+        if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.z >= min_.z && cutP.z <= max_.z) {
             inBox.push_back(t_vorne);
             normals.push_back({1, 0, 0});
         }
@@ -108,9 +108,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
 
     glm::vec3 links{0, 0, 1};
     if (glm::dot(links, ray.direction) != 0) {
-        float t_links = (glm::dot(links, max) - glm::dot(ray.origin, links)) / glm::dot(normdirection, links);
+        float t_links = (glm::dot(links, max_) - glm::dot(ray.origin, links)) / glm::dot(normdirection, links);
         glm::vec3 cutP = ray.origin + normdirection * t_links;
-        if (cutP.y >= min.y && cutP.y <= max.y && cutP.x >= min.x && cutP.x <= max.x) {
+        if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.x >= min_.x && cutP.x <= max_.x) {
             inBox.push_back(t_links);
             normals.push_back(glm::vec3{0, 0, 1});
         }
@@ -119,9 +119,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
 
     glm::vec3 oben{0, 1, 0};
     if (glm::dot(oben, ray.direction) != 0) {
-        float t_oben = (glm::dot(oben, max) - glm::dot(ray.origin, oben)) / glm::dot(normdirection, oben);
+        float t_oben = (glm::dot(oben, max_) - glm::dot(ray.origin, oben)) / glm::dot(normdirection, oben);
         glm::vec3 cutP = ray.origin + normdirection * t_oben;
-        if (cutP.z >= min.z && cutP.z <= max.z && cutP.x >= min.x && cutP.x <= max.x) {
+        if (cutP.z >= min_.z && cutP.z <= max_.z && cutP.x >= min_.x && cutP.x <= max_.x) {
             inBox.push_back(t_oben);
             normals.push_back(glm::vec3{0, 1, 0});
         }
@@ -138,8 +138,8 @@ Hitpoint Box::intersect(Ray const &ray) const {
                 minimal_normal = normals[i];
             }
         }
-        hit.material = material;
-        hit.name = name;
+        hit.material = material_;
+        hit.name = name_;
         hit.distance = minimal;
         hit.hit = true;
         hit.direction = r.direction;

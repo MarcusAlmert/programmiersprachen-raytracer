@@ -21,7 +21,7 @@ Scene read_sdf(std::string const &path) {
 
         if ("define" == identifier) {
             line_string_stream >> identifier;
-            if ("material" == identifier) {
+            if ("material_" == identifier) {
                 std::string mat_name;
                 line_string_stream >> mat_name;
                 float ka_r;

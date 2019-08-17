@@ -179,12 +179,12 @@ TEST_CASE("read sdf", "SDF") {
     CHECK(scene1.mat_vector[0]->name == "red");
     CHECK(scene1.mat_vector[1]->name == "green");
     CHECK(scene1.mat_vector[2]->name == "blue");
-    CHECK(scene1.shape_vector[0]->name == "sphere1");
-    CHECK(scene1.shape_vector[0]->material->name == "red");
-    CHECK(scene1.shape_vector[1]->material->name == "blue");
+    CHECK(scene1.shape_vector[0]->name_ == "sphere1");
+    CHECK(scene1.shape_vector[0]->material_->name == "red");
+    CHECK(scene1.shape_vector[1]->material_->name == "blue");
     std::cout << *scene1.shape_vector[0];
     std::cout << *scene1.shape_vector[1];
-    CHECK(scene1.shape_vector[1]->name == "box1");
+    CHECK(scene1.shape_vector[1]->name_ == "box1");
     CHECK(scene1.lights[0].name_ == "licht");
     CHECK(scene1.lights[0].brightness_ == 50);
     CHECK(scene1.lights[0].color_.r == 0.5f);
