@@ -233,3 +233,5 @@ TEST_CASE("struct Hitpoint, print", "[Hitpoint]"){
     Renderer test_renderer(600,600,"./test_ppm_example");
     test_renderer.render(scene1);
 }*/
+
+//TODO make tests for cone,triangle and cylinder
