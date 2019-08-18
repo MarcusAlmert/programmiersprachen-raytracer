@@ -8,10 +8,14 @@ class Composite : public Shape {
 public:
     Composite();
 
-    Composite(std::vector<std::shared_ptr<Shape>> shapes);
-//    Composite();
+    Composite(std::vector<std::shared_ptr<Shape>> const &shapes, std::string name);
+
+    Composite(std::shared_ptr<Shape> const shape, std::string name);
 
     ~Composite();
+
+    void add_shape(std::shared_ptr<Shape> const shape);
+
 
     virtual float area() const override;
 
@@ -23,7 +27,6 @@ public:
 
 private:
     std::vector<std::shared_ptr<Shape>> shapes_;
-
 };
 
 #endif //RAYTRACER_COMPOSITE_HPP

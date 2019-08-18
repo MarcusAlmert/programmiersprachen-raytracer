@@ -1,24 +1,20 @@
-//
-// Created by marcus on 17.08.19.
-//
-
 #ifndef RAYTRACER_CYLINDER_HPP
 #define RAYTRACER_CYLINDER_HPP
 
 #include "shape.hpp"
 #include <glm/vec3.hpp>
 
-class Zylinder : public Shape {
+class Cylinder : public Shape {
 
 public:
-    Zylinder();
+    Cylinder();
 
-    Zylinder(glm::vec3 const &pos, float radius, float height);
+    Cylinder(glm::vec3 const &pos, float radius, float height);
 
-    Zylinder(glm::vec3 const &pos, float radius, float height, std::string const &name,
+    Cylinder(glm::vec3 const &pos, float radius, float height, std::string const &name,
              std::shared_ptr<Material> const mat_ptr);
 
-    ~Zylinder();
+    ~Cylinder();
 
     virtual float area() const override;
 

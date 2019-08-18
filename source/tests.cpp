@@ -12,6 +12,7 @@
 #include "material.hpp"
 #include "scene.hpp"
 #include "light.hpp"
+#include "shapes/composite.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -178,24 +179,48 @@ TEST_CASE("read sdf", "SDF") {
     auto vec = scene1.mat_vector_;
     CHECK(scene1.mat_vector_[0]->name_ == "red");
     std::shared_ptr<Material> red = scene1.mat_vector_[0];
-    CHECK(red->ka_.r == 1); CHECK(red->ka_.g == 0); CHECK(red->ka_.b == 0);
-    CHECK(red->kd_.r == 1); CHECK(red->kd_.g == 0); CHECK(red->kd_.b == 0);
-    CHECK(red->ks_.r == 1); CHECK(red->ks_.g == 0); CHECK(red->ks_.b == 0);
-    CHECK(red->m_ == 20); CHECK(red->glossy_ == 1); CHECK(red->opacity_ == 2);
+    CHECK(red->ka_.r == 1);
+    CHECK(red->ka_.g == 0);
+    CHECK(red->ka_.b == 0);
+    CHECK(red->kd_.r == 1);
+    CHECK(red->kd_.g == 0);
+    CHECK(red->kd_.b == 0);
+    CHECK(red->ks_.r == 1);
+    CHECK(red->ks_.g == 0);
+    CHECK(red->ks_.b == 0);
+    CHECK(red->m_ == 20);
+    CHECK(red->glossy_ == 1);
+    CHECK(red->opacity_ == 2);
     CHECK(red->refractive_index_ == 3);
     CHECK(scene1.mat_vector_[1]->name_ == "green");
     std::shared_ptr<Material> green = scene1.mat_vector_[1];
-    CHECK(green->ka_.r == 0); CHECK(green->ka_.g == 1); CHECK(green->ka_.b == 0);
-    CHECK(green->kd_.r == 0); CHECK(green->kd_.g == 1); CHECK(green->kd_.b == 0);
-    CHECK(green->ks_.r == 0); CHECK(green->ks_.g == 1); CHECK(green->ks_.b == 0);
-    CHECK(green->m_ == 50); CHECK(green->glossy_ == 4); CHECK(green->opacity_ == 5);
+    CHECK(green->ka_.r == 0);
+    CHECK(green->ka_.g == 1);
+    CHECK(green->ka_.b == 0);
+    CHECK(green->kd_.r == 0);
+    CHECK(green->kd_.g == 1);
+    CHECK(green->kd_.b == 0);
+    CHECK(green->ks_.r == 0);
+    CHECK(green->ks_.g == 1);
+    CHECK(green->ks_.b == 0);
+    CHECK(green->m_ == 50);
+    CHECK(green->glossy_ == 4);
+    CHECK(green->opacity_ == 5);
     CHECK(green->refractive_index_ == 6);
     CHECK(scene1.mat_vector_[2]->name_ == "blue");
     std::shared_ptr<Material> blue = scene1.mat_vector_[2];
-    CHECK(blue->ka_.r == 0); CHECK(blue->ka_.g == 0); CHECK(blue->ka_.b == 1);
-    CHECK(blue->kd_.r == 0); CHECK(blue->kd_.g == 0); CHECK(blue->kd_.b == 1);
-    CHECK(blue->ks_.r == 0); CHECK(blue->ks_.g == 0); CHECK(blue->ks_.b == 1);
-    CHECK(blue->m_ == 10); CHECK(blue->glossy_ == 7); CHECK(blue->opacity_ == 8);
+    CHECK(blue->ka_.r == 0);
+    CHECK(blue->ka_.g == 0);
+    CHECK(blue->ka_.b == 1);
+    CHECK(blue->kd_.r == 0);
+    CHECK(blue->kd_.g == 0);
+    CHECK(blue->kd_.b == 1);
+    CHECK(blue->ks_.r == 0);
+    CHECK(blue->ks_.g == 0);
+    CHECK(blue->ks_.b == 1);
+    CHECK(blue->m_ == 10);
+    CHECK(blue->glossy_ == 7);
+    CHECK(blue->opacity_ == 8);
     CHECK(blue->refractive_index_ == 9);
     CHECK(scene1.shape_vector_[0]->name_ == "sphere1");
     CHECK(scene1.shape_vector_[0]->material_->name_ == "red");
@@ -223,6 +248,18 @@ TEST_CASE("read sdf", "SDF") {
     CHECK(scene1.camera_.upVector.x == 0);
     CHECK(scene1.camera_.upVector.y == 1);
     CHECK(scene1.camera_.upVector.z == 0);
+}
+// new with cylinder, cone , triangle  and composite starts here
+TEST_CASE("Testcase SDF-Reader for new shapes") {
+    Scene scene = read_sdf("../../SDF-Scene/composite.sdf");
+    CHECK(scene.ambient_ == 0.1f);
+    CHECK(scene.shape_vector_[0]->name_ == "rbox");
+    CHECK(scene.shape_vector_[1]->name_ == "bsphere");
+    CHECK(scene.shape_vector_[2]->name_ == "bcylinder");
+    std::cout << scene.shape_vector_[2]->name_;
+    CHECK(scene.shape_vector_[3]->name_ == "rcone");
+    CHECK(scene.shape_vector_[4]->name_ == "gtriangle");
+    CHECK(scene.shape_vector_[5]->name_ == "root");
 }
 
 TEST_CASE("find()", "vec,map,set") {
@@ -253,3 +290,19 @@ TEST_CASE("struct Hitpoint, print", "[Hitpoint]"){
 }*/
 
 //TODO make tests for composite, cone, triangle and cylinder
+TEST_CASE("Composite functions", "Composite") {
+
+}
+
+TEST_CASE("Cylinder functions", "Cylinder") {
+
+}
+
+TEST_CASE("Cone functions", "Cone") {
+
+}
+
+TEST_CASE("Triangle functions", "Triangle") {
+
+}
+

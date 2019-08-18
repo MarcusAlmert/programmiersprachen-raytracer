@@ -1,18 +1,18 @@
 #include "cylinder.hpp"
 
-Zylinder::Zylinder() {
+Cylinder::Cylinder() {
     pos_ = {0, 0, 0};
     radius_ = 1;
     height_ = 1;
 }
 
-Zylinder::Zylinder(glm::vec3 const &pos, float radius, float height) {
+Cylinder::Cylinder(glm::vec3 const &pos, float radius, float height) {
     pos_ = pos;
     radius_ = radius;
     height_ = height;
 }
 
-Zylinder::Zylinder(glm::vec3 const &pos, float radius, float height, std::string const &name,
+Cylinder::Cylinder(glm::vec3 const &pos, float radius, float height, std::string const &name,
                    std::shared_ptr<Material> const mat_ptr) {
     pos_ = pos;
     radius_ = radius;
@@ -21,17 +21,17 @@ Zylinder::Zylinder(glm::vec3 const &pos, float radius, float height, std::string
     material_ = mat_ptr;
 }
 
-Zylinder::~Zylinder() {}
+Cylinder::~Cylinder() {}
 
-float Zylinder::area() const {
+float Cylinder::area() const {
     return 2 * M_PI * pow(radius_, 2) + 2 * M_PI * radius_ * height_;
 }
 
-float Zylinder::volume() const {
+float Cylinder::volume() const {
     return M_PI * pow(radius_, 2) * height_;
 }
 
-std::ostream &Zylinder::print(std::ostream &os) const {
+std::ostream &Cylinder::print(std::ostream &os) const {
     if (material_ != nullptr) {
         return os << "Name: " << name_ << " (Cylinder)" << std::endl
                   << "Material: " << "[" << material_->name_ << "]" << std::endl
@@ -48,7 +48,7 @@ std::ostream &Zylinder::print(std::ostream &os) const {
 }
 
 // TODO implement intersect
-Hitpoint Zylinder::intersect(Ray const &ray) const {
+Hitpoint Cylinder::intersect(Ray const &ray) const {
 
 }
 

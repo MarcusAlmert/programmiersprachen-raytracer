@@ -1,6 +1,6 @@
-define material_ red 1 0 0 1 0 0 1 0 0 20 1 2 3
-define material_ green 0 1 0 0 1 0 0 1 0 50 4 5 6
-define material_ blue 0 0 1 0 0 1 0 0 1 10 7 8 9
+define material red 1 0 0 1 0 0 1 0 0 20 1 2 3
+define material green 0 1 0 0 1 0 0 1 0 50 4 5 6
+define material blue 0 0 1 0 0 1 0 0 1 10 7 8 9
 define shape sphere sphere1 1.5 1 0 10 red
 define shape box box1 1.5 1 0 10 5 7.8 blue
 define light licht 10 10 5 0.5 0.1 0.3 50
