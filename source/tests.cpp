@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <renderer.hpp>
+#include <shapes/triangle.hpp>
 #include "material.hpp"
 #include "scene.hpp"
 #include "light.hpp"
@@ -303,6 +304,15 @@ TEST_CASE("Cone functions", "Cone") {
 }
 
 TEST_CASE("Triangle functions", "Triangle") {
-
+    Triangle triangle1({1, 0, 1}, {1, 0, -1}, {1, 1, 0});
+    Ray ray{{0, 0, 0},
+            {1, 0, 0}};
+    Hitpoint hitp = triangle1.intersect(ray);
+    CHECK(hitp.hit_);
+    CHECK(hitp.name_ == "No_name");
+    CHECK(hitp.direction_ == ray.direction_);
+    CHECK(hitp.normal_.x == -2.0f);
+    CHECK(hitp.normal_.y == 0);
+    CHECK(hitp.normal_.z == 0);
 }
 

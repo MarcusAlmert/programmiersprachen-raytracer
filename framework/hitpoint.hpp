@@ -15,7 +15,7 @@ struct Hitpoint {
     glm::vec3 hitpoint_{MAXFLOAT, MAXFLOAT, MAXFLOAT};
     glm::vec3 normal_{0, 0, 0};
 
-    friend std::ostream& operator<<(std::ostream & os, Hitpoint const& hitpoint){
+    friend std::ostream &operator<<(std::ostream &os, Hitpoint const &hitpoint) {
         os << "name:        " << hitpoint.name_ << "\nobject type: Hitpoint\n" <<
            "hit:         " << hitpoint.hit_ << std::endl;
         if (hitpoint.hit_ == false) {

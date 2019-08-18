@@ -1,5 +1,8 @@
 #include "triangle.hpp"
 #include <cmath>
+#include <glm/gtx/intersect.hpp>
+#include <glm/vec3.hpp>
+#include "hitpoint.hpp"
 
 Triangle::Triangle() {
     p1_ = {0, 0, 0};
@@ -37,13 +40,13 @@ float Triangle::area() const {
 
 std::ostream &Triangle::print(std::ostream &os) const {
     if (material_ != nullptr) {
-        return os << "Name: " << name_ << " (Cylinder)" << std::endl
+        return os << "Name: " << name_ << " (Triangle)" << std::endl
                   << "Material: " << "[" << material_->name_ << "]" << std::endl
                   << "Point 1: " << "[" << p1_.x << ", " << p1_.y << ", " << p1_.z << "]" << std::endl
                   << "Point 2: " << "[" << p2_.x << ", " << p2_.y << ", " << p2_.z << "]" << std::endl
                   << "Point 3: " << "[" << p3_.x << ", " << p3_.y << ", " << p3_.z << "]" << std::endl;
     } else {
-        return os << "Name: " << name_ << " (Cylinder)" << std::endl
+        return os << "Name: " << name_ << " (Triangle)" << std::endl
                   << "Material: " << "[" << "No Material" << "]" << std::endl
                   << "Point 1: " << "[" << p1_.x << ", " << p1_.y << ", " << p1_.z << "]" << std::endl
                   << "Point 2: " << "[" << p2_.x << ", " << p2_.y << ", " << p2_.z << "]" << std::endl
@@ -53,7 +56,18 @@ std::ostream &Triangle::print(std::ostream &os) const {
 
 // TODO implement intersect
 Hitpoint Triangle::intersect(Ray const &ray) const {
-
+    glm::vec3 Position;
+    float distance;
+    bool hitted = glm::intersectRayTriangle(ray.origin_, ray.direction_, p1_, p2_, p3_, Position);
+    Hitpoint hitp;
+    hitp.hit_ = hitted;
+    hitp.hitpoint_ = Position;
+    hitp.material_ = material_;
+    hitp.distance_ = glm::distance(Position, ray.origin_);
+    hitp.direction_ = ray.direction_;
+    hitp.name_ = name_;
+    hitp.normal_ = glm::cross(p1_ - p2_, p3_ - p2_);
+    return hitp;
 }
 
 
