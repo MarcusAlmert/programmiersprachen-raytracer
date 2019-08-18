@@ -41,7 +41,6 @@ void Renderer::render(Scene const &scene) {
                 Color raytracer_color = calc_color(first_hit, scene, 3);
                 tone_mapping(raytracer_color);
                 p.color = raytracer_color;
-                //p.color = Color{1.0f, 0.0f, 0.0f};
             } else {
                 p.color = Color{0.0f, 0.0f, 0.0f};
             }
