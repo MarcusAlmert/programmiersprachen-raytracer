@@ -5,7 +5,7 @@
 #include <thread>
 #include <utility>
 #include <cmath>
-#include "../framework/read_sdf.cpp"
+#include "../framework/read_sdf.hpp"
 
 int main(int argc, char* argv[])
 {

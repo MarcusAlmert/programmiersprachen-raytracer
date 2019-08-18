@@ -5,8 +5,8 @@
 #include <memory>
 #include "material.hpp"
 #include "scene.hpp"
-#include "sphere.hpp"
-#include "box.hpp"
+#include "shapes/sphere.hpp"
+#include "shapes/box.hpp"
 
 
 Scene read_sdf(std::string const &path) {

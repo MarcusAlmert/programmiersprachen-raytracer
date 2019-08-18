@@ -2,9 +2,9 @@
 
 #include <catch.hpp>
 #include <memory>
-#include "shape.hpp"
-#include "sphere.hpp"
-#include "box.hpp"
+#include "shapes/shape.hpp"
+#include "shapes/sphere.hpp"
+#include "shapes/box.hpp"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>

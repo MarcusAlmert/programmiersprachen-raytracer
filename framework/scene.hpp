@@ -6,7 +6,7 @@
 #include <set>
 #include <memory>
 #include "material.hpp"
-#include "shape.hpp"
+#include "shapes/shape.hpp"
 #include "camera.hpp"
 #include "light.hpp"
 
