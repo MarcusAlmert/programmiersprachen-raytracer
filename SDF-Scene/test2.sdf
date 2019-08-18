@@ -1,9 +1,9 @@
 # materials
-define material_ red     1 0 0 1 0 0 1 0 0 100 	0.9
-define material_ blue    0 0 1 0 0 1 1 1 1 100 	0.9
-define material_ green   0 1 0 0 1 0 0 1 0 100 	0.9
-define material_ black   0.2 0.2 0.2 0 0 0 0.2 0.2 0.2 10 0.0
-define material_ white   0.2 0.2 0.2 1 1 1 0.2 0.2 0.2 10 0.0
+define material_ red     1 0 0 1 0 0 1 0 0 100 	0.9 0 0 0
+define material_ blue    0 0 1 0 0 1 1 1 1 100 	0.9 0 0 0
+define material_ green   0 1 0 0 1 0 0 1 0 100 	0.9 0 0 0
+define material_ black   0.2 0.2 0.2 0 0 0 0.2 0.2 0.2 10 0.0 0 0 0
+define material_ white   0.2 0.2 0.2 1 1 1 0.2 0.2 0.2 10 0.0 0 0 0
 
 # geometry
 define shape box chess_row_1_1  	-300	-100 	-700 	-200   	-50 	0 		red
@@ -29,4 +29,4 @@ define light spot1 -500 800 0 0.8 0.8 0.8 10
 define light spot1  500 0 1000 0.8 0.8 0.8 10
 define ambient 0.1
 # camera
-define camera eye 60		0 0 350  		0 	0 	-1 		0 	1 	0
+define camera eye 60		0 0 300  		0 	0 	-1 		0 	1 	0

@@ -2,11 +2,14 @@
 #include <memory>
 
 std::ostream &operator<<(std::ostream &os, Material const &mat) {
-    os << "Name: " << mat.name_ << std::endl;
-    os << "Materialkoeffizient kd:  " << mat.kd_;
-    os << "Materialkoeffizient ks:  " << mat.ks_;
-    os << "Materialkoeffizient ka:  " << mat.ka_;
-    os << "M:  " << mat.m_ << std::endl;
+    os << "Name:                   " << mat.name_ << std::endl;
+    os << "Materialkoeffizient kd: " << mat.ka_;
+    os << "Materialkoeffizient ks: " << mat.kd_;
+    os << "Materialkoeffizient ka: " << mat.ks_;
+    os << "M:                      " << mat.m_ << std::endl;
+    os << "Glossy:                 " << mat.glossy_ << std::endl;
+    os << "Opacity                 " << mat.opacity_ << std::endl;
+    os << "Reflective Index:       " << mat.refractive_index_ << std::endl;
     return os;
 }
 

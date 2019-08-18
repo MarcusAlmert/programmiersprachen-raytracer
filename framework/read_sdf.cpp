@@ -34,6 +34,9 @@ Scene read_sdf(std::string const &path) {
                 float ks_g;
                 float ks_b;
                 float m;
+                float g;
+                float o;
+                float ref;
                 line_string_stream >> ka_r;
                 line_string_stream >> ka_g;
                 line_string_stream >> ka_b;
@@ -44,9 +47,13 @@ Scene read_sdf(std::string const &path) {
                 line_string_stream >> ks_g;
                 line_string_stream >> ks_b;
                 line_string_stream >> m;
+                line_string_stream >> g;
+                line_string_stream >> o;
+                line_string_stream >> ref;
                 std::shared_ptr<Material> mat_ = std::make_shared<Material>(Material{mat_name, {ka_r, ka_g, ka_b},
                                                                                      {kd_r, kd_g, kd_b},
-                                                                                     {ks_r, ks_g, ks_b}, m});
+                                                                                     {ks_r, ks_g, ks_b},
+                                                                                      m, g, o, ref});
                 scene1.mat_vector_.push_back(mat_);
 
             } else if ("shape" == identifier) {

@@ -11,6 +11,9 @@ struct Material {
     Color kd_{1, 1, 1};
     Color ks_{1, 1, 1};
     float m_ = 0.0f;
+    float glossy_ = 0.0f;
+    float opacity_ = 0.0f;
+    float refractive_index_ = 0.0f;
 };
 
 std::ostream &operator<<(std::ostream &os, Material const &mat);
