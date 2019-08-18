@@ -79,7 +79,9 @@ Color Renderer::calc_color(Hitpoint const& hitpoint, Scene const &scene, unsigne
     Color ambient = calc_ambient(hitpoint.material_, scene);
     Color diffuse = calc_diffuse(hitpoint, scene);
     Color specular = calc_specular(hitpoint, scene);
-    return (raytracer_value + ambient + diffuse + specular);
+    //TODO fix SegFault
+    //Color reflection = calc_reflection(hitpoint,scene,1);
+    return (raytracer_value + ambient + diffuse + specular /*+ reflection */);
 }
 
 //TODO calc_phong
@@ -89,7 +91,7 @@ Color Renderer::calc_color(Hitpoint const& hitpoint, Scene const &scene, unsigne
 // Diese Funktion ist in soweit fertig holt nur ka aus dem Material
 Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &scene) {
     Color ambient = Color{scene.ambient_, scene.ambient_, scene.ambient_};
-    return (ambient *= material->ka_);
+    return (ambient = material->ka_ * ambient);
 }
 
 // TODO fix graphical bug // maybe fixed
@@ -168,11 +170,12 @@ Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, un
     Ray reflaction_ray{hitpoint.hitpoint_, glm::normalize(reflaction_ray_direction)};
     Hitpoint next_hit = fire_ray(scene, reflaction_ray);
 
-    if (hitpoint.hit_ == false) {
+    //hab es zu next_hit geändert
+    if (!next_hit.hit_) {
         return Color{0, 0, 0};
     } else {
         if (recursive_boundary > 0){
-            Color reflected_color = calc_color(next_hit, scene, recursive_boundary - 1) * 0.8;
+            Color reflected_color = calc_color(next_hit, scene, recursive_boundary - 1) * 0.8f;
             return reflected_color;
         } else {
             return Color{0, 0, 0};

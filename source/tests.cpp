@@ -252,4 +252,4 @@ TEST_CASE("struct Hitpoint, print", "[Hitpoint]"){
     test_renderer.render(scene1);
 }*/
 
-//TODO make tests for cone,triangle and cylinder
+//TODO make tests for composite, cone, triangle and cylinder

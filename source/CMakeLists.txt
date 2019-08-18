@@ -15,7 +15,9 @@ add_executable(raytracer
         ../framework/scene.cpp
         ../framework/shapes/cylinder.cpp
         ../framework/shapes/cone.cpp
-        ../framework/shapes/triangle.cpp)
+        ../framework/shapes/triangle.cpp
+        ../framework/shapes/composite.cpp
+        ../framework/shapes/composite.hpp)
 
 target_link_libraries(raytracer ${FRAMEWORK_NAME} ${LIBRARIES}
   glfw
@@ -36,7 +38,7 @@ add_executable(tests
         ../framework/scene.cpp
         ../framework/shapes/cylinder.cpp
         ../framework/shapes/cone.cpp
-        ../framework/shapes/triangle.cpp)
+        ../framework/shapes/triangle.cpp ../framework/shapes/composite.cpp ../framework/shapes/composite.hpp)
 
 
 target_link_libraries(tests
