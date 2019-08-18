@@ -75,7 +75,7 @@ void Renderer::write(Pixel const &p) {
 }
 
 // Farbwertberechnung, TODO ! Weiter Funktionen für Reflexionen etc. notwendig
-Color Renderer::calc_color(Hitpoint hitpoint, Scene const &scene, unsigned int reflaction_steps) {
+Color Renderer::calc_color(Hitpoint const& hitpoint, Scene const &scene, unsigned int reflaction_steps) {
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
     Color ambient = calc_ambient(hitpoint.material_, scene);
     Color diffuse = calc_diffuse(hitpoint, scene);
@@ -94,7 +94,7 @@ Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &sc
 }
 
 // TODO fix graphical bug // maybe fixed
-Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
+Color Renderer::calc_diffuse(Hitpoint const& hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights_) {
@@ -125,7 +125,7 @@ Color Renderer::calc_diffuse(Hitpoint hitpoint, Scene const &scene) {
     return final;
 }
 
-Color Renderer::calc_specular(Hitpoint hitpoint, Scene const &scene) {
+Color Renderer::calc_specular(Hitpoint const& hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights_) {
@@ -181,6 +181,44 @@ Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, un
     }
 }
 
+// calculates the refraction, not tested
+Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bool inside){
+    float eta;
+
+    // check if ray is coming from outside or inside the object
+    if (inside){
+        eta = hitpoint.material_->refractive_index_;
+    } else {
+        eta = 1.0f / hitpoint.material_->refractive_index_;
+    }
+
+    // calculates cosi and inverts it if negative
+    float c1 = glm::dot(hitpoint.normal_, hitpoint.direction_);
+    glm::vec3 n = hitpoint.normal_;
+    if (c1 < 0){
+        invert_direction(n);
+    }
+
+    // calulating the refrected ray
+    float c2 = sqrtf(1.0f - eta * eta * (1.0f -c1 * c1));
+    glm::vec3 refrection_direction = eta * hitpoint.direction_ + (eta * c1 - c2) * hitpoint.normal_;
+    glm::vec3 refrection_origin = hitpoint.hitpoint_ - 0.1f * hitpoint.normal_;
+    Ray refrected_ray{refrection_origin, refrection_direction};
+
+    // fires the refracted ray
+    Hitpoint hit = fire_ray(scene, refrected_ray);
+
+    // if the new ray hitted the object again, another object or non at all
+    if (hitpoint.hit_ && hitpoint.name_ != hit.name_){
+        return calc_color(hit, scene, 5);
+    } else if (hit.hit_){
+        return calc_refraction(hit, scene, true);
+    } else {
+        return Color{0.0f, 0.0f, 0.0f};
+    }
+
+}
+
 Hitpoint Renderer::fire_ray(Scene const& scene, Ray const& ray){
     Hitpoint first_hit;
     first_hit.distance_ = FLT_MAX;
@@ -191,6 +229,25 @@ Hitpoint Renderer::fire_ray(Scene const& scene, Ray const& ray){
         }
     }
     return first_hit;
+}
+
+// inverts a direction
+void Renderer::invert_direction(glm::vec3 & dir){
+    if (dir.x < 0){
+        dir.x -= dir.x + dir.x;
+    } else if (dir.x > 0){
+        dir.x -= dir.x + dir.x;
+    }
+    if (dir.y < 0){
+        dir.y -= dir.y + dir.y;
+    } else if (dir.y > 0){
+        dir.y -= dir.y + dir.y;
+    }
+    if (dir.z < 0){
+        dir.z -= dir.z + dir.z;
+    } else if (dir.z > 0){
+        dir.z -= dir.z + dir.z;
+    }
 }
 
 // Diese Funktion macht am Ende das tone mapping
