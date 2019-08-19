@@ -316,3 +316,4 @@ TEST_CASE("Triangle functions", "Triangle") {
     CHECK(hitp.normal_.z == 0);
 }
 
+
