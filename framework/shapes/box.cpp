@@ -41,7 +41,7 @@ void autocorrection(glm::vec3 &min, glm::vec3 &max) {
         correct = false;
     }
     if (!correct)
-        std::cout << "\033[1;32m Box points were autocorrected! \033[0m\n";
+        std::cout << "\033[1;33m Box points were autocorrected! \033[0m\n";
 }
 
 float Box::area() const {
