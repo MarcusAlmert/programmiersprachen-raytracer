@@ -4,7 +4,6 @@
 #include <glm/vec3.hpp>
 #include <algorithm>
 
-
 Box::Box() {
     max_ = {0, 0, 0};
     min_ = {0, 0, 0};
@@ -13,17 +12,36 @@ Box::Box() {
 Box::Box(glm::vec3 const &min, glm::vec3 const &max) {
     max_ = max;
     min_ = min;
-
+    autocorrection(min_, max_);
 }
 
 Box::Box(glm::vec3 const &min, glm::vec3 const &max, std::string const &name,
          std::shared_ptr<Material> const& mat_ptr) :
         Shape{name, mat_ptr} {
     max_ = max;
-    min_ = min;;
+    min_ = min;
+    autocorrection(min_, max_);
 }
 
 Box::~Box() {
+}
+
+void autocorrection(glm::vec3 &min, glm::vec3 &max) {
+    bool correct = true;
+    if (min.x > max.x) {
+        std::swap(min.x, max.x);
+        correct = false;
+    }
+    if (min.y > max.y) {
+        std::swap(min.y, max.y);
+        correct = false;
+    }
+    if (min.z > max.z) {
+        std::swap(min.z, max.z);
+        correct = false;
+    }
+    if (!correct)
+        std::cout << "Points were autocorrected!\n";
 }
 
 float Box::area() const {

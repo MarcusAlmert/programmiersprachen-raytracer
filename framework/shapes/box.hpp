@@ -11,9 +11,7 @@ private:
 
 public:
     Box();
-
     Box(glm::vec3 const &min, glm::vec3 const &max);
-
     Box(glm::vec3 const &min, glm::vec3 const &max, std::string const &name, std::shared_ptr<Material> const& mat_ptr);
     ~Box();//override ;
 
@@ -22,5 +20,7 @@ public:
     virtual std::ostream &print(std::ostream &os) const override;
     virtual Hitpoint intersect(Ray const &ray) const override;
 };
+
+void autocorrection(glm::vec3 &min, glm::vec3 &max);
 
 #endif //RAYTRACER_BOX_HPP
