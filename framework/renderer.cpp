@@ -19,19 +19,38 @@ void Renderer::render(Scene const &scene) {
 
     glm::vec3 dir = glm::normalize(scene.camera_.direction);    // vector in direction of view
     glm::vec3 up = glm::normalize(scene.camera_.upVector);  // vector in above direction from origin
+    glm::vec3 down = up; invert_direction(down);
     glm::vec3 l = glm::normalize(glm::cross(up, dir));  // vector in left direction from origin
     glm::vec3 r = glm::normalize(glm::cross(dir, up));  // vector in right direction from origin
 
-
+    float half_height = height_ / 2.0f;
+    float half_width = width_ / 2.0f;
+    glm::vec3 zr = d * dir;
+    glm::vec3 yr{0.0f, 0.0f, 0.0f};
+    glm::vec3 xr{0.0f, 0.0f, 0.0f};
 
     for (unsigned y = 0; y < height_; ++y) {
+
+        if (y < half_height){
+            yr = down * -(y - half_height);
+        } else if (y > half_height){
+            yr = up * (y - half_height);
+        }
+
         for (unsigned x = 0; x < width_; ++x) {
             Pixel p(x, y);
 
             glm::vec3 pos = scene.camera_.position;
-            glm::vec3 direction = glm::normalize(scene.camera_.direction);
+            //glm::vec3 direction = glm::normalize(scene.camera_.direction);
+            //direction = direction + glm::vec3{x - (0.5f * width_), y - (0.5f * height_), pos.z - d};
+            
+            if (x < half_width){
+                xr = l * -(x - half_width);
+            } else if (x > half_width) {
+                xr = r * (x - half_width);
+            }
 
-            direction = direction + glm::vec3{x - (0.5f * width_), y - (0.5f * height_), pos.z - d};
+            glm::vec3 direction = xr + yr + zr;
 
             // in dieser Schleife wird der Schnittpunkt mit dem ersten Objekt den der Strahl trifft berechnet
             Hitpoint first_hit = fire_ray(scene, Ray{pos, glm::normalize(direction)});
