@@ -14,7 +14,7 @@ public:
 
     Box(glm::vec3 const &min, glm::vec3 const &max);
 
-    Box(glm::vec3 const &min, glm::vec3 const &max, std::string const &name, std::shared_ptr<Material> const mat_ptr);
+    Box(glm::vec3 const &min, glm::vec3 const &max, std::string const &name, std::shared_ptr<Material> const& mat_ptr);
     ~Box();//override ;
 
     virtual float area() const override;

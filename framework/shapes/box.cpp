@@ -17,7 +17,7 @@ Box::Box(glm::vec3 const &min, glm::vec3 const &max) {
 }
 
 Box::Box(glm::vec3 const &min, glm::vec3 const &max, std::string const &name,
-         std::shared_ptr<Material> const mat_ptr) :
+         std::shared_ptr<Material> const& mat_ptr) :
         Shape{name, mat_ptr} {
     max_ = max;
     min_ = min;;
@@ -72,7 +72,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin_ + normdirection * t_hinten;
         if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.z >= min_.z && cutP.z <= max_.z) {
             inBox.push_back(t_hinten);
-            normals.push_back(glm::vec3{-1, 0, 0});
+            normals.emplace_back(glm::vec3{-1, 0, 0});
         }
     }
 
@@ -82,7 +82,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin_ + normdirection * t_rechts;
         if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.x >= min_.x && cutP.x <= max_.x) {
             inBox.push_back(t_rechts);
-            normals.push_back(glm::vec3{0, 0, -1});
+            normals.emplace_back(glm::vec3{0, 0, -1});
         }
     }
 
@@ -92,7 +92,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin_ + normdirection * t_unten;
         if (cutP.z >= min_.z && cutP.z <= max_.z && cutP.x >= min_.x && cutP.x <= max_.x) {
             inBox.push_back(t_unten);
-            normals.push_back(glm::vec3{0, -1, 0});
+            normals.emplace_back(glm::vec3{0, -1, 0});
         }
     }
 
@@ -102,7 +102,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin_ + normdirection * t_vorne;
         if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.z >= min_.z && cutP.z <= max_.z) {
             inBox.push_back(t_vorne);
-            normals.push_back({1, 0, 0});
+            normals.emplace_back(glm::vec3{1, 0, 0});
         }
     }
 
@@ -112,7 +112,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin_ + normdirection * t_links;
         if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.x >= min_.x && cutP.x <= max_.x) {
             inBox.push_back(t_links);
-            normals.push_back(glm::vec3{0, 0, 1});
+            normals.emplace_back(glm::vec3{0, 0, 1});
         }
 
     }
@@ -123,7 +123,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         glm::vec3 cutP = ray.origin_ + normdirection * t_oben;
         if (cutP.z >= min_.z && cutP.z <= max_.z && cutP.x >= min_.x && cutP.x <= max_.x) {
             inBox.push_back(t_oben);
-            normals.push_back(glm::vec3{0, 1, 0});
+            normals.emplace_back(glm::vec3{0, 1, 0});
         }
     }
     if (inBox.empty()) {
@@ -132,7 +132,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         std::sort(inBox.begin(), inBox.end());
         float minimal = inBox[0];
         glm::vec3 minimal_normal = normals[0];
-        for (int i = 1; i < inBox.size(); ++i){
+        for (unsigned long i = 1; i < inBox.size(); ++i){
             if (inBox[i] < minimal){
                 minimal = inBox[i];
                 minimal_normal = normals[i];

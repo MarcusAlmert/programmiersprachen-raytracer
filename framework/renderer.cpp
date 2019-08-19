@@ -38,7 +38,7 @@ void Renderer::render(Scene const &scene) {
 
             // Entweder es wurde ein Objekt getroffen oder der Pixel bekommt die Hintergrundfarbe zugewiesen
             if (first_hit.hit_) {
-                Color raytracer_color = calc_color(first_hit, scene, 3);
+                Color raytracer_color = calc_color(first_hit, scene, 1);
                 tone_mapping(raytracer_color);
                 p.color = raytracer_color;
             } else {
@@ -80,7 +80,7 @@ Color Renderer::calc_color(Hitpoint const& hitpoint, Scene const &scene, unsigne
     Color diffuse = calc_diffuse(hitpoint, scene);
     Color specular = calc_specular(hitpoint, scene);
     //TODO fix SegFault
-    //Color reflection = calc_reflection(hitpoint,scene,1);
+    Color reflection = calc_reflection(hitpoint,scene,reflaction_steps);
     return (raytracer_value + ambient + diffuse + specular /*+ reflection */);
 }
 
@@ -91,7 +91,7 @@ Color Renderer::calc_color(Hitpoint const& hitpoint, Scene const &scene, unsigne
 // Diese Funktion ist in soweit fertig holt nur ka aus dem Material
 Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &scene) {
     Color ambient = Color{scene.ambient_, scene.ambient_, scene.ambient_};
-    return (ambient = material->ka_ * ambient);
+    return (material->ka_ * ambient);
 }
 
 // TODO fix graphical bug // maybe fixed
