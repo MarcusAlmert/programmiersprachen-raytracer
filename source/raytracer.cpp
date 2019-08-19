@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 
   Renderer renderer{image_width, image_height, filename};
 
-  Scene scene = read_sdf("../../SDF-Scene/test2.sdf");   // alle lieben relative Pfade
+    Scene scene = read_sdf("../../SDF-Scene/composite.sdf");   // alle lieben relative Pfade
 
   //create separate thread to see updates of pixels while rendering
   //std::thread render_thread([&renderer]() {renderer.render();});

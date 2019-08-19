@@ -54,7 +54,7 @@ std::ostream &Triangle::print(std::ostream &os) const {
     }
 }
 
-// TODO implement intersect
+// TODO implement intersect // not working
 Hitpoint Triangle::intersect(Ray const &ray) const {
     glm::vec3 Position;
     float distance;

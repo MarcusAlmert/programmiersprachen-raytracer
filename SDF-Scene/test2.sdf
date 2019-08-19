@@ -23,6 +23,7 @@ define shape box rbottom    		-100  	-80 	-200 	100 	80 		-100 	red
 define shape sphere bsphere 0 		0 	-200 50 blue
 define shape sphere rsphere +100 	100 	+200 50 red
 define shape sphere gsphere +100 	0 	+200 50 green
+
 # lights
 define light sun    500 800 0 1.0 1.0 1.0 10
 define light spot1 -500 800 0 0.8 0.8 0.8 10
