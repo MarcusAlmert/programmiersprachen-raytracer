@@ -18,19 +18,20 @@ void Renderer::render(Scene const &scene) {
     float d = (width_ / 2) / tan(scene.camera_.fov / 2 * M_PI / 180);
 
     glm::vec3 dir = glm::normalize(scene.camera_.direction);    // vector in direction of view
-    glm::vec3 up = glm::normalize(scene.camera_.upVector);  // vector in above direction from origin
-    glm::vec3 down = up; invert_direction(down);
-    glm::vec3 l = glm::normalize(glm::cross(up, dir));  // vector in left direction from origin
-    glm::vec3 r = glm::normalize(glm::cross(dir, up));  // vector in right direction from origin
+    glm::vec3 up = glm::normalize(scene.camera_.upVector);      // vector in above direction from origin
+    glm::vec3 down = up; invert_direction(down);                // vector in down direction from origin
+    glm::vec3 l = glm::normalize(glm::cross(up, dir));          // vector in left direction from origin
+    glm::vec3 r = glm::normalize(glm::cross(dir, up));          // vector in right direction from origin
 
     float half_height = height_ / 2.0f;
     float half_width = width_ / 2.0f;
-    glm::vec3 zr = d * dir;
+    glm::vec3 zr = d * dir;                                     // distance of pixel from "eye" position
     glm::vec3 yr{0.0f, 0.0f, 0.0f};
     glm::vec3 xr{0.0f, 0.0f, 0.0f};
 
     for (unsigned y = 0; y < height_; ++y) {
 
+        // calculates vertical position of pixel
         if (y < half_height){
             yr = down * -(y - half_height);
         } else if (y > half_height){
@@ -44,12 +45,14 @@ void Renderer::render(Scene const &scene) {
             //glm::vec3 direction = glm::normalize(scene.camera_.direction);
             //direction = direction + glm::vec3{x - (0.5f * width_), y - (0.5f * height_), pos.z - d};
             
+            // calculates horizontal position of pixel
             if (x < half_width){
                 xr = l * -(x - half_width);
             } else if (x > half_width) {
                 xr = r * (x - half_width);
             }
 
+            // final direction is the sum out of 3 directions of the viewplain
             glm::vec3 direction = xr + yr + zr;
 
             // in dieser Schleife wird der Schnittpunkt mit dem ersten Objekt den der Strahl trifft berechnet
@@ -180,7 +183,7 @@ Color Renderer::calc_specular(Hitpoint const& hitpoint, Scene const &scene) {
     return final;
 }
 
-// Berechnung der Spiegelung noch nicht ganz ausgereift.
+// Working. No graphical testing yet
 Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, unsigned int recursive_boundary){
     Color final{0, 0, 0};
     glm::vec3 incoming_direction = glm::normalize(hitpoint.direction_);
@@ -189,7 +192,7 @@ Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, un
     Ray reflaction_ray{hitpoint.hitpoint_, glm::normalize(reflaction_ray_direction)};
     Hitpoint next_hit = fire_ray(scene, reflaction_ray);
 
-    //hab es zu next_hit geändert
+    // return of background color in case of no hit, no color in case of reaching maximum recursive depth
     if (!next_hit.hit_) {
         return Color{0, 0, 0};
     } else {
@@ -202,7 +205,7 @@ Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, un
     }
 }
 
-// calculates the refraction, not tested
+// calculates the refraction, not tested yet
 Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bool inside){
     float eta;
 
@@ -229,7 +232,7 @@ Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bo
     // fires the refracted ray
     Hitpoint hit = fire_ray(scene, refrected_ray);
 
-    // if the new ray hitted the object again, another object or non at all
+    // if the new ray hitted the object again(from inside), another new object or non at all
     if (hitpoint.hit_ && hitpoint.name_ != hit.name_){
         return calc_color(hit, scene, 5);
     } else if (hit.hit_){
