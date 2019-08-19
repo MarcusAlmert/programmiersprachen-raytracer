@@ -70,7 +70,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         auto t = glm::dot(normdirection, hinten);
         float t_hinten = (glm::dot(hinten, min_) - glm::dot(ray.origin_, hinten)) / glm::dot(normdirection, hinten);
         glm::vec3 cutP = ray.origin_ + normdirection * t_hinten;
-        if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.z >= min_.z && cutP.z <= max_.z) {
+        if (cutP.y > min_.y && cutP.y < max_.y && cutP.z > min_.z && cutP.z < max_.z) {
             inBox.push_back(t_hinten);
             normals.emplace_back(glm::vec3{-1, 0, 0});
         }
@@ -80,7 +80,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
     if (glm::dot(rechts, ray.direction_) != 0) {
         float t_rechts = (glm::dot(rechts, min_) - glm::dot(ray.origin_, rechts)) / glm::dot(normdirection, rechts);
         glm::vec3 cutP = ray.origin_ + normdirection * t_rechts;
-        if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.x >= min_.x && cutP.x <= max_.x) {
+        if (cutP.y > min_.y && cutP.y < max_.y && cutP.x > min_.x && cutP.x < max_.x) {
             inBox.push_back(t_rechts);
             normals.emplace_back(glm::vec3{0, 0, -1});
         }
@@ -90,7 +90,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
     if (glm::dot(unten, ray.direction_) != 0) {
         float t_unten = (glm::dot(unten, min_) - glm::dot(ray.origin_, unten)) / glm::dot(normdirection, unten);
         glm::vec3 cutP = ray.origin_ + normdirection * t_unten;
-        if (cutP.z >= min_.z && cutP.z <= max_.z && cutP.x >= min_.x && cutP.x <= max_.x) {
+        if (cutP.z > min_.z && cutP.z < max_.z && cutP.x > min_.x && cutP.x < max_.x) {
             inBox.push_back(t_unten);
             normals.emplace_back(glm::vec3{0, -1, 0});
         }
@@ -100,7 +100,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
     if (glm::dot(vorne, ray.direction_) != 0) {
         float t_vorne = (glm::dot(vorne, max_) - glm::dot(ray.origin_, vorne)) / glm::dot(normdirection, vorne);
         glm::vec3 cutP = ray.origin_ + normdirection * t_vorne;
-        if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.z >= min_.z && cutP.z <= max_.z) {
+        if (cutP.y > min_.y && cutP.y < max_.y && cutP.z > min_.z && cutP.z < max_.z) {
             inBox.push_back(t_vorne);
             normals.emplace_back(glm::vec3{1, 0, 0});
         }
@@ -110,7 +110,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
     if (glm::dot(links, ray.direction_) != 0) {
         float t_links = (glm::dot(links, max_) - glm::dot(ray.origin_, links)) / glm::dot(normdirection, links);
         glm::vec3 cutP = ray.origin_ + normdirection * t_links;
-        if (cutP.y >= min_.y && cutP.y <= max_.y && cutP.x >= min_.x && cutP.x <= max_.x) {
+        if (cutP.y > min_.y && cutP.y < max_.y && cutP.x > min_.x && cutP.x < max_.x) {
             inBox.push_back(t_links);
             normals.emplace_back(glm::vec3{0, 0, 1});
         }
@@ -121,7 +121,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
     if (glm::dot(oben, ray.direction_) != 0) {
         float t_oben = (glm::dot(oben, max_) - glm::dot(ray.origin_, oben)) / glm::dot(normdirection, oben);
         glm::vec3 cutP = ray.origin_ + normdirection * t_oben;
-        if (cutP.z >= min_.z && cutP.z <= max_.z && cutP.x >= min_.x && cutP.x <= max_.x) {
+        if (cutP.z > min_.z && cutP.z < max_.z && cutP.x > min_.x && cutP.x < max_.x) {
             inBox.push_back(t_oben);
             normals.emplace_back(glm::vec3{0, 1, 0});
         }
