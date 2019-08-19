@@ -56,18 +56,49 @@ std::ostream &Triangle::print(std::ostream &os) const {
 
 // TODO implement intersect // not working
 Hitpoint Triangle::intersect(Ray const &ray) const {
-    glm::vec3 Position;
-    float distance;
-    bool hitted = glm::intersectRayTriangle(ray.origin_, ray.direction_, p1_, p2_, p3_, Position);
-    Hitpoint hitp;
-    hitp.hit_ = hitted;
-    hitp.hitpoint_ = Position;
-    hitp.material_ = material_;
-    hitp.distance_ = glm::distance(Position, ray.origin_);
-    hitp.direction_ = ray.direction_;
-    hitp.name_ = name_;
-    hitp.normal_ = glm::cross(p1_ - p2_, p3_ - p2_);
-    return hitp;
+    glm::vec3 u, v, n;              // triangle vectors
+    glm::vec3 w0, w;           // ray vectors
+    float r, a, b;              // params to calc ray-plane intersect
+
+    // get triangle edge vectors and plane normal
+    u = p2_ - p1_;
+    v = p3_ - p1_;
+    n = glm::cross(u, v);
+    if (n == glm::vec3{0, 0, 0})
+        return Hitpoint{};           // triangle is a line or point
+
+    w0 = ray.origin_ - p1_;
+    a = -glm::dot(n, w0);
+    b = glm::dot(n, ray.direction_);
+    if (fabs(b) < 0.00000001) {     // ray is  parallel to triangle plane
+        if (a == 0)                 // ray lies in triangle plane
+            return Hitpoint{};
+        else return Hitpoint{};     // ray disjoint from plane
+    }
+
+    r = a / b;
+    if (r < 0.0)                    // ray goes away from triangle
+        return Hitpoint{};         // no intersect
+    glm::vec3 intersection_point = ray.origin_ + r * ray.direction_;
+    float uu, uv, vv, wu, wv, D;
+    uu = glm::dot(u, u);
+    uv = glm::dot(u, v);
+    vv = glm::dot(v, v);
+    w = intersection_point - p1_;
+    wu = glm::dot(w, u);
+    wv = glm::dot(w, v);
+    D = uv * uv - uu * vv;
+
+    float s, t;
+    s = (uv * wv - vv * wu) / D;
+    if (s < 0.0 || s > 1.0)         // point is outside T
+        return Hitpoint{};
+    t = (uv * wu - uu * wv) / D;
+    if (t < 0.0 || (s + t) > 1.0)  // point is outside T
+        return Hitpoint{};
+
+    return Hitpoint{true, r, name_, material_, ray.direction_, intersection_point,
+                    n};                       // I is in T
 }
 
 
