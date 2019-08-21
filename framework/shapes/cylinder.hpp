@@ -9,9 +9,9 @@ class Cylinder : public Shape {
 public:
     Cylinder();
 
-    Cylinder(glm::vec3 const &pos, float radius, float height);
+    Cylinder(glm::vec3 const &pos1, glm::vec3 const& pos2, float radius);
 
-    Cylinder(glm::vec3 const &pos, float radius, float height, std::string const &name,
+    Cylinder(glm::vec3 const &pos1, glm::vec3 const& pos2, float radius, std::string const &name,
              std::shared_ptr<Material> const mat_ptr);
 
     ~Cylinder();
@@ -24,10 +24,12 @@ public:
 
     virtual Hitpoint intersect(Ray const &ray) const override;
 
+    float get_height() const;
+
 private:
-    glm::vec3 pos_;
+    glm::vec3 pos1_;
+    glm::vec3 pos2_;
     float radius_;
-    float height_;
 };
 
 

@@ -107,21 +107,25 @@ Scene read_sdf(std::string const &path) {
                 } else if (type == "cylinder") {
                     std::string shape_name;
                     std::string shape_mat_name;
-                    float px;
-                    float py;
-                    float pz;
+                    float p1x;
+                    float p1y;
+                    float p1z;
+                    float p2x;
+                    float p2y;
+                    float p2z;
                     float r;
-                    float h;
                     line_string_stream >> shape_name;
-                    line_string_stream >> px;
-                    line_string_stream >> py;
-                    line_string_stream >> pz;
+                    line_string_stream >> p1x;
+                    line_string_stream >> p1y;
+                    line_string_stream >> p1z;
+                    line_string_stream >> p2x;
+                    line_string_stream >> p2y;
+                    line_string_stream >> p2z;
                     line_string_stream >> r;
-                    line_string_stream >> h;
                     line_string_stream >> shape_mat_name;
                     auto matptr = find(scene1.mat_vector_, shape_mat_name);
                     std::shared_ptr<Shape> cylinder = std::make_shared<Cylinder>(
-                            Cylinder({px, py, pz}, r, h, shape_name, matptr));
+                            Cylinder(glm::vec3{p1x, p1y, p1z}, glm::vec3{p2x, p2y, p2z}, r, shape_name, matptr));
                     scene1.shape_vector_.push_back(cylinder);
 
                 } else if (type == "cone") {
