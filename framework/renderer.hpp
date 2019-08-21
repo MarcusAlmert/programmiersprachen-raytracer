@@ -45,7 +45,8 @@ private:
     Color calc_diffuse(Hitpoint const& hitpoint, Scene const &scene);
     Color calc_specular(Hitpoint const& hitpoint, Scene const &scene);
     Color calc_reflection(Hitpoint const& hitpoint, Scene const& scene, unsigned int recursive_boundary);
-    Color calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bool inside);
+    Color calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bool inside, unsigned int recursive_boundary);
+    float calc_fresnel_reflection_ratio(Hitpoint const& hitpoint, Scene const& scene);
 
     Hitpoint fire_ray(Scene const& scene, Ray const& ray);
 

@@ -95,20 +95,32 @@ void Renderer::write(Pixel const &p) {
     ppm_.write(p);
 }
 
-// Farbwertberechnung, TODO ! Weiter Funktionen für Reflexionen etc. notwendig
+// Farbwertberechnung, TODO !
 Color Renderer::calc_color(Hitpoint const& hitpoint, Scene const &scene, unsigned int reflaction_steps) {
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
     Color ambient = calc_ambient(hitpoint.material_, scene);
     Color diffuse = calc_diffuse(hitpoint, scene);
     Color specular = calc_specular(hitpoint, scene);
     //TODO fix SegFault
-    Color reflection = calc_reflection(hitpoint,scene,reflaction_steps);
-    return (raytracer_value + ambient + diffuse + specular /*+ reflection */);
-}
 
-//TODO calc_phong
-//TODO calc_reflection
-//TODO calc_refraction
+    // Experimentelle Berechnung, durchsichtigkeit und Spiegelung nicht ausgereift
+    if(hitpoint.material_->glossy_ > 0 && hitpoint.material_->opacity_ > 0){            // transparent and reflactive
+        float kr = calc_fresnel_reflection_ratio(hitpoint, scene);
+        float ko = 1 - kr;
+        Color reflection = calc_reflection(hitpoint, scene, reflaction_steps);
+        Color refraction = calc_refraction(hitpoint, scene, false, reflaction_steps);
+        raytracer_value = (kr * reflection + ko * refraction);
+    } else if (hitpoint.material_->glossy_ > 0){                                        // reflactive
+        Color reflection = calc_reflection(hitpoint, scene, reflaction_steps);
+        Color phong = ambient + diffuse + specular;
+        raytracer_value = (phong * (1 - hitpoint.material_->glossy_) + reflection * hitpoint.material_->glossy_);
+    } //else if (hitpoint.material_->opacity_ > 0){} 
+    else {                                                                              // default phong
+        raytracer_value = (ambient + diffuse + specular);
+    }
+    tone_mapping(raytracer_value);                                                      // default tone mapping
+    return raytracer_value;
+}
 
 // Diese Funktion ist in soweit fertig holt nur ka aus dem Material
 Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &scene) {
@@ -206,7 +218,7 @@ Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, un
 }
 
 // calculates the refraction, not tested yet
-Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bool inside){
+Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bool inside, unsigned int recursive_boundary){
     float eta;
 
     // check if ray is coming from outside or inside the object
@@ -217,15 +229,21 @@ Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bo
     }
 
     // calculates cosi and inverts it if negative
-    float c1 = glm::dot(hitpoint.normal_, hitpoint.direction_);
+    float cos1 = glm::dot(hitpoint.normal_, hitpoint.direction_);
     glm::vec3 n = hitpoint.normal_;
-    if (c1 < 0){
+    if (cos1 < 0){
         invert_direction(n);
     }
 
+    // check for case of total reflection
+    float sin2 = eta * sqrtf(std::max(0.0f, 1 - cos1 * cos1));
+    if (sin2 > 1){
+        return calc_reflection(hitpoint, scene, recursive_boundary);
+    }
+
     // calulating the refrected ray
-    float c2 = sqrtf(1.0f - eta * eta * (1.0f -c1 * c1));
-    glm::vec3 refrection_direction = eta * hitpoint.direction_ + (eta * c1 - c2) * hitpoint.normal_;
+    float cos2 = sqrtf(1.0f - eta * eta * (1.0f -cos1 * cos1));
+    glm::vec3 refrection_direction = eta * hitpoint.direction_ + (eta * cos1 - cos2) * hitpoint.normal_;
     glm::vec3 refrection_origin = hitpoint.hitpoint_ - 0.1f * hitpoint.normal_;
     Ray refrected_ray{refrection_origin, refrection_direction};
 
@@ -234,13 +252,40 @@ Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bo
 
     // if the new ray hitted the object again(from inside), another new object or non at all
     if (hitpoint.hit_ && hitpoint.name_ != hit.name_){
-        return calc_color(hit, scene, 5);
+        return calc_color(hit, scene, 3);
     } else if (hit.hit_){
-        return calc_refraction(hit, scene, true);
+        return calc_refraction(hit, scene, true, recursive_boundary);
     } else {
         return Color{0.0f, 0.0f, 0.0f};
     }
 
+}
+
+float Renderer::calc_fresnel_reflection_ratio(Hitpoint const& hitpoint, Scene const& scene){
+
+    float cos1 = glm::clamp(-1.0f, 1.0f, glm::dot(hitpoint.direction_, hitpoint.normal_));
+    float eta1 =  1;
+    float eta2 = hitpoint.material_->refractive_index_;
+
+    // check if inside or outside of object
+    if (cos1 > 0){
+        std::swap(eta1, eta2);
+    }
+    float sin2 = (eta1 / eta2) * sqrtf(std::max(0.0f, 1 - cos1 * cos1));
+
+    // check for case of total reflection
+    if (sin2 > 1){
+        return 0;
+    } else {
+        float cos2 = sqrt(std::max(0.0f, 1 - sin2 * sin2));
+        cos1 = fabsf(cos1);     // absolute value
+        float n2cos1 = eta2 * cos1;
+        float n1cos2 = eta1 * cos2;
+        float f_parallel = (n2cos1 - n1cos2) / (n2cos1 + n1cos2);
+        float f_perpendicular = (n1cos2 - n2cos1) / (n1cos2 + n2cos1);
+        float ratio_of_reflected =  0.5 * (f_parallel + f_perpendicular);
+        return ratio_of_reflected;
+    }
 }
 
 Hitpoint Renderer::fire_ray(Scene const& scene, Ray const& ray){

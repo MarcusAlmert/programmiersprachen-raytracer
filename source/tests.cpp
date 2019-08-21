@@ -251,6 +251,7 @@ TEST_CASE("read sdf", "SDF") {
     CHECK(scene1.camera_.upVector.z == 0);
 }
 // new with cylinder, cone , triangle  and composite starts here
+/* 
 TEST_CASE("Testcase SDF-Reader for new shapes") {
     Scene scene = read_sdf("../../SDF-Scene/composite.sdf");
     CHECK(scene.ambient_ == 0.2f);
@@ -261,7 +262,7 @@ TEST_CASE("Testcase SDF-Reader for new shapes") {
     CHECK(scene.shape_vector_[3]->name_ == "rcone");
     CHECK(scene.shape_vector_[4]->name_ == "gtriangle");
     CHECK(scene.shape_vector_[5]->name_ == "root");
-}
+}*/
 
 TEST_CASE("find()", "vec,map,set") {
     Scene scene1 = read_sdf("../../SDF-Scene/example.sdf");

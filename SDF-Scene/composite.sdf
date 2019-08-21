@@ -1,10 +1,10 @@
 # materials
-define material red     1 0 0   1 0 0   1 0 0   10 	0.9  0  0  0
-define material blue    0 0 1   0 0 1   1 1 1   100	    0.9  0  0  0
-define material green   0 1 0   0 1 0   0 1 0   10 	0.9  0  0  0
+define material red     1 0 0   1 0 0   1 0 0   10 	0  0  0  0
+define material blue    0 0 1   0 0 1   1 1 1   100 0  0  0  0
+define material green   0 1 0   0 1 0   0 1 0   10 	0  0  0  0
 
 # shapes
-define shape box        rbox        75  75  -10     -20 -20 -50                 green
+define shape box        rbox        45  75  -10     -50 -20 -50                 green
 define shape sphere     bsphere     150 0   -60     100                         blue
 define shape cylinder   bcylinder   0   0    0      100 100                     blue
 define shape cone       rcone           0   0    -100      50  50                      red
