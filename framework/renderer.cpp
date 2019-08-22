@@ -206,7 +206,7 @@ Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, un
 
     // return of background color in case of no hit, no color in case of reaching maximum recursive depth
     if (!next_hit.hit_) {
-        return Color{0, 0, 0};
+        return scene.backgroundcolor_;
     } else {
         if (recursive_boundary > 0){
             Color reflected_color = calc_color(next_hit, scene, recursive_boundary - 1) * 0.8f;

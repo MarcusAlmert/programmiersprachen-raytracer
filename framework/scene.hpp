@@ -9,6 +9,7 @@
 #include "shapes/shape.hpp"
 #include "camera.hpp"
 #include "light.hpp"
+#include "color.hpp"
 
 
 struct Scene {
@@ -17,6 +18,7 @@ struct Scene {
     Camera camera_;
     std::vector<Light> lights_;
     float ambient_;
+    Color backgroundcolor_ = Color{0.0f, 0.0f, 0.0f};
 };
 
 

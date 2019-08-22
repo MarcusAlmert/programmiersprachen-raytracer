@@ -246,6 +246,15 @@ Scene read_sdf(std::string const &path) {
                 float amb;
                 line_string_stream >> amb;
                 scene1.ambient_ = amb;
+            } else if (identifier == "backgroundcolor"){
+                float r;
+                float g;
+                float b;
+                line_string_stream >> r;
+                line_string_stream >> g;
+                line_string_stream >> b;
+                Color back_col = Color(r, g, b);
+                scene1.backgroundcolor_ = back_col;
             }
         }
     }
