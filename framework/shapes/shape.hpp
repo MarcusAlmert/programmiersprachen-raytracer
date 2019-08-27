@@ -26,6 +26,11 @@ public:
 
     std::shared_ptr<Material> material_;
     std::string name_ = "No_name";
+    glm::mat4 world_transformation_ = glm::mat4x4{glm::vec4{1.0f,0.0f,0.0f,0.0f},
+                                                  glm::vec4{0.0f,1.0f,0.0f,0.0f},
+                                                  glm::vec4{0.0f,0.0f,1.0f,0.0f},
+                                                  glm::vec4{0.0f,0.0f,0.0f,1.0f}};
+    glm::mat4 world_transformation_inv = glm::inverse(world_transformation_);
 };
 
 std::ostream &operator<<(std::ostream &os, Shape const &s);
