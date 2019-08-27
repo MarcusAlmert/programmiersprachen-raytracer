@@ -22,13 +22,19 @@ struct Hitpoint {
             os << "--------------------" << std::endl;
             return os;
         } else {
+            std::shared_ptr<Material> check = nullptr;
             os << "distance:    " << hitpoint.distance_ << "\ndirection:   x[" <<
                hitpoint.direction_.x << "] y[" << hitpoint.direction_.y << "] z[" <<
                hitpoint.direction_.z << "]\nhitpoint:    x[" << hitpoint.hitpoint_.x <<
                "] y[" << hitpoint.hitpoint_.y << "] z[" << hitpoint.hitpoint_.z <<
                "]\nnormal:      x[" << hitpoint.normal_.x << "] y[" << hitpoint.normal_.y <<
-               "] z[" << hitpoint.normal_.z << "]\nmaterial:    " << hitpoint.material_->name_ <<
-               "\n--------------------" << std::endl;
+               "] z[" << hitpoint.normal_.z << "]\nmaterial:    ";
+            if (hitpoint.material_ == nullptr){
+                os << "NoMaterial";
+            } else {
+                os << hitpoint.material_->name_;
+            }
+            os  << "\n--------------------" << std::endl;
             return os;
         }
 
