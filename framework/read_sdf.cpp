@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <glm/gtx/transform.hpp>
 #include "material.hpp"
 #include "scene.hpp"
 #include "shapes/sphere.hpp"
@@ -255,6 +256,49 @@ Scene read_sdf(std::string const &path) {
                 line_string_stream >> b;
                 Color back_col = Color(r, g, b);
                 scene1.backgroundcolor_ = back_col;
+            }
+        } else if(identifier == "transform"){
+            std::string name;
+            line_string_stream >> name;
+            if(find(scene1.shape_vector_,name) != nullptr){
+                std::shared_ptr<Shape> shape_ptr = find(scene1.shape_vector_,name);
+            } else if(name == "camera"){
+                std::string transType;
+                if(transType == "rotate"){
+                    float angle;
+                    float x;
+                    float y;
+                    float z;
+                    line_string_stream >> angle;
+                    line_string_stream >> x;
+                    line_string_stream >> y;
+                    line_string_stream >> z;
+                    glm::mat4x4 rotate = glm::rotate(angle,glm::vec3(x,y,z));
+                    glm::vec4 dir4 = glm::vec4(scene1.camera_.direction,0) * rotate;
+                    glm::vec4 up4 = glm::vec4(scene1.camera_.upVector,0) * rotate;
+                    glm::vec3 dir = glm::normalize(glm::vec3(dir4.x,dir4.y,dir4.z));
+                    glm::vec3 up = glm::vec3(up4.x,up4.y,up4.z);
+                    glm::vec3 u = glm::normalize(glm::cross(dir, up));
+                    glm::vec3 v = glm::normalize(glm::cross(u, dir));
+                    scene1.camera_.transformation_ += glm::mat4{
+                            glm::vec4{u,0.0f},
+                            glm::vec4{v,0.0f},
+                            glm::vec4{-dir,0.0f},
+                            glm::vec4{0.0f}};
+                } else if(transType == "translate"){
+                    float angle;
+                    float x;
+                    float y;
+                    line_string_stream >> angle;
+                    line_string_stream >> x;
+                    line_string_stream >> y;
+                    scene1.camera_.transformation_ += glm::mat4{
+                            glm::vec4{0.0f},
+                            glm::vec4{0.0f},
+                            glm::vec4{0.0f},
+                            glm::vec4{angle,x,y, 1.0f}};
+                }
+
             }
         }
     }

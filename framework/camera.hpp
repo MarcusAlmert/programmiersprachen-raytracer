@@ -11,7 +11,7 @@ struct Camera{
     glm::vec3 position = {0,0,0};
     glm::vec3 upVector = {0,1,0};
     unsigned int fov = 60;
-    glm::mat4x4 transformation =  glm::mat4x4{
+    glm::mat4x4 transformation_ =  glm::mat4x4{
             glm::vec4{1.0f,0.0f,0.0f,0.0f},
             glm::vec4{0.0f,1.0f,0.0f,0.0f},
             glm::vec4{0.0f,0.0f,1.0f,0.0f},

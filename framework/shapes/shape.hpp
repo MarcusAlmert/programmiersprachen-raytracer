@@ -7,6 +7,8 @@
 #include "ray.hpp"
 #include "hitpoint.hpp"
 
+enum Axis{x_axis,y_axis, z_axis};
+
 class Shape {
 
 public:
@@ -31,6 +33,7 @@ public:
                                                   glm::vec4{0.0f,0.0f,1.0f,0.0f},
                                                   glm::vec4{0.0f,0.0f,0.0f,1.0f}};
     glm::mat4 world_transformation_inv = glm::inverse(world_transformation_);
+    void transformation(float rotate, glm::vec3 const& scale, glm::vec3 translate, Axis);
 };
 
 std::ostream &operator<<(std::ostream &os, Shape const &s);
