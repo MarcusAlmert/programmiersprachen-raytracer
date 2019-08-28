@@ -7,6 +7,7 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/glm.hpp>
 #include <renderer.hpp>
+#include <shapes/plane.hpp>
 #include "shapes/shape.hpp"
 #include "shapes/sphere.hpp"
 #include "shapes/box.hpp"
@@ -15,6 +16,7 @@
 #include "light.hpp"
 #include "shapes/composite.hpp"
 #include "shapes/cylinder.hpp"
+#include "shapes/plane.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -359,6 +361,11 @@ TEST_CASE("Triangle functions", "Triangle") {
     CHECK(hitp.normal_.x == 1.0f);
     CHECK(hitp.normal_.y == 0);
     CHECK(hitp.normal_.z == 0);
+}
+
+TEST_CASE("Plane functions"){
+    Plane plane({1,1,1},{0,0,0},"plane1", nullptr);
+    std::cout << plane;
 }
 
 
