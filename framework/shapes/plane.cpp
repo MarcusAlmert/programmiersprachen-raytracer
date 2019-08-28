@@ -1,3 +1,4 @@
+#include <glm-0.9.5.3/glm/gtx/intersect.hpp>
 #include "plane.hpp"
 
 Plane::Plane() {
@@ -42,24 +43,22 @@ std::ostream& Plane::print(std::ostream &os) const {
 
 Hitpoint Plane::intersect(Ray const &ray) const {
     Ray transformedRay = transformRay(ray, world_transformation_inv);
-    float denominator = glm::dot(normal_, transformedRay.direction_);
-
-    if (fabs(denominator) > 0.0001) {
-        glm::vec3 difference = point_ - transformedRay.origin_;
-        float t = glm::dot(difference, normal_) / denominator;
-        if (t > 0.0001) {
-            glm::vec3 cutP = transformedRay.origin_ + t * transformedRay.direction_;
+    float distance;
+    bool hitted = glm::intersectRayPlane(transformedRay.origin_,glm::normalize(transformedRay.direction_),point_,glm::normalize(normal_),distance);
+    if(hitted){
+            glm::vec3 cutP = transformedRay.origin_ + distance * transformedRay.direction_;
             glm::vec4 trans_cutP =world_transformation_ * glm::vec4{cutP,1 };
             glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4{normal_,0 });
             Hitpoint hit;
-            hit.hitpoint_ = cutP;//{trans_cutP.x, trans_cutP.y, trans_cutP.z};
-            hit.normal_ = normal_; //{trans_normal.x, trans_normal.y, trans_normal.z};
+            hit.hitpoint_ = {trans_cutP.x, trans_cutP.y, trans_cutP.z};
+            hit.normal_ = {trans_normal.x, trans_normal.y, trans_normal.z};
             hit.direction_ = ray.direction_;
             hit.name_ = name_;
             hit.material_ = material_;
             hit.hit_ = true;
+            hit.distance_ = glm::length(hit.hitpoint_-ray.origin_);
             return hit;
         }
-    }
+
     return Hitpoint{};
 }
