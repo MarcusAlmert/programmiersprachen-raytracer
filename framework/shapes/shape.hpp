@@ -26,7 +26,7 @@ public:
 
     virtual ~Shape();
 
-    void transformation(float rotate, glm::vec3 const &scale, glm::vec3 const& translate, Axis const& axis);
+    void transformation(float rotateAngle, glm::vec3 const& rotateAxis, glm::vec3 const &scale, glm::vec3 const& translate);
 
     std::shared_ptr<Material> material_;
     std::string name_ = "No_name";

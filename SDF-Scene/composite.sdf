@@ -19,5 +19,10 @@ define light spot1 -500 800 0       0.8 0.8 0.8     10
 define light spot1  500 0   1000    0.8 0.8 0.8     10
 define ambient 0.2
 
+# transformations
+
+transform bsphere scale 1 0.5 1
+transform bsphere translate -10 0 0
+transform bsphere rotate 90 1 0 5
 # camera
-define camera eye   60	50 -100 300 	0 5 -10 	0 1 0
+define camera eye   60	50 -100 400 	0 5 -10 	0 1 0

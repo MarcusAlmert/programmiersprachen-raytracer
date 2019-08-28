@@ -223,10 +223,7 @@ Scene read_sdf(std::string const &path) {
             } else if (identifier == "camera") {
                 std::string c_name;
                 line_string_stream >> c_name;
-                float x;
-                float y;
-                float z;
-                float fov;
+                float x,y,z,fov;
                 line_string_stream >> fov;
                 line_string_stream >> x;
                 line_string_stream >> y;
@@ -248,9 +245,7 @@ Scene read_sdf(std::string const &path) {
                 line_string_stream >> amb;
                 scene1.ambient_ = amb;
             } else if (identifier == "backgroundcolor"){
-                float r;
-                float g;
-                float b;
+                float r,g,b;
                 line_string_stream >> r;
                 line_string_stream >> g;
                 line_string_stream >> b;
@@ -260,15 +255,37 @@ Scene read_sdf(std::string const &path) {
         } else if(identifier == "transform"){
             std::string name;
             line_string_stream >> name;
+
             if(find(scene1.shape_vector_,name) != nullptr){
                 std::shared_ptr<Shape> shape_ptr = find(scene1.shape_vector_,name);
+                std::string transType;
+                line_string_stream >> transType;
+                if(transType == "translate"){
+                    float x,y,z;
+                    line_string_stream >> x;
+                    line_string_stream >> y;
+                    line_string_stream >> z;
+                    shape_ptr->transformation(0,{0,0,0},{1,1,1},{x,y,z});
+                } else if(transType == "rotate"){
+                    float angle,x,y,z;
+                    line_string_stream >> angle;
+                    line_string_stream >> x;
+                    line_string_stream >> y;
+                    line_string_stream >> z;
+                    shape_ptr->transformation(angle,{x,y,z},{1,1,1},{0,0,0});
+                }else if(transType == "scale"){
+                    float x,y,z;
+                    line_string_stream >> x;
+                    line_string_stream >> y;
+                    line_string_stream >> z;
+                    shape_ptr->transformation(0,{0,0,0},{x,y,z},{0,0,0});
+                }
+
             } else if(name == "camera"){
                 std::string transType;
+                line_string_stream >> transType;
                 if(transType == "rotate"){
-                    float angle;
-                    float x;
-                    float y;
-                    float z;
+                    float angle,x,y,z;
                     line_string_stream >> angle;
                     line_string_stream >> x;
                     line_string_stream >> y;
@@ -286,9 +303,7 @@ Scene read_sdf(std::string const &path) {
                             glm::vec4{-dir,0.0f},
                             glm::vec4{0.0f}};
                 } else if(transType == "translate"){
-                    float angle;
-                    float x;
-                    float y;
+                    float angle,x,y;
                     line_string_stream >> angle;
                     line_string_stream >> x;
                     line_string_stream >> y;

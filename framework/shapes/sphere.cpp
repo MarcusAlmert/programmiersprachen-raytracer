@@ -48,17 +48,26 @@ std::ostream &Sphere::print(std::ostream &os) const {
 }
 
 Hitpoint Sphere::intersect(Ray const &ray) const {
-    Ray ray_ = ray;
+    Ray transformedRay_ = transformRay(ray,world_transformation_inv);
     Hitpoint hitp;
     float distance;
-    bool hitted = glm::intersectRaySphere(ray_.origin_,
-                                          glm::normalize(ray_.direction_), middlePoint_, pow(radius_, 2), distance);
+    glm::vec3 cutpoint;
+    glm::vec3 normal;
+    glm::vec4 trans_middlePoint_ = glm::vec4{middlePoint_,1 } * world_transformation_;
+   // bool hitted = glm::intersectRaySphere(transformedRay_.origin_,
+     //                                     glm::normalize(transformedRay_.direction_), {trans_middlePoint_.x,trans_middlePoint_.y,trans_middlePoint_.z}, pow(radius_, 2), distance);
+
+    bool hitted = glm::intersectRaySphere(transformedRay_.origin_,glm::normalize(transformedRay_.direction_),middlePoint_,radius_, cutpoint, normal);
     if (hitted) {
         float hitx = ray.origin_.x + distance * ray.direction_.x;
         float hity = ray.origin_.y + distance * ray.direction_.y;
         float hitz = ray.origin_.z + distance * ray.direction_.z;
-        glm::vec3 normal = glm::normalize(glm::vec3{hitx, hity, hitz} - middlePoint_);
-        hitp = {true, distance, name_, material_, ray_.direction_, {hitx, hity, hitz}, normal};
+        glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(normal,0));
+        glm::vec4 trans_cutpoint = world_transformation_ * glm::vec4(cutpoint,1);
+        normal = {trans_normal.x, trans_normal.y, trans_normal.z};
+        cutpoint = {trans_cutpoint.x, trans_cutpoint.y, trans_cutpoint.z};
+        distance = glm::length(cutpoint-ray.origin_);
+        hitp = {true, distance, name_, material_, ray.direction_, cutpoint, normal};
     }
     return hitp;
 }
