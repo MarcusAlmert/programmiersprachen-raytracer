@@ -106,7 +106,6 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
     if (t1 > 0.00001f){
         Hitpoint hitpoint{};
         glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t1;
-        hitpoint.distance_ = t1;
         glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point,1);
         hitpoint.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
         hitpoint.distance_ = glm::length(ray.origin_-hitpoint.hitpoint_);
@@ -180,7 +179,7 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
     if (final_hitpoint.hit_){
         final_hitpoint.name_ = name_;
         final_hitpoint.material_ = material_;
-        final_hitpoint.direction_ = ray_direction;
+        final_hitpoint.direction_ = ray.direction_;
     }
 
     return final_hitpoint;
