@@ -65,10 +65,10 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
     // C = (dp - dot(dp, va) * va)^2 - r^2
     // -> A*t^2 + B*t + C = 0
 
-    
+    Ray transformedRay = transformRay(ray, world_transformation_inv);
     glm::vec3 cylinder_direction = glm::normalize(pos2_ - pos1_);
-    glm::vec3 ray_direction = glm::normalize(ray.direction_);
-    glm::vec3 delta_p = ray.origin_ - pos1_;
+    glm::vec3 ray_direction = glm::normalize(transformedRay.direction_);
+    glm::vec3 delta_p = transformedRay.origin_ - pos1_;
     float A = powf(glm::length((ray_direction - glm::dot(ray_direction, cylinder_direction) * cylinder_direction)), 2.0f);
     float B = 2 * glm::dot((ray_direction - glm::dot(ray_direction, cylinder_direction) * cylinder_direction), 
                             delta_p - glm::dot(delta_p, cylinder_direction) * cylinder_direction);
@@ -105,9 +105,11 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
     // first check for two possible hits on the body of the cylinder
     if (t1 > 0.00001f){
         Hitpoint hitpoint{};
+        glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t1;
         hitpoint.distance_ = t1;
-        glm::vec3 hit_point = ray.origin_ + ray_direction * t1;
-        hitpoint.hitpoint_ = hit_point;
+        glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point,1);
+        hitpoint.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
+        hitpoint.distance_ = glm::length(ray.origin_-hitpoint.hitpoint_);
         if (glm::dot(cylinder_direction, hit_point - pos1_) > 0 && glm::dot(cylinder_direction, hit_point - pos2_) < 0){
         hitpoint.hit_ = true;
         hitpoint.normal_ = calc_normal_corpus(hit_point);
@@ -116,43 +118,51 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
     }
     if (t2 > 0.00001f){
         Hitpoint hitpoint{};
-
-        hitpoint.distance_ = t2;
-        glm::vec3 hit_point = ray.origin_ + ray_direction * t2;
-        hitpoint.hitpoint_ = hit_point;
+        glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t2;
+        glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point,1);
+        hitpoint.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
+        hitpoint.hit_ = true;
+        hitpoint.distance_ = glm::length(ray.origin_-hitpoint.hitpoint_);
         if (glm::dot(cylinder_direction, hit_point - pos1_) > 0 && glm::dot(cylinder_direction, hit_point - pos2_) < 0){
-        hitpoint.hit_ = true;        
         hitpoint.normal_ = calc_normal_corpus(hit_point);
         candidates.emplace_back(hitpoint);
         }
     }
     
     // calculating distance between origin of ray and fields of the caps
-    float t3 = (glm::dot(cylinder_direction, pos1_) - glm::dot(cylinder_direction, ray.origin_)) / glm::dot(ray_direction, cylinder_direction);
-    float t4 = (glm::dot(cylinder_direction, pos2_) - glm::dot(cylinder_direction, ray.origin_)) / glm::dot(ray_direction, cylinder_direction);
+    float t3 = (glm::dot(cylinder_direction, pos1_) - glm::dot(cylinder_direction, transformedRay.origin_)) / glm::dot(ray_direction, cylinder_direction);
+    float t4 = (glm::dot(cylinder_direction, pos2_) - glm::dot(cylinder_direction, transformedRay.origin_)) / glm::dot(ray_direction, cylinder_direction);
 
     // t3 and t4 are candidates if hit is on the cap of the cylinder
     if (t3 > 0.0001f){
-        glm::vec3 hit_point = ray.origin_ + ray_direction * t3;
+        glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t3;
+
+
         float q3_minus_p1_length_squared = powf(glm::length(hit_point - pos1_),2.0f);
         if (q3_minus_p1_length_squared < powf(radius_, 2.0f)){
+
             Hitpoint hitpoint{};
+            glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point,1);
+            glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(glm::normalize(pos1_ - pos2_),0));
+            hitpoint.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
+            hitpoint.normal_ = {trans_normal.x,trans_normal.y,trans_normal.z};
             hitpoint.hit_ = true;
-            hitpoint.distance_ = t3;
-            hitpoint.hitpoint_ = hit_point;
-            hitpoint.normal_ = glm::normalize(pos1_ - pos2_);
+            hitpoint.distance_ = glm::length(ray.origin_-hitpoint.hitpoint_);
             candidates.emplace_back(hitpoint);
         }
     }
     if (t4 > 0.0001f){
-        glm::vec3 hit_point = ray.origin_ + ray_direction * t4;
+        glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t4;
         float q4_minus_p2_length_squared = powf(glm::length(hit_point - pos2_), 2.0f);
         if (q4_minus_p2_length_squared < powf(radius_, 2.0f)){
+
+            glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point,1);
+            glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(cylinder_direction,0));
             Hitpoint hitpoint{};
+            hitpoint.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
+            hitpoint.normal_ = {trans_normal.x,trans_normal.y,trans_normal.z};
             hitpoint.hit_ = true;
-            hitpoint.distance_ = t4;
-            hitpoint.hitpoint_ = hit_point;
-            hitpoint.normal_ = cylinder_direction;
+            hitpoint.distance_ = glm::length(ray.origin_-hitpoint.hitpoint_);
             candidates.emplace_back(hitpoint);
         }
     }
@@ -182,5 +192,8 @@ glm::vec3 Cylinder::calc_normal_corpus(glm::vec3 const& hitpoint) const{
     glm::vec3 normal{hitpoint.x -(pos1_.x + r * cylinder_direction.x),
                      hitpoint.y -(pos1_.y + r * cylinder_direction.y),
                      hitpoint.z -(pos1_.z + r * cylinder_direction.z)};
-    return normal;
+
+    glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(glm::normalize(pos1_ - pos2_),0));
+
+    return {trans_normal.x,trans_normal.y,trans_normal.z};
 }
