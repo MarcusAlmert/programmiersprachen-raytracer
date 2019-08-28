@@ -2,18 +2,19 @@
 
 #include <catch.hpp>
 #include <memory>
+#include <shapes/triangle.hpp>
+#include <iostream>
+#include <glm/gtx/intersect.hpp>
+#include <glm/glm.hpp>
+#include <renderer.hpp>
 #include "shapes/shape.hpp"
 #include "shapes/sphere.hpp"
 #include "shapes/box.hpp"
-#include <iostream>
-#include <glm/glm.hpp>
-#include <glm/gtx/intersect.hpp>
-#include <renderer.hpp>
-#include <shapes/triangle.hpp>
 #include "material.hpp"
 #include "scene.hpp"
 #include "light.hpp"
 #include "shapes/composite.hpp"
+#include "shapes/cylinder.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -95,10 +96,10 @@ TEST_CASE("Print", "[Shapes]") {
     Box b1{{1, 1, 1},
            {0, 0, 0}};
     Sphere sp1;
-    std::cout << "--------- test ------------\n";
+    //std::cout << "--------- test ------------\n";
     sp1.print(std::cout) << std::endl;
     b1.print(std::cout);
-    std::cout << "---------test over----------\n";
+    //std::cout << "---------test over----------\n";
 }
 
 
@@ -297,7 +298,50 @@ TEST_CASE("Composite functions", "Composite") {
 }
 
 TEST_CASE("Cylinder functions", "Cylinder") {
-
+    Cylinder cy1 = Cylinder();
+    Cylinder cy2 = Cylinder(glm::vec3{10.0f, 10.0f, 0.0f}, glm::vec3{10.0f, 10.0f, 10.0f}, 5.0f);
+    std::shared_ptr<Material> test_material = std::make_shared<Material>(Material{});
+    Cylinder cy3 = Cylinder(glm::vec3{10.0f, -10.0f, 0.0f}, glm::vec3{10.0f, -10.0f, 10.0f}, 3.0f, "Testzylinder", test_material);
+    CHECK(cy1.area() == 0.0f);
+    CHECK(cy2.area() == Approx(471.239));
+    CHECK(cy3.area() == Approx(245.044));
+    CHECK(cy1.volume() == 0.0f);
+    CHECK(cy2.volume() == Approx(785.398));
+    CHECK(cy3.volume() == Approx(282.743));
+    CHECK(cy1.get_height() == 0.0f);
+    CHECK(cy2.get_height() == 10.0f);
+    CHECK(cy3.get_height() == 10.0f);
+    std::cout << cy1 << cy2 << cy3 << std::endl;
+    Cylinder cy4 = Cylinder(glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 10.0f, 0.0f}, 5.0f);
+    Ray ray1{glm::vec3{3.0f, 5.0f, 10.0f}, glm::vec3{0.0f, 0.0f ,-1.0f}};
+    Hitpoint hitpoint1 = cy4.intersect(ray1);
+    CHECK(hitpoint1.hit_); 
+    CHECK(hitpoint1.direction_ == ray1.direction_);
+    std::cout << hitpoint1;
+    Ray ray2{glm::vec3{3.0f, 3.0f, 10.0f}, glm::vec3{0.0f, 0.0f, 1.0f}};
+    Hitpoint hitpoint2 = cy4.intersect(ray2);
+    CHECK(!hitpoint2.hit_);
+    Ray ray3{glm::vec3{0.0f, -10.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f}};
+    Hitpoint hitpoint3 = cy4.intersect(ray3);
+    CHECK(hitpoint3.hit_);
+    CHECK(hitpoint3.distance_ == 10.0f);
+    CHECK(hitpoint3.hitpoint_.x == 0.0f); CHECK(hitpoint3.hitpoint_.y == 0.0f); CHECK(hitpoint3.hitpoint_.z == 0.0f);
+    CHECK(hitpoint3.normal_.x == 0.0f); CHECK(hitpoint3.normal_.y == -1.0f); CHECK(hitpoint3.normal_.x == 0.0f);
+    CHECK(hitpoint3.name_ == cy4.name_);
+    Ray ray4{glm::vec3{0.0f, 20.0f, 0.0f}, glm::vec3{0.0f, -1.0f, 0.0f}};
+    Hitpoint hitpoint4 = cy4.intersect(ray4);
+    CHECK(hitpoint4.hit_);
+    CHECK(hitpoint4.distance_ == 10.0f);
+    CHECK(hitpoint4.hitpoint_.x == 0.0f); CHECK(hitpoint4.hitpoint_.y == 10.0f); CHECK(hitpoint4.hitpoint_.z == 0.0f);
+    CHECK(hitpoint4.normal_.x == 0.0f); CHECK(hitpoint4.normal_.y == 1.0f); CHECK(hitpoint4.normal_.x == 0.0f);
+    Ray ray5{glm::vec3{0.0f, 11.0f, 0.0f}, glm::vec3{0.0f, -1.0f, -1.0f}};
+    Hitpoint hitpoint5 = cy4.intersect(ray5);
+    CHECK(hitpoint5.hit_);
+    CHECK(hitpoint5.hitpoint_.y == 10.0f);
+    Cylinder cy5 = Cylinder(glm::vec3{7.0f, 0.0f, 7.0f}, glm::vec3{7.0f, 12.0f, 7.0f}, 5.0f);
+    Ray ray6{glm::vec3{7.0f, -5.0f, 17.0f}, glm::vec3{0.0f, 1.0f, -1.0f}};
+    Hitpoint hitpoint6 = cy5.intersect(ray6);
+    CHECK(hitpoint6.hit_);
 }
 
 TEST_CASE("Cone functions", "Cone") {
