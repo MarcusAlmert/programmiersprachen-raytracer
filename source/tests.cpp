@@ -356,7 +356,7 @@ TEST_CASE("Triangle functions", "Triangle") {
     CHECK(hitp.hit_);
     CHECK(hitp.name_ == "No_name");
     CHECK(hitp.direction_ == ray.direction_);
-    CHECK(hitp.normal_.x == 2.0f);
+    CHECK(hitp.normal_.x == 1.0f);
     CHECK(hitp.normal_.y == 0);
     CHECK(hitp.normal_.z == 0);
 }
