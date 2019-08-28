@@ -1,8 +1,9 @@
 #ifndef RAYTRACER_CYLINDER_HPP
 #define RAYTRACER_CYLINDER_HPP
 
-#include "shape.hpp"
 #include <glm/vec3.hpp>
+#include <vector>
+#include "shape.hpp"
 
 class Cylinder : public Shape {
 
@@ -30,6 +31,7 @@ private:
     glm::vec3 pos1_;
     glm::vec3 pos2_;
     float radius_;
+    glm::vec3 calc_normal_corpus(glm::vec3 const& hitpoint) const;
 };
 
 
