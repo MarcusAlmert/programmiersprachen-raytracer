@@ -19,6 +19,9 @@ struct Scene {
     std::vector<Light> lights_;
     float ambient_;
     Color backgroundcolor_ = Color{0.0f, 0.0f, 0.0f};
+    unsigned int height = 500;
+    unsigned int width = 500;
+    std::string filename = "./Test.ppm";
 };
 
 

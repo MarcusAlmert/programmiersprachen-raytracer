@@ -19,7 +19,8 @@ void Renderer::render(Scene const &scene) {
 
     glm::vec3 dir = glm::normalize(scene.camera_.direction);    // vector in direction of view
     glm::vec3 up = glm::normalize(scene.camera_.upVector);      // vector in above direction from origin
-    glm::vec3 down = up; invert_direction(down);                // vector in down direction from origin
+    glm::vec3 down = up;
+    invert_direction(down);                // vector in down direction from origin
     glm::vec3 l = glm::normalize(glm::cross(up, dir));          // vector in left direction from origin
     glm::vec3 r = glm::normalize(glm::cross(dir, up));          // vector in right direction from origin
 
@@ -32,9 +33,9 @@ void Renderer::render(Scene const &scene) {
     for (unsigned y = 0; y < height_; ++y) {
 
         // calculates vertical position of pixel
-        if (y < half_height){
+        if (y < half_height) {
             yr = down * -(y - half_height);
-        } else if (y > half_height){
+        } else if (y > half_height) {
             yr = up * (y - half_height);
         }
 
@@ -42,11 +43,9 @@ void Renderer::render(Scene const &scene) {
             Pixel p(x, y);
 
             glm::vec3 pos = scene.camera_.position;
-            //glm::vec3 direction = glm::normalize(scene.camera_.direction);
-            //direction = direction + glm::vec3{x - (0.5f * width_), y - (0.5f * height_), pos.z - d};
-            
+
             // calculates horizontal position of pixel
-            if (x < half_width){
+            if (x < half_width) {
                 xr = l * -(x - half_width);
             } else if (x > half_width) {
                 xr = r * (x - half_width);
@@ -67,13 +66,6 @@ void Renderer::render(Scene const &scene) {
                 p.color = Color{0.0f, 0.0f, 0.0f};
             }
 
-            /*
-            if (((x / checker_pattern_size) % 2) != ((y / checker_pattern_size) % 2)) {
-                p.color = Color(0.0, 1.0, float(x) / height_);
-            } else {
-                p.color = Color(1.0, 0.0, float(y) / width_);
-            }
-            */
             write(p);
         }
     }
@@ -96,7 +88,7 @@ void Renderer::write(Pixel const &p) {
 }
 
 // Farbwertberechnung, TODO !
-Color Renderer::calc_color(Hitpoint const& hitpoint, Scene const &scene, unsigned int reflaction_steps) {
+Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigned int reflaction_steps) {
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
     Color ambient = calc_ambient(hitpoint.material_, scene);
     Color diffuse = calc_diffuse(hitpoint, scene);
@@ -104,13 +96,13 @@ Color Renderer::calc_color(Hitpoint const& hitpoint, Scene const &scene, unsigne
     //TODO fix SegFault
 
     // Experimentelle Berechnung, durchsichtigkeit und Spiegelung nicht ausgereift
-    if(hitpoint.material_->glossy_ > 0 && hitpoint.material_->opacity_ > 0){            // transparent and reflactive
+    if (hitpoint.material_->glossy_ > 0 && hitpoint.material_->opacity_ > 0) {            // transparent and reflactive
         float kr = calc_fresnel_reflection_ratio(hitpoint, scene);
         float ko = 1 - kr;
         Color reflection = calc_reflection(hitpoint, scene, reflaction_steps);
         Color refraction = calc_refraction(hitpoint, scene, false, reflaction_steps);
         raytracer_value = (kr * reflection + ko * refraction);
-    } else if (hitpoint.material_->glossy_ > 0){                                        // reflactive
+    } else if (hitpoint.material_->glossy_ > 0) {                                        // reflactive
         Color reflection = calc_reflection(hitpoint, scene, reflaction_steps);
         Color phong = ambient + diffuse + specular;
         raytracer_value = (phong * (1 - hitpoint.material_->glossy_) + reflection * hitpoint.material_->glossy_);
@@ -129,7 +121,7 @@ Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &sc
 }
 
 // TODO fix graphical bug // maybe fixed
-Color Renderer::calc_diffuse(Hitpoint const& hitpoint, Scene const &scene) {
+Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights_) {
@@ -160,7 +152,7 @@ Color Renderer::calc_diffuse(Hitpoint const& hitpoint, Scene const &scene) {
     return final;
 }
 
-Color Renderer::calc_specular(Hitpoint const& hitpoint, Scene const &scene) {
+Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights_) {
@@ -196,7 +188,7 @@ Color Renderer::calc_specular(Hitpoint const& hitpoint, Scene const &scene) {
 }
 
 // Working. No graphical testing yet
-Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, unsigned int recursive_boundary){
+Color Renderer::calc_reflection(Hitpoint const &hitpoint, Scene const &scene, unsigned int recursive_boundary) {
     Color final{0, 0, 0};
     glm::vec3 incoming_direction = glm::normalize(hitpoint.direction_);
     glm::vec3 normal = glm::normalize(hitpoint.normal_);
@@ -208,7 +200,7 @@ Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, un
     if (!next_hit.hit_) {
         return scene.backgroundcolor_;
     } else {
-        if (recursive_boundary > 0){
+        if (recursive_boundary > 0) {
             Color reflected_color = calc_color(next_hit, scene, recursive_boundary - 1) * 0.8f;
             return reflected_color;
         } else {
@@ -218,11 +210,12 @@ Color Renderer::calc_reflection(Hitpoint const& hitpoint, Scene const& scene, un
 }
 
 // calculates the refraction, not tested yet
-Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bool inside, unsigned int recursive_boundary){
+Color
+Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool inside, unsigned int recursive_boundary) {
     float eta;
 
     // check if ray is coming from outside or inside the object
-    if (inside){
+    if (inside) {
         eta = hitpoint.material_->refractive_index_;
     } else {
         eta = 1.0f / hitpoint.material_->refractive_index_;
@@ -231,18 +224,18 @@ Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bo
     // calculates cosi and inverts it if negative
     float cos1 = glm::dot(hitpoint.normal_, hitpoint.direction_);
     glm::vec3 n = hitpoint.normal_;
-    if (cos1 < 0){
+    if (cos1 < 0) {
         invert_direction(n);
     }
 
     // check for case of total reflection
     float sin2 = eta * sqrtf(std::max(0.0f, 1 - cos1 * cos1));
-    if (sin2 > 1){
+    if (sin2 > 1) {
         return calc_reflection(hitpoint, scene, recursive_boundary);
     }
 
     // calulating the refrected ray
-    float cos2 = sqrtf(1.0f - eta * eta * (1.0f -cos1 * cos1));
+    float cos2 = sqrtf(1.0f - eta * eta * (1.0f - cos1 * cos1));
     glm::vec3 refrection_direction = eta * hitpoint.direction_ + (eta * cos1 - cos2) * hitpoint.normal_;
     glm::vec3 refrection_origin = hitpoint.hitpoint_ - 0.1f * hitpoint.normal_;
     Ray refrected_ray{refrection_origin, refrection_direction};
@@ -251,9 +244,9 @@ Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bo
     Hitpoint hit = fire_ray(scene, refrected_ray);
 
     // if the new ray hitted the object again(from inside), another new object or non at all
-    if (hitpoint.hit_ && hitpoint.name_ != hit.name_){
+    if (hitpoint.hit_ && hitpoint.name_ != hit.name_) {
         return calc_color(hit, scene, 3);
-    } else if (hit.hit_){
+    } else if (hit.hit_) {
         return calc_refraction(hit, scene, true, recursive_boundary);
     } else {
         return Color{0.0f, 0.0f, 0.0f};
@@ -261,20 +254,20 @@ Color Renderer::calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bo
 
 }
 
-float Renderer::calc_fresnel_reflection_ratio(Hitpoint const& hitpoint, Scene const& scene){
+float Renderer::calc_fresnel_reflection_ratio(Hitpoint const &hitpoint, Scene const &scene) {
 
     float cos1 = glm::clamp(-1.0f, 1.0f, glm::dot(hitpoint.direction_, hitpoint.normal_));
-    float eta1 =  1;
+    float eta1 = 1;
     float eta2 = hitpoint.material_->refractive_index_;
 
     // check if inside or outside of object
-    if (cos1 > 0){
+    if (cos1 > 0) {
         std::swap(eta1, eta2);
     }
     float sin2 = (eta1 / eta2) * sqrtf(std::max(0.0f, 1 - cos1 * cos1));
 
     // check for case of total reflection
-    if (sin2 > 1){
+    if (sin2 > 1) {
         return 0;
     } else {
         float cos2 = sqrt(std::max(0.0f, 1 - sin2 * sin2));
@@ -283,12 +276,12 @@ float Renderer::calc_fresnel_reflection_ratio(Hitpoint const& hitpoint, Scene co
         float n1cos2 = eta1 * cos2;
         float f_parallel = (n2cos1 - n1cos2) / (n2cos1 + n1cos2);
         float f_perpendicular = (n1cos2 - n2cos1) / (n1cos2 + n2cos1);
-        float ratio_of_reflected =  0.5 * (f_parallel + f_perpendicular);
+        float ratio_of_reflected = 0.5 * (f_parallel + f_perpendicular);
         return ratio_of_reflected;
     }
 }
 
-Hitpoint Renderer::fire_ray(Scene const& scene, Ray const& ray){
+Hitpoint Renderer::fire_ray(Scene const &scene, Ray const &ray) {
     Hitpoint first_hit;
     first_hit.distance_ = FLT_MAX;
     for (int i = 0; i < scene.shape_vector_.size(); ++i) {
@@ -301,20 +294,20 @@ Hitpoint Renderer::fire_ray(Scene const& scene, Ray const& ray){
 }
 
 // inverts a direction
-void Renderer::invert_direction(glm::vec3 & dir){
-    if (dir.x < 0){
+void Renderer::invert_direction(glm::vec3 &dir) {
+    if (dir.x < 0) {
         dir.x -= dir.x + dir.x;
-    } else if (dir.x > 0){
+    } else if (dir.x > 0) {
         dir.x -= dir.x + dir.x;
     }
-    if (dir.y < 0){
+    if (dir.y < 0) {
         dir.y -= dir.y + dir.y;
-    } else if (dir.y > 0){
+    } else if (dir.y > 0) {
         dir.y -= dir.y + dir.y;
     }
-    if (dir.z < 0){
+    if (dir.z < 0) {
         dir.z -= dir.z + dir.z;
-    } else if (dir.z > 0){
+    } else if (dir.z > 0) {
         dir.z -= dir.z + dir.z;
     }
 }

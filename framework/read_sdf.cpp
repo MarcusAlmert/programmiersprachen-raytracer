@@ -27,7 +27,13 @@ Scene read_sdf(std::string const &path) {
 
         if ("define" == identifier) {
             line_string_stream >> identifier;
-            if ("material" == identifier) {
+            if ("resolution" == identifier) {
+                unsigned int h, w;
+                line_string_stream >> scene1.width;
+                line_string_stream >> scene1.height;
+            } else if ("filename" == identifier) {
+                line_string_stream >> scene1.filename;
+            } else if ("material" == identifier) {
                 std::string mat_name;
                 line_string_stream >> mat_name;
                 float ka_r, ka_g, ka_b, kd_r, kd_g, kd_b, ks_r, ks_g, ks_b, m, g, o, ref;

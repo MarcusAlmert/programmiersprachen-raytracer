@@ -40,3 +40,7 @@ transform bcylinder rotate  90 1 1 0
 
 # camera
 define camera eye   60	50 -100 800 	0 5 -10 	0 1 0
+
+#renderer
+define resolution 500 500
+define filename ./Test1.ppm

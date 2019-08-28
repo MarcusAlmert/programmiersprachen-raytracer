@@ -7,32 +7,31 @@
 #include <cmath>
 #include "../framework/read_sdf.hpp"
 
-int main(int argc, char* argv[])
-{
-  unsigned const image_width = 500;
-  unsigned const image_height = 500;
-  std::string const filename = "./Test.ppm";  // Unsere Bilder werden in Test.ppm gespeichert
-
-  Renderer renderer{image_width, image_height, filename};
+int main(int argc, char *argv[]) {
 
     Scene scene = read_sdf("../../SDF-Scene/composite.sdf");   // alle lieben relative Pfade
 
-  //create separate thread to see updates of pixels while rendering
-  //std::thread render_thread([&renderer]() {renderer.render();});
+    unsigned const image_width = scene.width;
+    unsigned const image_height = scene.height;
+    std::string const filename = scene.filename;
+    Renderer renderer{image_width, image_height, filename};
 
-  // dem renderer wird hier die eingelesene Szene gegeben
-  renderer.render(scene);
+    //create separate thread to see updates of pixels while rendering
+    //std::thread render_thread([&renderer]() {renderer.render();});
 
-  Window window{{image_width, image_height}};
+    // dem renderer wird hier die eingelesene Szene gegeben
+    renderer.render(scene);
 
-  while (!window.should_close()) {
-    if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-      window.close();
+    Window window{{image_width, image_height}};
+
+    while (!window.should_close()) {
+        if (window.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            window.close();
+        }
+        window.show(renderer.color_buffer());
     }
-    window.show(renderer.color_buffer());
-  }
 
-  //"join" threads, i.e. synchronize main thread with render_thread
-  //render_thread.join();
-  return 0;
+    //"join" threads, i.e. synchronize main thread with render_thread
+    //render_thread.join();
+    return 0;
 }
