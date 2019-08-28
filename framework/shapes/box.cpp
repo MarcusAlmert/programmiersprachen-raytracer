@@ -71,11 +71,10 @@ std::ostream &Box::print(std::ostream &os) const {
 }
 
 Hitpoint Box::intersect(Ray const &ray) const {
-    Ray r = ray;
+    Ray transRay = transformRay(ray,world_transformation_inv);
     Hitpoint hit;
-    glm::vec3 normdirection = glm::normalize(ray.direction_);
+    glm::vec3 normdirection = glm::normalize(transRay.direction_);
 
-    //das war glaube was adrian meint ist egal
     std::vector<float> inBox;
     std::vector<glm::vec3> normals;
 
@@ -84,10 +83,10 @@ Hitpoint Box::intersect(Ray const &ray) const {
     // t und die jeweilige normale werden in vectoren gespeichert
     // kleinste distanz am ende rausgesucht
     glm::vec3 hinten{-1, 0, 0};
-    if (glm::dot(hinten, ray.direction_) != 0) {
+    if (glm::dot(hinten, transRay.direction_) != 0) {
         auto t = glm::dot(normdirection, hinten);
-        float t_hinten = (glm::dot(hinten, min_) - glm::dot(ray.origin_, hinten)) / glm::dot(normdirection, hinten);
-        glm::vec3 cutP = ray.origin_ + normdirection * t_hinten;
+        float t_hinten = (glm::dot(hinten, min_) - glm::dot(transRay.origin_, hinten)) / glm::dot(normdirection, hinten);
+        glm::vec3 cutP = transRay.origin_ + normdirection * t_hinten;
         if (cutP.y > min_.y && cutP.y < max_.y && cutP.z > min_.z && cutP.z < max_.z) {
             inBox.push_back(t_hinten);
             normals.emplace_back(glm::vec3{-1, 0, 0});
@@ -95,9 +94,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
     }
 
     glm::vec3 rechts{0, 0, -1};
-    if (glm::dot(rechts, ray.direction_) != 0) {
-        float t_rechts = (glm::dot(rechts, min_) - glm::dot(ray.origin_, rechts)) / glm::dot(normdirection, rechts);
-        glm::vec3 cutP = ray.origin_ + normdirection * t_rechts;
+    if (glm::dot(rechts, transRay.direction_) != 0) {
+        float t_rechts = (glm::dot(rechts, min_) - glm::dot(transRay.origin_, rechts)) / glm::dot(normdirection, rechts);
+        glm::vec3 cutP = transRay.origin_ + normdirection * t_rechts;
         if (cutP.y > min_.y && cutP.y < max_.y && cutP.x > min_.x && cutP.x < max_.x) {
             inBox.push_back(t_rechts);
             normals.emplace_back(glm::vec3{0, 0, -1});
@@ -105,9 +104,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
     }
 
     glm::vec3 unten{0, -1, 0};
-    if (glm::dot(unten, ray.direction_) != 0) {
-        float t_unten = (glm::dot(unten, min_) - glm::dot(ray.origin_, unten)) / glm::dot(normdirection, unten);
-        glm::vec3 cutP = ray.origin_ + normdirection * t_unten;
+    if (glm::dot(unten, transRay.direction_) != 0) {
+        float t_unten = (glm::dot(unten, min_) - glm::dot(transRay.origin_, unten)) / glm::dot(normdirection, unten);
+        glm::vec3 cutP = transRay.origin_ + normdirection * t_unten;
         if (cutP.z > min_.z && cutP.z < max_.z && cutP.x > min_.x && cutP.x < max_.x) {
             inBox.push_back(t_unten);
             normals.emplace_back(glm::vec3{0, -1, 0});
@@ -115,9 +114,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
     }
 
     glm::vec3 vorne{1, 0, 0};
-    if (glm::dot(vorne, ray.direction_) != 0) {
-        float t_vorne = (glm::dot(vorne, max_) - glm::dot(ray.origin_, vorne)) / glm::dot(normdirection, vorne);
-        glm::vec3 cutP = ray.origin_ + normdirection * t_vorne;
+    if (glm::dot(vorne, transRay.direction_) != 0) {
+        float t_vorne = (glm::dot(vorne, max_) - glm::dot(transRay.origin_, vorne)) / glm::dot(normdirection, vorne);
+        glm::vec3 cutP = transRay.origin_ + normdirection * t_vorne;
         if (cutP.y > min_.y && cutP.y < max_.y && cutP.z > min_.z && cutP.z < max_.z) {
             inBox.push_back(t_vorne);
             normals.emplace_back(glm::vec3{1, 0, 0});
@@ -125,9 +124,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
     }
 
     glm::vec3 links{0, 0, 1};
-    if (glm::dot(links, ray.direction_) != 0) {
-        float t_links = (glm::dot(links, max_) - glm::dot(ray.origin_, links)) / glm::dot(normdirection, links);
-        glm::vec3 cutP = ray.origin_ + normdirection * t_links;
+    if (glm::dot(links, transRay.direction_) != 0) {
+        float t_links = (glm::dot(links, max_) - glm::dot(transRay.origin_, links)) / glm::dot(normdirection, links);
+        glm::vec3 cutP = transRay.origin_ + normdirection * t_links;
         if (cutP.y > min_.y && cutP.y < max_.y && cutP.x > min_.x && cutP.x < max_.x) {
             inBox.push_back(t_links);
             normals.emplace_back(glm::vec3{0, 0, 1});
@@ -136,9 +135,9 @@ Hitpoint Box::intersect(Ray const &ray) const {
     }
 
     glm::vec3 oben{0, 1, 0};
-    if (glm::dot(oben, ray.direction_) != 0) {
-        float t_oben = (glm::dot(oben, max_) - glm::dot(ray.origin_, oben)) / glm::dot(normdirection, oben);
-        glm::vec3 cutP = ray.origin_ + normdirection * t_oben;
+    if (glm::dot(oben, transRay.direction_) != 0) {
+        float t_oben = (glm::dot(oben, max_) - glm::dot(transRay.origin_, oben)) / glm::dot(normdirection, oben);
+        glm::vec3 cutP = transRay.origin_ + normdirection * t_oben;
         if (cutP.z > min_.z && cutP.z < max_.z && cutP.x > min_.x && cutP.x < max_.x) {
             inBox.push_back(t_oben);
             normals.emplace_back(glm::vec3{0, 1, 0});
@@ -156,16 +155,21 @@ Hitpoint Box::intersect(Ray const &ray) const {
                 minimal_normal = normals[i];
             }
         }
+
+        float hitx = transRay.origin_.x + minimal * normdirection.x;
+        float hity = transRay.origin_.y + minimal * normdirection.y;
+        float hitz = transRay.origin_.z + minimal * normdirection.z;
+
+        glm::vec4 trans_cut = world_transformation_ * glm::vec4({hitx,hity,hitz,1});
+        glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(minimal_normal,0));
+
         hit.material_ = material_;
         hit.name_ = name_;
-        hit.distance_ = minimal;
         hit.hit_ = true;
-        hit.direction_ = r.direction_;
-        float hitx = ray.origin_.x + minimal * normdirection.x;
-        float hity = ray.origin_.y + minimal * normdirection.y;
-        float hitz = ray.origin_.z + minimal * normdirection.z;
-        hit.hitpoint_ = {hitx, hity, hitz};
-        hit.normal_ = minimal_normal;
+        hit.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
+        hit.normal_ = {trans_normal.x,trans_normal.y,trans_normal.z};
+        hit.direction_ = ray.direction_;
+        hit.distance_ = glm::length(hit.hitpoint_ - ray.origin_);
         return hit;
     }
 

@@ -30,6 +30,7 @@ void Shape::transformation(float const rotateAngle, glm::vec3 const& rotateAxis,
 
     if(rotateAngle != 0){
         glm::mat4x4 RotMat = glm::rotate(rotateAngle,rotateAxis);
+        world_transformation_ = world_transformation_ * translationMat * RotMat * scaleMat;
 
     } else{
         world_transformation_ = world_transformation_ * translationMat *  scaleMat;

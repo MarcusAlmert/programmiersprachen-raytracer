@@ -1,7 +1,7 @@
 # materials
-define material red     1 0 0   1 0 0   1 0 0   10 	0  0  0  0
-define material blue    0 0 1   0 0 1   1 1 1   100 0  0  0  0
-define material green   0 1 0   0 1 0   0 1 0   10 	0  0  0  0
+define material red     1 0 0   1 0 0   1 0 0   100 	0  0  0  0
+define material blue    0 0 1   0 0 1   1 1 1   100     0  0  0  0
+define material green   0 1 0   0 1 0   0 1 0   100	0  0  0  0
 
 # shapes
 define shape box        rbox            45      75     -10     -50   -20  -50                 green
@@ -16,13 +16,19 @@ define shape triangle   gtriangle       0       0       10      50    200  50   
 # lights
 define light sun    500 800 0       1.0 1.0 1.0     10
 define light spot1 -500 800 0       0.8 0.8 0.8     10
-define light spot1  500 0   1000    0.8 0.8 0.8     10
+define light spot2  500 0   1000    0.8 0.8 0.8     10
+define light spot3  0 500   100    0.8 0.8 0.8     10
 define ambient 0.2
 
 # transformations
-
 transform bsphere scale 1 0.5 1
 transform bsphere translate -10 0 0
-transform bsphere rotate 90 1 0 5
+transform bsphere rotate 50 1 0 0
+
+transform rbox scale 1 2 1
+transform rbox rotate 45 0 1 0
+transform rbox translate 0 50 0
+
+
 # camera
 define camera eye   60	50 -100 400 	0 5 -10 	0 1 0
