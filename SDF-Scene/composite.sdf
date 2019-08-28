@@ -17,7 +17,7 @@ define shape triangle   gtriangle       0       0       10      50    200  50   
 define light sun    500 800 0       1.0 1.0 1.0     10
 define light spot1 -500 800 0       0.8 0.8 0.8     10
 define light spot2  500 0   1000    0.8 0.8 0.8     10
-define light spot3  0 500   100    0.8 0.8 0.8     10
+define light spot3  0 500   1000    0.8 0.8 0.8     10
 define ambient 0.2
 
 # transformations
@@ -28,6 +28,10 @@ transform bsphere rotate 50 1 0 0
 transform rbox scale 1 2 1
 transform rbox rotate 45 0 1 0
 transform rbox translate 0 50 0
+
+transform gtriangle scale 0.5 0.5 0.5
+transform gtriangle translate 0 -200 0
+transform gtriangle rotate 95  0 1 5
 
 
 # camera

@@ -59,7 +59,7 @@ Hitpoint Triangle::intersect(Ray const &ray) const {
     glm::vec3 u, v, n;              // triangle vectors
     glm::vec3 w0, w;           // ray vectors
     float r, a, b;              // params to calc ray-plane intersect
-
+    Ray transformedRay = transformRay(ray,world_transformation_inv);
     // get triangle edge vectors and plane normal
     u = p2_ - p1_;
     v = p3_ - p1_;
@@ -67,9 +67,9 @@ Hitpoint Triangle::intersect(Ray const &ray) const {
     if (n == glm::vec3{0, 0, 0})
         return Hitpoint{};           // triangle is a line or point
 
-    w0 = ray.origin_ - p1_;
+    w0 = transformedRay.origin_ - p1_;
     a = -glm::dot(n, w0);
-    b = glm::dot(n, ray.direction_);
+    b = glm::dot(n, transformedRay.direction_);
     if (fabs(b) < 0.00000001) {     // ray is  parallel to triangle plane
         if (a == 0)                 // ray lies in triangle plane
             return Hitpoint{};
@@ -79,7 +79,7 @@ Hitpoint Triangle::intersect(Ray const &ray) const {
     r = a / b;
     if (r < 0.0)                    // ray goes away from triangle
         return Hitpoint{};         // no intersect
-    glm::vec3 intersection_point = ray.origin_ + r * ray.direction_;
+    glm::vec3 intersection_point = transformedRay.origin_ + r * transformedRay.direction_;
     float uu, uv, vv, wu, wv, D;
     uu = glm::dot(u, u);
     uv = glm::dot(u, v);
@@ -96,9 +96,17 @@ Hitpoint Triangle::intersect(Ray const &ray) const {
     t = (uv * wu - uu * wv) / D;
     if (t < 0.0 || (s + t) > 1.0)  // point is outside T
         return Hitpoint{};
-
-    return Hitpoint{true, r, name_, material_, ray.direction_, intersection_point,
-                    n};                       // I is in T
+    Hitpoint hit = {true, r, name_, material_, ray.direction_, intersection_point,n};
+    hit.name_ = name_;
+    hit.hit_ = true;
+    hit.material_ = material_;
+    hit.direction_ = ray.direction_;
+    glm::vec4 transformed_cut = world_transformation_ * glm::vec4{intersection_point,1 };
+    glm::vec4 transformed_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4{ n,0 });
+    hit.hitpoint_ = {transformed_cut.x, transformed_cut.y, transformed_cut.z};
+    hit.normal_ = {transformed_normal.x, transformed_normal.y, transformed_normal.z};
+    hit.distance_ = glm::length(ray.origin_ - hit.hitpoint_);
+    return hit;                       // I is in T
 }
 
 
