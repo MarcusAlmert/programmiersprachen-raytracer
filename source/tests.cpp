@@ -17,6 +17,7 @@
 #include "shapes/composite.hpp"
 #include "shapes/cylinder.hpp"
 #include "shapes/plane.hpp"
+#include "shapes/cone.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -347,7 +348,23 @@ TEST_CASE("Cylinder functions", "Cylinder") {
 }
 
 TEST_CASE("Cone functions", "Cone") {
-
+    Cone co1 = Cone();
+    Cone co2 = Cone(glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 12.0, 0.0f}, 6.0f);
+    std::shared_ptr<Material> test_material = std::make_shared<Material>(Material{});
+    Cone co3 = Cone(glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 15.0f, 0.0f}, 6.0f, "Testkegel", test_material);
+    CHECK(co1.area() == 0.0f);
+    CHECK(co2.area() == Approx(365.99f));
+    CHECK(co3.area() == Approx(417.621f));
+    CHECK(co1.volume() == 0.0f);
+    CHECK(co2.volume() == Approx(452.389));
+    CHECK(co3.volume() == Approx(565.486));
+    CHECK(co1.get_height() == 0.0f);
+    CHECK(co2.get_height() == 12.0f);
+    CHECK(co3.get_height() == 15.0f);
+    std::cout << co1 << co2 << co3 << std::endl;
+    Ray r1{glm::vec3{0.0f, 5.0f, 10.0f}, glm::vec3{0.0f, 0.0f, -1.0f}};
+    Hitpoint hitpoint1 = co3.intersect(r1);
+    CHECK(hitpoint1.hit_);
 }
 
 TEST_CASE("Triangle functions", "Triangle") {
