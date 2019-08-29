@@ -100,9 +100,26 @@ struct Color {
         return tmp;
     }
 
-    float r;
-    float g;
-    float b;
+    friend Color operator/(float a, Color const &color) {
+        auto tmp(color);
+        tmp.r = tmp.r / a;
+        tmp.g = tmp.g / a;
+        tmp.b = tmp.b / a;
+        return tmp;
+    }
+
+    friend Color operator/(Color const &color, float a) {
+        auto tmp(color);
+        tmp.r = tmp.r / a;
+        tmp.g = tmp.g / a;
+        tmp.b = tmp.b / a;
+        return tmp;
+    }
+
+    float r = 0;
+    float g = 0;
+    float b = 0;
+
 };
 
 #endif //#define BUW_COLOR_HPP
