@@ -68,7 +68,9 @@ void Renderer::render(Scene const &scene) {
                 directions.push_back(dir_3);
                 directions.push_back(dir_4);
             } else if (scene.antialiasing_ == 1) {
-                directions.push_back(glm::vec3{xr + yr + zr});
+                //directions.push_back(glm::normalize(xr + yr + zr));
+                directions.push_back(glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d}));
             }
 
             Pixel aliased;
