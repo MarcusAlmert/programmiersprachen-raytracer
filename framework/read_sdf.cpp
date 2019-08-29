@@ -113,19 +113,21 @@ Scene read_sdf(std::string const &path) {
                 } else if (type == "cone") {
                     std::string shape_name;
                     std::string shape_mat_name;
-                    float px, py, pz, r;
+                    float px, py, pz, tx, ty, tz, r;
                     line_string_stream >> shape_name;
                     line_string_stream >> px;
                     line_string_stream >> py;
                     line_string_stream >> pz;
+                    line_string_stream >> tx;
+                    line_string_stream >> ty;
+                    line_string_stream >> tz;
                     glm::vec3 base{px, py, pz};
-                    line_string_stream >> px;
-                    line_string_stream >> py;
-                    line_string_stream >> pz;
+                    glm::vec3 tip{tx, ty, tz};
                     line_string_stream >> r;
                     line_string_stream >> shape_mat_name;
                     auto matptr = find(scene1.mat_vector_, shape_mat_name);
-                    std::shared_ptr<Shape> cone = std::make_shared<Cone>(Cone(glm::vec3{px, py, pz}, base, r, shape_name, matptr));
+                    std::shared_ptr<Shape> cone = std::make_shared<Cone>(
+                            Cone(glm::vec3{px, py, pz}, {tx, ty, tz}, r, shape_name, matptr));
                     scene1.shape_vector_.push_back(cone);
 
                 } else if (type == "triangle") {

@@ -7,7 +7,7 @@ define material green   0 1 0   0 1 0   0 1 0   100	    0  0  0  0
 define shape box        rbox            45      75     -10     -50   -20  -50                 green
 define shape sphere     bsphere         150     0      -60      100                           blue
 define shape cylinder   bcylinder      -100     0       0      -100   100  0     50           red
-//define shape cone       rcone         0       0      -100     50    50                      red
+define shape cone       rcone          -400     0      -10     -400   300   -10 100                 red
 define shape triangle   gtriangle       0       0       10      50    200  50    100 100 10   red
 define shape plane      bplane          0       0       0       0      1   0     blue
 define shape plane      bplane          0       -0.1       0       0      1   0     blue
@@ -39,9 +39,12 @@ transform bcylinder scale 2 1.5 1
 transform bcylinder translate 0 50 0
 transform bcylinder rotate  90 1 1 0
 
+transform rcone scale 2 1 1
+transform rcone translate 200 0 0
+
 
 # camera
-define camera eye   60	0 -100 800 	0 5 -10 	0 1 0
+define camera eye   60	0 -100 1000 	0 5 -10 	0 1 0
 
 #renderer
 define resolution 500 500
