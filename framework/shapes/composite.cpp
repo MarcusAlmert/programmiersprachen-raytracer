@@ -44,8 +44,9 @@ float Composite::area() const {
 
 std::ostream &Composite::print(std::ostream &os) const {
     for (int i = 0; i < shapes_.size(); i++) {
-        std::cout << shapes_[i] << std::endl;
+        os << shapes_[i] << std::endl;
     }
+    return os;
 }
 
 //outputs the hitpoint which is closest to ray.origin (first hit of the ray)

@@ -107,8 +107,8 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
         Hitpoint hitpoint{};
         glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t1;
         glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point,1);
-        hitpoint.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
-        hitpoint.distance_ = glm::length(ray.origin_-hitpoint.hitpoint_);
+        hitpoint.hitpoint_ = glm::vec3{trans_cut.x,trans_cut.y,trans_cut.z};
+        hitpoint.distance_ = glm::length(ray.origin_- hitpoint.hitpoint_);
         if (glm::dot(cylinder_direction, hit_point - pos1_) > 0 && glm::dot(cylinder_direction, hit_point - pos2_) < 0){
         hitpoint.hit_ = true;
         hitpoint.normal_ = calc_normal_corpus(hit_point);
@@ -119,7 +119,7 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
         Hitpoint hitpoint{};
         glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t2;
         glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point,1);
-        hitpoint.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
+        hitpoint.hitpoint_ = glm::vec3{trans_cut.x,trans_cut.y,trans_cut.z};
         hitpoint.hit_ = true;
         hitpoint.distance_ = glm::length(ray.origin_-hitpoint.hitpoint_);
         if (glm::dot(cylinder_direction, hit_point - pos1_) > 0 && glm::dot(cylinder_direction, hit_point - pos2_) < 0){

@@ -19,8 +19,7 @@ void Renderer::render(Scene const &scene) {
 
     glm::vec3 dir = glm::normalize(scene.camera_.direction);    // vector in direction of view
     glm::vec3 up = glm::normalize(scene.camera_.upVector);      // vector in above direction from origin
-    glm::vec3 down = up;
-    invert_direction(down);                // vector in down direction from origin
+    glm::vec3 down = up; invert_direction(down);                // vector in down direction from origin
     glm::vec3 l = glm::normalize(glm::cross(up, dir));          // vector in left direction from origin
     glm::vec3 r = glm::normalize(glm::cross(dir, up));          // vector in right direction from origin
 
@@ -96,7 +95,7 @@ Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigne
     //TODO fix SegFault
 
     // Experimentelle Berechnung, durchsichtigkeit und Spiegelung nicht ausgereift
-    if (hitpoint.material_->glossy_ > 0 && hitpoint.material_->opacity_ > 0) {            // transparent and reflactive
+    if (hitpoint.material_->glossy_ > 0 && hitpoint.material_->opacity_ > 0) {           // transparent and reflactive
         float kr = calc_fresnel_reflection_ratio(hitpoint, scene);
         float ko = 1 - kr;
         Color reflection = calc_reflection(hitpoint, scene, reflaction_steps);
@@ -295,21 +294,7 @@ Hitpoint Renderer::fire_ray(Scene const &scene, Ray const &ray) {
 
 // inverts a direction
 void Renderer::invert_direction(glm::vec3 &dir) {
-    if (dir.x < 0) {
-        dir.x -= dir.x + dir.x;
-    } else if (dir.x > 0) {
-        dir.x -= dir.x + dir.x;
-    }
-    if (dir.y < 0) {
-        dir.y -= dir.y + dir.y;
-    } else if (dir.y > 0) {
-        dir.y -= dir.y + dir.y;
-    }
-    if (dir.z < 0) {
-        dir.z -= dir.z + dir.z;
-    } else if (dir.z > 0) {
-        dir.z -= dir.z + dir.z;
-    }
+   dir = dir * -1.0f;
 }
 
 // Diese Funktion macht am Ende das tone mapping
