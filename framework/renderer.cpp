@@ -15,7 +15,13 @@ Renderer::Renderer(unsigned w, unsigned h, std::string const &file)
 void Renderer::render(Scene const &scene) {
     //std::size_t const checker_pattern_size = 20;
 
-    float d = (width_ / 2) / tan(scene.camera_.fov / 2 * M_PI / 180);
+    // AntiAliasing
+
+    unsigned int a_height = height_ * scene.antialiasing;
+    unsigned int a_width = width_ * scene.antialiasing;
+    std::vector<std::vector<Pixel>> pixelbuffer(a_width);
+
+    float d = (a_width / 2) / tan(scene.camera_.fov / 2 * M_PI / 180);
 
     glm::vec3 dir = glm::normalize(scene.camera_.direction);    // vector in direction of view
     glm::vec3 up = glm::normalize(scene.camera_.upVector);      // vector in above direction from origin
@@ -23,13 +29,13 @@ void Renderer::render(Scene const &scene) {
     glm::vec3 l = glm::normalize(glm::cross(up, dir));          // vector in left direction from origin
     glm::vec3 r = glm::normalize(glm::cross(dir, up));          // vector in right direction from origin
 
-    float half_height = height_ / 2.0f;
-    float half_width = width_ / 2.0f;
+    float half_height = a_height / 2.0f;
+    float half_width = a_width / 2.0f;
     glm::vec3 zr = d * dir;                                     // distance of pixel from "eye" position
     glm::vec3 yr{0.0f, 0.0f, 0.0f};
     glm::vec3 xr{0.0f, 0.0f, 0.0f};
 
-    for (unsigned y = 0; y < height_; ++y) {
+    for (unsigned y = 0; y < a_height; ++y) {
 
         // calculates vertical position of pixel
         if (y < half_height) {
@@ -38,7 +44,7 @@ void Renderer::render(Scene const &scene) {
             yr = up * (y - half_height);
         }
 
-        for (unsigned x = 0; x < width_; ++x) {
+        for (unsigned x = 0; x < a_width; ++x) {
             Pixel p(x, y);
 
             glm::vec3 pos = scene.camera_.position;
@@ -64,8 +70,21 @@ void Renderer::render(Scene const &scene) {
             } else {
                 p.color = scene.backgroundcolor_;
             }
-
-            write(p);
+            pixelbuffer[x].push_back(p);
+            //write(p);
+        }
+    }
+    for (int i = 0; i < a_width; i++) {
+        for (int j = 0; j < a_height; j++) {
+            Pixel aliased_pixel;
+            if (i + 1 < a_width && j + 1 < a_height) {
+                aliased_pixel.color =
+                        (pixelbuffer[i][j].color + pixelbuffer[i + 1][j].color + pixelbuffer[i][j + 1].color +
+                         pixelbuffer[i + 1][j + 1].color) / float(scene.antialiasing);
+            } else {
+                aliased_pixel = pixelbuffer[i][j];
+            }
+            write(aliased_pixel);
         }
     }
     ppm_.save(filename_);

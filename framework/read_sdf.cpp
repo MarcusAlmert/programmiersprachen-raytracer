@@ -31,6 +31,8 @@ Scene read_sdf(std::string const &path) {
                 unsigned int h, w;
                 line_string_stream >> scene1.width;
                 line_string_stream >> scene1.height;
+            } else if ("antialiasing" == identifier) {
+                line_string_stream >> scene1.antialiasing;
             } else if ("filename" == identifier) {
                 line_string_stream >> scene1.filename;
             } else if ("material" == identifier) {

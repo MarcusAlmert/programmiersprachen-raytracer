@@ -43,6 +43,6 @@ transform bcylinder rotate  90 1 1 0
 define camera eye   60	50 -100 800 	0 5 -10 	0 1 0
 
 #renderer
-define resolution 500 500
+define resolution 1000 1000
 define filename ./Test1.ppm
 define backgroundcolor 0.1 0.1 0.1
