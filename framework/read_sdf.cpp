@@ -283,17 +283,19 @@ Scene read_sdf(std::string const &path) {
                             glm::vec4{-dir, 0.0f},
                             glm::vec4{0.0f}};
                 } else if (transType == "translate") {
-                    float angle, x, y;
-                    line_string_stream >> angle;
+                    float x, y, z;
                     line_string_stream >> x;
                     line_string_stream >> y;
+                    line_string_stream >> z;
                     scene1.camera_.transformation_ += glm::mat4{
                             glm::vec4{0.0f},
                             glm::vec4{0.0f},
                             glm::vec4{0.0f},
-                            glm::vec4{angle, x, y, 1.0f}};
+                            glm::vec4{x, y, z, 1.0f}};
                 }
-
+                // apply transformation to position
+                glm::vec4 trans_pos = scene1.camera_.transformation_ * glm::vec4{scene1.camera_.position, 1};
+                scene1.camera_.position = {trans_pos.x, trans_pos.y, trans_pos.z};
             }
         }
     }
