@@ -19,7 +19,8 @@ void Renderer::render(Scene const &scene) {
 
     glm::vec3 dir = glm::normalize(scene.camera_.direction);    // vector in direction of view
     glm::vec3 up = glm::normalize(scene.camera_.upVector);      // vector in above direction from origin
-    glm::vec3 down = up; invert_direction(down);                // vector in down direction from origin
+    glm::vec3 down = up;
+    invert_direction(down);                // vector in down direction from origin
     glm::vec3 l = glm::normalize(glm::cross(up, dir));          // vector in left direction from origin
     glm::vec3 r = glm::normalize(glm::cross(dir, up));          // vector in right direction from origin
 
@@ -49,22 +50,45 @@ void Renderer::render(Scene const &scene) {
             } else if (x > half_width) {
                 xr = r * (x - half_width);
             }
-
             // final direction is the sum out of 3 directions of the viewplain
-            glm::vec3 direction = xr + yr + zr;
-
-            // in dieser Schleife wird der Schnittpunkt mit dem ersten Objekt den der Strahl trifft berechnet
-            Hitpoint first_hit = fire_ray(scene, Ray{pos, glm::normalize(direction)});
-
-            // Entweder es wurde ein Objekt getroffen oder der Pixel bekommt die Hintergrundfarbe zugewiesen
-            if (first_hit.hit_) {
-                Color raytracer_color = calc_color(first_hit, scene, 1);
-                tone_mapping(raytracer_color);
-                p.color = raytracer_color;
-            } else {
-                p.color = scene.backgroundcolor_;
+            //glm::vec3 direction = xr + yr + zr;
+            // new for AntiAliasing
+            std::vector<glm::vec3> directions;
+            if (scene.antialiasing_ == 4) {
+                glm::vec3 dir_1 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
+                glm::vec3 dir_2 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) - 0.5f, -d});
+                glm::vec3 dir_3 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) + 0.5f, -d});
+                glm::vec3 dir_4 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) - 0.5f, -d});
+                directions.push_back(dir_1);
+                directions.push_back(dir_2);
+                directions.push_back(dir_3);
+                directions.push_back(dir_4);
+            } else if (scene.antialiasing_ == 1) {
+                //directions.push_back(glm::normalize(xr + yr + zr));
+                directions.push_back(glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d}));
             }
 
+            Pixel aliased;
+            for (int i = 0; i < directions.size(); i++) {
+                // in dieser Schleife wird der Schnittpunkt mit dem ersten Objekt den der Strahl trifft berechnet
+                Hitpoint first_hit = fire_ray(scene, Ray{pos, glm::normalize(directions[i])});
+
+                // Entweder es wurde ein Objekt getroffen oder der Pixel bekommt die Hintergrundfarbe zugewiesen
+                if (first_hit.hit_) {
+                    Color raytracer_color = calc_color(first_hit, scene, 1);
+                    tone_mapping(raytracer_color);
+                    p.color = raytracer_color;
+                } else {
+                    p.color = scene.backgroundcolor_;
+                }
+                aliased.color += p.color;
+            }
+            p.color = aliased.color / scene.antialiasing_;
             write(p);
         }
     }
@@ -131,7 +155,7 @@ Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) {
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
         for (auto shape : scene.shape_vector_) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 0.2f * hitpoint.normal_, vec_light_cut}).hit_;
+            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 0.1f * hitpoint.normal_, vec_light_cut}).hit_;
             if (light_not_visible) {
                 light_not_visible = true;
                 break;  // if there is atleast one shape in between light and current shape light gets blocked
@@ -294,7 +318,7 @@ Hitpoint Renderer::fire_ray(Scene const &scene, Ray const &ray) {
 
 // inverts a direction
 void Renderer::invert_direction(glm::vec3 &dir) {
-   dir = dir * -1.0f;
+    dir = dir * -1.0f;
 }
 
 // Diese Funktion macht am Ende das tone mapping

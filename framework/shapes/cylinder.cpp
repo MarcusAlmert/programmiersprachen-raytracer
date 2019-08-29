@@ -192,7 +192,8 @@ glm::vec3 Cylinder::calc_normal_corpus(glm::vec3 const& hitpoint) const{
                      hitpoint.y -(pos1_.y + r * cylinder_direction.y),
                      hitpoint.z -(pos1_.z + r * cylinder_direction.z)};
 
-    glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(glm::normalize(pos1_ - pos2_),0));
+    glm::vec4 trans_normal = glm::normalize(
+            glm::transpose(world_transformation_inv) * glm::vec4(glm::normalize(normal), 0));
 
     return {trans_normal.x,trans_normal.y,trans_normal.z};
 }
