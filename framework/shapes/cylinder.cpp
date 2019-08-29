@@ -141,7 +141,7 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
         if (q3_minus_p1_length_squared < powf(radius_, 2.0f)){
 
             Hitpoint hitpoint{};
-            glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point,1);
+            glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point, 1.0f);
             glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(glm::normalize(pos1_ - pos2_),0));
             hitpoint.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
             hitpoint.normal_ = {trans_normal.x,trans_normal.y,trans_normal.z};
