@@ -62,7 +62,7 @@ void Renderer::render(Scene const &scene) {
                 tone_mapping(raytracer_color);
                 p.color = raytracer_color;
             } else {
-                p.color = Color{0.0f, 0.0f, 0.0f};
+                p.color = scene.backgroundcolor_;
             }
 
             write(p);
