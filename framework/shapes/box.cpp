@@ -16,7 +16,7 @@ Box::Box(glm::vec3 const &min, glm::vec3 const &max) {
 }
 
 Box::Box(glm::vec3 const &min, glm::vec3 const &max, std::string const &name,
-         std::shared_ptr<Material> const& mat_ptr) :
+         std::shared_ptr<Material> const &mat_ptr) :
         Shape{name, mat_ptr} {
     max_ = max;
     min_ = min;
@@ -71,106 +71,112 @@ std::ostream &Box::print(std::ostream &os) const {
 }
 
 Hitpoint Box::intersect(Ray const &ray) const {
-    Ray transRay = transformRay(ray,world_transformation_inv);
-    Hitpoint hit;
-    glm::vec3 normdirection = glm::normalize(transRay.direction_);
+    Ray transformedRay = transformRay(ray, world_transformation_inv);
+    Hitpoint hit{};
+    bool hitted = false;
+    float tmin = FLT_MAX;
 
-    std::vector<float> inBox;
-    std::vector<glm::vec3> normals;
+    float t = (min_.x - transformedRay.origin_.x) / (glm::normalize(transformedRay.direction_)).x;
+    glm::vec3 p_x = transformedRay.origin_ + t * (glm::normalize(transformedRay.direction_));
 
-    // erst check ob direction parallel zur Ebene der Seite (dann ignoriert)
-    // dann Berechnung des Schnittpunktes und Test ob Lage in Seiten der Box
-    // t und die jeweilige normale werden in vectoren gespeichert
-    // kleinste distanz am ende rausgesucht
-    glm::vec3 hinten{-1, 0, 0};
-    if (glm::dot(hinten, transRay.direction_) != 0) {
-        auto t = glm::dot(normdirection, hinten);
-        float t_hinten = (glm::dot(hinten, min_) - glm::dot(transRay.origin_, hinten)) / glm::dot(normdirection, hinten);
-        glm::vec3 cutP = transRay.origin_ + normdirection * t_hinten;
-        if (cutP.y > min_.y && cutP.y < max_.y && cutP.z > min_.z && cutP.z < max_.z) {
-            inBox.push_back(t_hinten);
-            normals.emplace_back(glm::vec3{-1, 0, 0});
+    if (p_x.y <= max_.y && p_x.y >= min_.y
+        && p_x.z <= max_.z && p_x.z >= min_.z && t > 0) {
+        hitted = true;
+        tmin = t;
+        hit.hitpoint_ = p_x;
+        hit.normal_ = glm::vec3{-1.0f, 0.0f, 0.0f};
+    }
+
+    float t_max_x = (max_.x - transformedRay.origin_.x) / (glm::normalize(transformedRay.direction_)).x;
+    glm::vec3 p_x2 = transformedRay.origin_ + t_max_x * (glm::normalize(transformedRay.direction_));
+
+    if (p_x2.y <= max_.y && p_x2.y >= min_.y
+        && p_x2.z <= max_.z && p_x2.z >= min_.z && t_max_x > 0) {
+        //std::cout << "Der angegebene Punkt liegt innerhalb des Objektes.\n";
+        hitted = true;
+        if (tmin > t_max_x) {
+            hit.hitpoint_ = p_x2;
+            tmin = t_max_x;
+            hit.normal_ = glm::vec3{1.0f, 0.0f, 0.0f};
         }
     }
 
-    glm::vec3 rechts{0, 0, -1};
-    if (glm::dot(rechts, transRay.direction_) != 0) {
-        float t_rechts = (glm::dot(rechts, min_) - glm::dot(transRay.origin_, rechts)) / glm::dot(normdirection, rechts);
-        glm::vec3 cutP = transRay.origin_ + normdirection * t_rechts;
-        if (cutP.y > min_.y && cutP.y < max_.y && cutP.x > min_.x && cutP.x < max_.x) {
-            inBox.push_back(t_rechts);
-            normals.emplace_back(glm::vec3{0, 0, -1});
+    float t_min_y = (min_.y - transformedRay.origin_.y) / (glm::normalize(transformedRay.direction_)).y;
+    glm::vec3 p_y = transformedRay.origin_ + t_min_y * (glm::normalize(transformedRay.
+            direction_));
+
+    if (p_y.x <= max_.x && p_y.x >= min_.x
+        && p_y.z <= max_.z && p_y.z >= min_.z && t_min_y > 0) {
+        hitted = true;
+
+        if (tmin > t_min_y) {
+            hit.hitpoint_ = p_y;
+            tmin = t_min_y;
+            hit.normal_ = glm::vec3{0.0f, -1.0f, 0.0f};
         }
     }
 
-    glm::vec3 unten{0, -1, 0};
-    if (glm::dot(unten, transRay.direction_) != 0) {
-        float t_unten = (glm::dot(unten, min_) - glm::dot(transRay.origin_, unten)) / glm::dot(normdirection, unten);
-        glm::vec3 cutP = transRay.origin_ + normdirection * t_unten;
-        if (cutP.z > min_.z && cutP.z < max_.z && cutP.x > min_.x && cutP.x < max_.x) {
-            inBox.push_back(t_unten);
-            normals.emplace_back(glm::vec3{0, -1, 0});
+    float t_max_y = (max_.y - transformedRay.origin_.y) / (glm::normalize(transformedRay.direction_)).y;
+    glm::vec3 p_y2 = transformedRay.origin_ + t_max_y * (glm::normalize(transformedRay.direction_));
+
+    if (p_y2.x <= max_.x && p_y2.x >= min_.x
+        && p_y2.z <= max_.z && p_y2.z >= min_.z && t_max_y > 0) {
+        hitted = true;
+
+        if (tmin > t_max_y) {
+            hit.hitpoint_ = p_y2;
+            tmin = t_max_y;
+            hit.normal_ = glm::vec3{0.0f, 1.0f, 0.0f};
         }
     }
 
-    glm::vec3 vorne{1, 0, 0};
-    if (glm::dot(vorne, transRay.direction_) != 0) {
-        float t_vorne = (glm::dot(vorne, max_) - glm::dot(transRay.origin_, vorne)) / glm::dot(normdirection, vorne);
-        glm::vec3 cutP = transRay.origin_ + normdirection * t_vorne;
-        if (cutP.y > min_.y && cutP.y < max_.y && cutP.z > min_.z && cutP.z < max_.z) {
-            inBox.push_back(t_vorne);
-            normals.emplace_back(glm::vec3{1, 0, 0});
+    float t_min_z = (min_.z - transformedRay.origin_.z) / (glm::normalize(transformedRay.direction_)).z;
+    glm::vec3 p_z = transformedRay.origin_ + t_min_z * (glm::normalize(transformedRay.direction_));
+
+    if (p_z.y <= max_.y && p_z.y >= min_.y
+        && p_z.x <= max_.x && p_z.x >= min_.x && t_min_z > 0) {
+        hitted = true;
+
+
+        if (tmin > t_min_z) {
+            hit.hitpoint_ = p_z;
+            tmin = t_min_z;
+            hit.normal_ = glm::vec3{0.0f, 0.0f, -1.0f};
         }
     }
 
-    glm::vec3 links{0, 0, 1};
-    if (glm::dot(links, transRay.direction_) != 0) {
-        float t_links = (glm::dot(links, max_) - glm::dot(transRay.origin_, links)) / glm::dot(normdirection, links);
-        glm::vec3 cutP = transRay.origin_ + normdirection * t_links;
-        if (cutP.y > min_.y && cutP.y < max_.y && cutP.x > min_.x && cutP.x < max_.x) {
-            inBox.push_back(t_links);
-            normals.emplace_back(glm::vec3{0, 0, 1});
-        }
+    float t_max_z = (max_.z - transformedRay.origin_.z) / (glm::normalize(transformedRay.direction_)).z;
+    glm::vec3 p_z2 = transformedRay.origin_ + t_max_z * (glm::normalize(transformedRay.direction_));
 
-    }
+    if (p_z2.y <= max_.y && p_z2.y >= min_.y
+        && p_z2.x <= max_.x && p_z2.x >= min_.x && t_max_z > 0) {
+        hitted = true;
 
-    glm::vec3 oben{0, 1, 0};
-    if (glm::dot(oben, transRay.direction_) != 0) {
-        float t_oben = (glm::dot(oben, max_) - glm::dot(transRay.origin_, oben)) / glm::dot(normdirection, oben);
-        glm::vec3 cutP = transRay.origin_ + normdirection * t_oben;
-        if (cutP.z > min_.z && cutP.z < max_.z && cutP.x > min_.x && cutP.x < max_.x) {
-            inBox.push_back(t_oben);
-            normals.emplace_back(glm::vec3{0, 1, 0});
+
+        if (tmin > t_max_z) {
+            hit.hitpoint_ = p_z2;
+            tmin = t_max_z;
+            hit.normal_ = glm::vec3{0.0f, 0.0f, 1.0f};
+
         }
     }
-    if (inBox.empty()) {
-        return Hitpoint{};
-    } else {
-        std::sort(inBox.begin(), inBox.end());
-        float minimal = inBox[0];
-        glm::vec3 minimal_normal = normals[0];
-        for (unsigned long i = 1; i < inBox.size(); ++i){
-            if (inBox[i] < minimal){
-                minimal = inBox[i];
-                minimal_normal = normals[i];
-            }
-        }
 
-        float hitx = transRay.origin_.x + minimal * normdirection.x;
-        float hity = transRay.origin_.y + minimal * normdirection.y;
-        float hitz = transRay.origin_.z + minimal * normdirection.z;
+    //TODO make sure, that the distance is positive if the box is in front of the  camera else the hit should be false!!!
 
-        glm::vec4 trans_cut = world_transformation_ * glm::vec4({hitx,hity,hitz,1});
-        glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(minimal_normal,0));
-
-        hit.material_ = material_;
-        hit.name_ = name_;
+    if (hitted == true) {
+        glm::vec4 transformed_point = world_transformation_ * glm::vec4{hit.hitpoint_, 1};
+        glm::vec4 transformed_normal = glm::normalize(
+                glm::transpose(world_transformation_inv) * glm::vec4{hit.normal_, 0});
         hit.hit_ = true;
-        hit.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
-        hit.normal_ = {trans_normal.x,trans_normal.y,trans_normal.z};
+        hit.material_ = material_;
         hit.direction_ = ray.direction_;
-        hit.distance_ = glm::length(hit.hitpoint_ - ray.origin_);
-        return hit;
+        hit.distance_ = tmin;
+        hit.name_ = name_;
+        hit.normal_ = glm::vec3{transformed_normal.x, transformed_normal.y, transformed_normal.z};
+        hit.hitpoint_ = glm::vec3{transformed_point.x, transformed_point.y, transformed_point.z};
     }
-
+    return hit;
 }
+
+
+

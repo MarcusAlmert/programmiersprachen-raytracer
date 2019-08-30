@@ -23,25 +23,24 @@ define light spot3  0   500   1000    0.8 0.8 0.8     10
 define ambient 0.05
 
 # transformations
-transform bsphere scale 1 0.5 1
-transform bsphere translate -10 0 0
+transform bsphere scale 1 2 1
+transform bsphere translate -10 0 100
 transform bsphere rotate 50 1 0 0
 
 transform rbox scale 2 2 1
 transform rbox rotate 50 0 1 0
 transform rbox translate -200 100 300
 
-transform gtriangle scale 0.5 0.5 0.5
-transform gtriangle translate 0 -200 0
-transform gtriangle rotate 95  0 1 5
+transform gtriangle scale 1 2 0.5
+transform gtriangle translate 0 -200 200
+transform gtriangle rotate 160  0 1 0
 
 transform bcylinder scale 2 1.5 1
 transform bcylinder translate 0 60 0
 transform bcylinder rotate  90 1 1 0
 
 transform rcone scale 2 1 1
-transform rcone translate 200 0 0
-
+transform rcone translate 100 0 0
 
 # camera
 define camera eye   60	0 0 1000 	0 5 -10 	0 1 0
@@ -50,4 +49,4 @@ define camera eye   60	0 0 1000 	0 5 -10 	0 1 0
 define resolution 500 500
 define filename ./Test1.ppm
 define backgroundcolor 0.1 0.1 0.1
-define antialiasing 4
+define antialiasing 1
