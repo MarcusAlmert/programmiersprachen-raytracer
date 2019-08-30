@@ -74,11 +74,11 @@ Hitpoint Box::intersect(Ray const &ray) const {
     Ray transformedRay = transformRay(ray, world_transformation_inv);
     Hitpoint hit{};
     bool hitted = false;
-    float tmin = FLT_MAX;
+    float tmin = MAXFLOAT;
 
+    //hinten
     float t = (min_.x - transformedRay.origin_.x) / (glm::normalize(transformedRay.direction_)).x;
     glm::vec3 p_x = transformedRay.origin_ + t * (glm::normalize(transformedRay.direction_));
-
     if (p_x.y <= max_.y && p_x.y >= min_.y
         && p_x.z <= max_.z && p_x.z >= min_.z && t > 0) {
         hitted = true;
@@ -87,12 +87,11 @@ Hitpoint Box::intersect(Ray const &ray) const {
         hit.normal_ = glm::vec3{-1.0f, 0.0f, 0.0f};
     }
 
+    //vorne
     float t_max_x = (max_.x - transformedRay.origin_.x) / (glm::normalize(transformedRay.direction_)).x;
     glm::vec3 p_x2 = transformedRay.origin_ + t_max_x * (glm::normalize(transformedRay.direction_));
-
     if (p_x2.y <= max_.y && p_x2.y >= min_.y
         && p_x2.z <= max_.z && p_x2.z >= min_.z && t_max_x > 0) {
-        //std::cout << "Der angegebene Punkt liegt innerhalb des Objektes.\n";
         hitted = true;
         if (tmin > t_max_x) {
             hit.hitpoint_ = p_x2;
@@ -101,14 +100,13 @@ Hitpoint Box::intersect(Ray const &ray) const {
         }
     }
 
+    //unten
     float t_min_y = (min_.y - transformedRay.origin_.y) / (glm::normalize(transformedRay.direction_)).y;
     glm::vec3 p_y = transformedRay.origin_ + t_min_y * (glm::normalize(transformedRay.
             direction_));
-
     if (p_y.x <= max_.x && p_y.x >= min_.x
         && p_y.z <= max_.z && p_y.z >= min_.z && t_min_y > 0) {
         hitted = true;
-
         if (tmin > t_min_y) {
             hit.hitpoint_ = p_y;
             tmin = t_min_y;
@@ -116,13 +114,12 @@ Hitpoint Box::intersect(Ray const &ray) const {
         }
     }
 
+    //oben
     float t_max_y = (max_.y - transformedRay.origin_.y) / (glm::normalize(transformedRay.direction_)).y;
     glm::vec3 p_y2 = transformedRay.origin_ + t_max_y * (glm::normalize(transformedRay.direction_));
-
     if (p_y2.x <= max_.x && p_y2.x >= min_.x
         && p_y2.z <= max_.z && p_y2.z >= min_.z && t_max_y > 0) {
         hitted = true;
-
         if (tmin > t_max_y) {
             hit.hitpoint_ = p_y2;
             tmin = t_max_y;
@@ -130,14 +127,12 @@ Hitpoint Box::intersect(Ray const &ray) const {
         }
     }
 
+    //rechts
     float t_min_z = (min_.z - transformedRay.origin_.z) / (glm::normalize(transformedRay.direction_)).z;
     glm::vec3 p_z = transformedRay.origin_ + t_min_z * (glm::normalize(transformedRay.direction_));
-
     if (p_z.y <= max_.y && p_z.y >= min_.y
         && p_z.x <= max_.x && p_z.x >= min_.x && t_min_z > 0) {
         hitted = true;
-
-
         if (tmin > t_min_z) {
             hit.hitpoint_ = p_z;
             tmin = t_min_z;
@@ -145,14 +140,12 @@ Hitpoint Box::intersect(Ray const &ray) const {
         }
     }
 
+    //links
     float t_max_z = (max_.z - transformedRay.origin_.z) / (glm::normalize(transformedRay.direction_)).z;
     glm::vec3 p_z2 = transformedRay.origin_ + t_max_z * (glm::normalize(transformedRay.direction_));
-
     if (p_z2.y <= max_.y && p_z2.y >= min_.y
         && p_z2.x <= max_.x && p_z2.x >= min_.x && t_max_z > 0) {
         hitted = true;
-
-
         if (tmin > t_max_z) {
             hit.hitpoint_ = p_z2;
             tmin = t_max_z;
@@ -160,8 +153,6 @@ Hitpoint Box::intersect(Ray const &ray) const {
 
         }
     }
-
-    //TODO make sure, that the distance is positive if the box is in front of the  camera else the hit should be false!!!
 
     if (hitted == true) {
         glm::vec4 transformed_point = world_transformation_ * glm::vec4{hit.hitpoint_, 1};
