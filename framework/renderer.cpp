@@ -18,7 +18,7 @@ void Renderer::render(Scene const &scene) {
     float angle = 360 / rotate_scene.frames;
     for (int i = 0; i < rotate_scene.frames; i++) {
 
-        glm::vec3 distance{0.0f, 0.0f, 0};
+        glm::vec3 distance{0.0f, 0.0f, 0.0f};   // additional distance for camera rotation
         glm::mat4x4 rotation = glm::rotate((float) angle * i, glm::vec3{0.0f, 1.0f, 0.0f});
         glm::vec4 n_4 = glm::vec4{rotate_scene.camera_.direction, 0} * rotation;
         glm::vec4 up_4 = glm::vec4{rotate_scene.camera_.upVector, 0} * rotation;

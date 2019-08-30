@@ -50,4 +50,4 @@ define resolution 1920 1080
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
 define antialiasing 4
-define frames 180
+define frames 2
