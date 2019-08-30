@@ -7,167 +7,190 @@
 // Renderer
 // -----------------------------------------------------------------------------
 
+#include <glm-0.9.5.3/glm/gtx/transform.hpp>
 #include "renderer.hpp"
 
 Renderer::Renderer(unsigned w, unsigned h, std::string const &file)
         : width_(w), height_(h), color_buffer_(w * h, Color(0.0, 0.0, 0.0)), filename_(file), ppm_(width_, height_) {}
 
 void Renderer::render(Scene const &scene) {
-    //std::size_t const checker_pattern_size = 20;
+    Scene rotate_scene = scene;
+    float angle = 360 / rotate_scene.frames;
+    for (int i = 0; i < rotate_scene.frames; i++) {
 
-    float d = (width_ / 2) / tan(scene.camera_.fov / 2 * M_PI / 180);
+        glm::vec3 distance{0.0f, 0.0f, 0};
+        glm::mat4x4 rotation = glm::rotate((float) angle * i, glm::vec3{0.0f, 1.0f, 0.0f});
+        glm::vec4 n_4 = glm::vec4{rotate_scene.camera_.direction, 0} * rotation;
+        glm::vec4 up_4 = glm::vec4{rotate_scene.camera_.upVector, 0} * rotation;
+        glm::vec3 n = glm::normalize(glm::vec3{n_4.x, n_4.y, n_4.z});
+        glm::vec3 up = glm::vec3{up_4.x, up_4.y, up_4.z};
+        glm::vec3 u = glm::normalize(glm::cross(n, up));
+        glm::vec3 v = glm::normalize(glm::cross(u, n));
+        float x = (glm::vec4{distance, 1.0f} * rotation).x;
+        float z = (glm::vec4{distance, 1.0f} * rotation).z;
+        rotate_scene.camera_.transformation_ = glm::mat4{
+                glm::vec4{u, 0.0f},
+                glm::vec4{v, 0.0f},
+                glm::vec4{-n, 0.0f},
+                glm::vec4{x, 50.0f, z, 1.0f}
+        };
 
-    glm::vec3 dir = glm::normalize(scene.camera_.direction);    // vector in direction of view
-    glm::vec3 up = glm::normalize(scene.camera_.upVector);      // vector in above direction from origin
-    glm::vec3 down = up;
-    invert_direction(down);                // vector in down direction from origin
-    glm::vec3 l = glm::normalize(glm::cross(up, dir));          // vector in left direction from origin
-    glm::vec3 r = glm::normalize(glm::cross(dir, up));          // vector in right direction from origin
+        std::string picture_name = rotate_scene.filename + std::to_string(i) + ".ppm";
+        float d = (width_ / 2) / tan(rotate_scene.camera_.fov / 2 * M_PI / 180);
 
-    float half_height = height_ / 2.0f;
-    float half_width = width_ / 2.0f;
-    glm::vec3 zr = d * dir;                                     // distance of pixel from "eye" position
-    glm::vec3 yr{0.0f, 0.0f, 0.0f};
-    glm::vec3 xr{0.0f, 0.0f, 0.0f};
+        glm::vec3 dir = glm::normalize(rotate_scene.camera_.direction);    // vector in direction of view
+        up = glm::normalize(rotate_scene.camera_.upVector);      // vector in above direction from origin
+        glm::vec3 down = up;
+        invert_direction(down);                // vector in down direction from origin
+        glm::vec3 l = glm::normalize(glm::cross(up, dir));          // vector in left direction from origin
+        glm::vec3 r = glm::normalize(glm::cross(dir, up));          // vector in right direction from origin
 
-    for (unsigned y = 0; y < height_; ++y) {
+        float half_height = height_ / 2.0f;
+        float half_width = width_ / 2.0f;
+        glm::vec3 zr = d * dir;                                     // distance of pixel from "eye" position
+        glm::vec3 yr{0.0f, 0.0f, 0.0f};
+        glm::vec3 xr{0.0f, 0.0f, 0.0f};
 
-        // calculates vertical position of pixel
-        if (y < half_height) {
-            yr = down * -(y - half_height);
-        } else if (y > half_height) {
-            yr = up * (y - half_height);
-        }
+        for (unsigned y = 0; y < height_; ++y) {
 
-        for (unsigned x = 0; x < width_; ++x) {
-            Pixel p(x, y);
-
-            glm::vec3 pos = scene.camera_.position;
-
-            // calculates horizontal position of pixel
-            if (x < half_width) {
-                xr = l * -(x - half_width);
-            } else if (x > half_width) {
-                xr = r * (x - half_width);
-            }
-            // final direction is the sum out of 3 directions of the viewplain
-            //glm::vec3 direction = xr + yr + zr;
-            // new for AntiAliasing
-            std::vector<glm::vec3> directions;
-            if (scene.antialiasing_ == 4) {
-                glm::vec3 dir_1 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
-                glm::vec3 dir_2 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) - 0.5f, -d});
-                glm::vec3 dir_3 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) + 0.5f, -d});
-                glm::vec3 dir_4 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) - 0.5f, -d});
-                directions.push_back(dir_1);
-                directions.push_back(dir_2);
-                directions.push_back(dir_3);
-                directions.push_back(dir_4);
-            } else if (scene.antialiasing_ == 8) {
-                glm::vec3 dir_1 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
-                glm::vec3 dir_2 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) - 0.5f, -d});
-                glm::vec3 dir_3 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) + 0.5f, -d});
-                glm::vec3 dir_4 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) - 0.5f, -d});
-                glm::vec3 dir_5 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) + 0.25f, -d});
-                glm::vec3 dir_6 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) - 0.25f, -d});
-                glm::vec3 dir_7 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) + 0.25f, -d});
-                glm::vec3 dir_8 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) - 0.25f, -d});
-                directions.push_back(dir_1);
-                directions.push_back(dir_2);
-                directions.push_back(dir_3);
-                directions.push_back(dir_4);
-                directions.push_back(dir_5);
-                directions.push_back(dir_6);
-                directions.push_back(dir_7);
-                directions.push_back(dir_8);
-            } else if (scene.antialiasing_ == 16) {
-                glm::vec3 dir_1 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
-                glm::vec3 dir_2 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) - 0.5f, -d});
-                glm::vec3 dir_3 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) + 0.5f, -d});
-                glm::vec3 dir_4 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) - 0.5f, -d});
-                glm::vec3 dir_5 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) + 0.25f, -d});
-                glm::vec3 dir_6 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) - 0.25f, -d});
-                glm::vec3 dir_7 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) + 0.25f, -d});
-                glm::vec3 dir_8 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) - 0.25f, -d});
-                glm::vec3 dir_9 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.125f, y - (half_height) + 0.125f, -d});
-                glm::vec3 dir_10 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.125f, y - (half_height) - 0.125f, -d});
-                glm::vec3 dir_11 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.125f, y - (half_height) + 0.125f, -d});
-                glm::vec3 dir_12 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.125f, y - (half_height) - 0.125f, -d});
-                glm::vec3 dir_13 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.0625f, y - (half_height) + 0.0625f, -d});
-                glm::vec3 dir_14 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.0625f, y - (half_height) - 0.0625f, -d});
-                glm::vec3 dir_15 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.0625f, y - (half_height) + 0.0625f, -d});
-                glm::vec3 dir_16 = glm::normalize(
-                        dir + glm::vec3{x - (half_width) - 0.0625f, y - (half_height) - 0.0625f, -d});
-
-                directions.push_back(dir_1);
-                directions.push_back(dir_2);
-                directions.push_back(dir_3);
-                directions.push_back(dir_4);
-                directions.push_back(dir_5);
-                directions.push_back(dir_6);
-                directions.push_back(dir_7);
-                directions.push_back(dir_8);
-                directions.push_back(dir_9);
-                directions.push_back(dir_10);
-                directions.push_back(dir_11);
-                directions.push_back(dir_12);
-                directions.push_back(dir_13);
-                directions.push_back(dir_14);
-                directions.push_back(dir_15);
-                directions.push_back(dir_16);
-            } else if (scene.antialiasing_ == 1) {
-                //directions.push_back(glm::normalize(xr + yr + zr));
-                directions.push_back(glm::normalize(
-                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d}));
+            // calculates vertical position of pixel
+            if (y < half_height) {
+                yr = down * -(y - half_height);
+            } else if (y > half_height) {
+                yr = up * (y - half_height);
             }
 
-            Pixel aliased;
-            for (int i = 0; i < directions.size(); i++) {
-                // in dieser Schleife wird der Schnittpunkt mit dem ersten Objekt den der Strahl trifft berechnet
-                Hitpoint first_hit = fire_ray(scene, Ray{pos, glm::normalize(directions[i])});
+            for (unsigned x = 0; x < width_; ++x) {
+                Pixel p(x, y);
 
-                // Entweder es wurde ein Objekt getroffen oder der Pixel bekommt die Hintergrundfarbe zugewiesen
-                if (first_hit.hit_) {
-                    Color raytracer_color = calc_color(first_hit, scene, 1);
-                    tone_mapping(raytracer_color);
-                    p.color = raytracer_color;
-                } else {
-                    p.color = scene.backgroundcolor_;
+                glm::vec3 pos = rotate_scene.camera_.position;
+
+                // calculates horizontal position of pixel
+                if (x < half_width) {
+                    xr = l * -(x - half_width);
+                } else if (x > half_width) {
+                    xr = r * (x - half_width);
                 }
-                aliased.color += p.color;
+                // final direction is the sum out of 3 directions of the viewplain
+                //glm::vec3 direction = xr + yr + zr;
+                // new for AntiAliasing
+                std::vector<glm::vec3> directions;
+                if (rotate_scene.antialiasing_ == 4) {
+                    glm::vec3 dir_1 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
+                    glm::vec3 dir_2 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) - 0.5f, -d});
+                    glm::vec3 dir_3 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) + 0.5f, -d});
+                    glm::vec3 dir_4 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) - 0.5f, -d});
+                    directions.push_back(dir_1);
+                    directions.push_back(dir_2);
+                    directions.push_back(dir_3);
+                    directions.push_back(dir_4);
+                } else if (rotate_scene.antialiasing_ == 8) {
+                    glm::vec3 dir_1 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
+                    glm::vec3 dir_2 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) - 0.5f, -d});
+                    glm::vec3 dir_3 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) + 0.5f, -d});
+                    glm::vec3 dir_4 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) - 0.5f, -d});
+                    glm::vec3 dir_5 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) + 0.25f, -d});
+                    glm::vec3 dir_6 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) - 0.25f, -d});
+                    glm::vec3 dir_7 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) + 0.25f, -d});
+                    glm::vec3 dir_8 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) - 0.25f, -d});
+                    directions.push_back(dir_1);
+                    directions.push_back(dir_2);
+                    directions.push_back(dir_3);
+                    directions.push_back(dir_4);
+                    directions.push_back(dir_5);
+                    directions.push_back(dir_6);
+                    directions.push_back(dir_7);
+                    directions.push_back(dir_8);
+                } else if (rotate_scene.antialiasing_ == 16) {
+                    glm::vec3 dir_1 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
+                    glm::vec3 dir_2 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) - 0.5f, -d});
+                    glm::vec3 dir_3 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) + 0.5f, -d});
+                    glm::vec3 dir_4 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) - 0.5f, -d});
+                    glm::vec3 dir_5 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) + 0.25f, -d});
+                    glm::vec3 dir_6 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) - 0.25f, -d});
+                    glm::vec3 dir_7 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) + 0.25f, -d});
+                    glm::vec3 dir_8 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) - 0.25f, -d});
+                    glm::vec3 dir_9 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.125f, y - (half_height) + 0.125f, -d});
+                    glm::vec3 dir_10 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.125f, y - (half_height) - 0.125f, -d});
+                    glm::vec3 dir_11 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.125f, y - (half_height) + 0.125f, -d});
+                    glm::vec3 dir_12 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.125f, y - (half_height) - 0.125f, -d});
+                    glm::vec3 dir_13 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.0625f, y - (half_height) + 0.0625f, -d});
+                    glm::vec3 dir_14 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.0625f, y - (half_height) - 0.0625f, -d});
+                    glm::vec3 dir_15 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.0625f, y - (half_height) + 0.0625f, -d});
+                    glm::vec3 dir_16 = glm::normalize(
+                            dir + glm::vec3{x - (half_width) - 0.0625f, y - (half_height) - 0.0625f, -d});
+
+                    directions.push_back(dir_1);
+                    directions.push_back(dir_2);
+                    directions.push_back(dir_3);
+                    directions.push_back(dir_4);
+                    directions.push_back(dir_5);
+                    directions.push_back(dir_6);
+                    directions.push_back(dir_7);
+                    directions.push_back(dir_8);
+                    directions.push_back(dir_9);
+                    directions.push_back(dir_10);
+                    directions.push_back(dir_11);
+                    directions.push_back(dir_12);
+                    directions.push_back(dir_13);
+                    directions.push_back(dir_14);
+                    directions.push_back(dir_15);
+                    directions.push_back(dir_16);
+                } else if (rotate_scene.antialiasing_ == 1) {
+                    //directions.push_back(glm::normalize(xr + yr + zr));
+                    directions.push_back(glm::normalize(
+                            dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d}));
+                }
+
+                Pixel aliased;
+                for (int i = 0; i < directions.size(); i++) {
+                    // in dieser Schleife wird der Schnittpunkt mit dem ersten Objekt den der Strahl trifft berechnet
+                    Hitpoint first_hit = fire_ray(rotate_scene, transformRay(Ray{pos, glm::normalize(directions[i])},
+                                                                             rotate_scene.camera_.transformation_));
+
+                    // Entweder es wurde ein Objekt getroffen oder der Pixel bekommt die Hintergrundfarbe zugewiesen
+                    if (first_hit.hit_) {
+                        Color raytracer_color = calc_color(first_hit, rotate_scene, 1);
+                        tone_mapping(raytracer_color);
+                        p.color = raytracer_color;
+                    } else {
+                        p.color = rotate_scene.backgroundcolor_;
+                    }
+                    aliased.color += p.color;
+                }
+                p.color = aliased.color / rotate_scene.antialiasing_;
+                write(p);
             }
-            p.color = aliased.color / scene.antialiasing_;
-            write(p);
         }
+        ppm_.save(picture_name);
     }
-    ppm_.save(filename_);
 }
 
 void Renderer::write(Pixel const &p) {
@@ -269,7 +292,7 @@ Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) {
         }
         // if there is no light blocking shape
         if (light_not_visible == false) {
-            glm::vec3 camera_hitpoint = glm::normalize(scene.camera_.position - hitpoint.hitpoint_);
+            glm::vec3 camera_hitpoint = glm::normalize(camera_hitpoint - hitpoint.hitpoint_);
             glm::vec3 r = glm::dot(hitpoint.normal_, vec_light_cut) * 2.0f * hitpoint.normal_ - vec_light_cut;
             float p = abs(glm::dot(r, camera_hitpoint));
             float cos = pow(p, hitpoint.material_->m_);

@@ -23,6 +23,7 @@ struct Scene {
     unsigned int width = 500;
     std::string filename = "./Test.ppm";
     unsigned int antialiasing_ = 4;
+    unsigned int frames = 1;
 };
 
 
