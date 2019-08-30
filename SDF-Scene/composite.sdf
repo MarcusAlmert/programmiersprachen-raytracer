@@ -44,7 +44,7 @@ transform rcone translate 200 0 0
 
 
 # camera
-define camera eye   60	0 -100 1000 	0 5 -10 	0 1 0
+define camera eye   60	0 0 1000 	0 5 -10 	0 1 0
 
 #renderer
 define resolution 500 500

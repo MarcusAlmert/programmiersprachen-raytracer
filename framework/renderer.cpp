@@ -67,6 +67,81 @@ void Renderer::render(Scene const &scene) {
                 directions.push_back(dir_2);
                 directions.push_back(dir_3);
                 directions.push_back(dir_4);
+            } else if (scene.antialiasing_ == 8) {
+                glm::vec3 dir_1 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
+                glm::vec3 dir_2 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) - 0.5f, -d});
+                glm::vec3 dir_3 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) + 0.5f, -d});
+                glm::vec3 dir_4 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) - 0.5f, -d});
+                glm::vec3 dir_5 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) + 0.25f, -d});
+                glm::vec3 dir_6 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) - 0.25f, -d});
+                glm::vec3 dir_7 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) + 0.25f, -d});
+                glm::vec3 dir_8 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) - 0.25f, -d});
+                directions.push_back(dir_1);
+                directions.push_back(dir_2);
+                directions.push_back(dir_3);
+                directions.push_back(dir_4);
+                directions.push_back(dir_5);
+                directions.push_back(dir_6);
+                directions.push_back(dir_7);
+                directions.push_back(dir_8);
+            } else if (scene.antialiasing_ == 16) {
+                glm::vec3 dir_1 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
+                glm::vec3 dir_2 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) - 0.5f, -d});
+                glm::vec3 dir_3 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) + 0.5f, -d});
+                glm::vec3 dir_4 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.5f, y - (half_height) - 0.5f, -d});
+                glm::vec3 dir_5 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) + 0.25f, -d});
+                glm::vec3 dir_6 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.25f, y - (half_height) - 0.25f, -d});
+                glm::vec3 dir_7 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) + 0.25f, -d});
+                glm::vec3 dir_8 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.25f, y - (half_height) - 0.25f, -d});
+                glm::vec3 dir_9 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.125f, y - (half_height) + 0.125f, -d});
+                glm::vec3 dir_10 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.125f, y - (half_height) - 0.125f, -d});
+                glm::vec3 dir_11 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.125f, y - (half_height) + 0.125f, -d});
+                glm::vec3 dir_12 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.125f, y - (half_height) - 0.125f, -d});
+                glm::vec3 dir_13 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.0625f, y - (half_height) + 0.0625f, -d});
+                glm::vec3 dir_14 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) + 0.0625f, y - (half_height) - 0.0625f, -d});
+                glm::vec3 dir_15 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.0625f, y - (half_height) + 0.0625f, -d});
+                glm::vec3 dir_16 = glm::normalize(
+                        dir + glm::vec3{x - (half_width) - 0.0625f, y - (half_height) - 0.0625f, -d});
+
+                directions.push_back(dir_1);
+                directions.push_back(dir_2);
+                directions.push_back(dir_3);
+                directions.push_back(dir_4);
+                directions.push_back(dir_5);
+                directions.push_back(dir_6);
+                directions.push_back(dir_7);
+                directions.push_back(dir_8);
+                directions.push_back(dir_9);
+                directions.push_back(dir_10);
+                directions.push_back(dir_11);
+                directions.push_back(dir_12);
+                directions.push_back(dir_13);
+                directions.push_back(dir_14);
+                directions.push_back(dir_15);
+                directions.push_back(dir_16);
             } else if (scene.antialiasing_ == 1) {
                 //directions.push_back(glm::normalize(xr + yr + zr));
                 directions.push_back(glm::normalize(
