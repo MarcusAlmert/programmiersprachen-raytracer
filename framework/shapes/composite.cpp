@@ -3,7 +3,6 @@
 #include "iostream"
 
 Composite::Composite() {
-    shapes_ = {nullptr};
 }
 
 Composite::Composite(std::shared_ptr<Shape> const shape, std::string name) {
@@ -66,4 +65,12 @@ Hitpoint Composite::intersect(Ray const &ray) const {
                 return glm::distance(lhs.hitpoint_, ray.origin_) < glm::distance(rhs.hitpoint_, ray.origin_);
             });
     return *hitpoints.begin();
+}
+
+std::vector<std::shared_ptr<Shape>> Composite::getShapes() const {
+    return shapes_;
+}
+
+std::shared_ptr<Shape> find(std::shared_ptr<Composite> const composite, std::string const &name) {
+
 }

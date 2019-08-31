@@ -13,7 +13,7 @@ define shape triangle   gtriangle       0       0       10      50    200  50   
 //define shape plane      bplane          0       -0.1       0       0      1   0     blue
 
 # composite
-//define shape composite root rbox bsphere bcylinder rcone gtriangle
+define shape composite root rbox bsphere bcylinder rcone gtriangle
 
 # lights
 define light sun    500 800 0       1.0 1.0 1.0     10
@@ -43,11 +43,11 @@ transform rcone scale 2 1 1
 transform rcone translate 180 0 0
 
 # camera
-define camera eye   60	0 0 2000 	0 0 -10 	0 1 0
+define camera eye   60	0 0 1000 	0 0 -10 	0 1 0
 
 #renderer
-define resolution 1920 1080
+define resolution 500 500
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
-define antialiasing 4
-define frames 2
+define antialiasing 1
+define frames 1

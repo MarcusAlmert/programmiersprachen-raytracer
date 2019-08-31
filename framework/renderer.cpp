@@ -252,12 +252,10 @@ Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) {
         glm::vec3 vec_light_cut = glm::normalize(light.position_ - hitpoint.hitpoint_);
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
-        for (auto shape : scene.shape_vector_) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 0.1f * hitpoint.normal_, vec_light_cut}).hit_;
-            if (light_not_visible) {
-                light_not_visible = true;
-                break;  // if there is atleast one shape in between light and current shape light gets blocked
-            }
+        light_not_visible = scene.composite->intersect(
+                Ray{hitpoint.hitpoint_ + 0.1f * hitpoint.normal_, vec_light_cut}).hit_;
+        if (light_not_visible) {
+            break;// if there is atleast one shape in between light and current shape light gets blocked
         }
         // if there is no light blocking shape
         if (light_not_visible == false) {
@@ -283,13 +281,11 @@ Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) {
         glm::vec3 vec_light_cut = glm::normalize(light.position_ - hitpoint.hitpoint_);
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
-        for (auto shape : scene.shape_vector_) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 0.2f * hitpoint.normal_, vec_light_cut}).hit_;
+        light_not_visible = scene.composite->intersect(
+                Ray{hitpoint.hitpoint_ + 0.2f * hitpoint.normal_, vec_light_cut}).hit_;
             if (light_not_visible) {
-                light_not_visible = true;
                 break;  // if there is atleast one shape in between light and current shape light gets blocked
             }
-        }
         // if there is no light blocking shape
         if (light_not_visible == false) {
             glm::vec3 camera_hitpoint = glm::normalize(camera_hitpoint - hitpoint.hitpoint_);
@@ -405,12 +401,10 @@ float Renderer::calc_fresnel_reflection_ratio(Hitpoint const &hitpoint, Scene co
 Hitpoint Renderer::fire_ray(Scene const &scene, Ray const &ray) {
     Hitpoint first_hit;
     first_hit.distance_ = FLT_MAX;
-    for (int i = 0; i < scene.shape_vector_.size(); ++i) {
-        Hitpoint hit = scene.shape_vector_[i]->intersect(ray);
+    Hitpoint hit = scene.composite->intersect(ray);
         if (hit.hit_ && hit.distance_ < first_hit.distance_) {
             first_hit = hit;
         }
-    }
     return first_hit;
 }
 

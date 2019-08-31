@@ -19,6 +19,7 @@ Scene read_sdf(std::string const &path) {
     std::string linebuffer;
     std::ifstream in_scene_file(path);
     Scene scene1;
+    std::vector<std::shared_ptr<Shape>> shapes;
     while (std::getline(in_scene_file, linebuffer)) {
         std::istringstream line_string_stream(linebuffer);
 
@@ -77,7 +78,7 @@ Scene read_sdf(std::string const &path) {
                     auto matptr = find(scene1.mat_vector_, shape_mat_name);
                     std::shared_ptr<Shape> sp = std::make_shared<Sphere>(
                             Sphere({centerx, centery, centerz}, radius, shape_name, matptr));
-                    scene1.shape_vector_.push_back(sp);
+                    shapes.push_back(sp);
 
                 } else if (type == "box") {
                     std::string shape_name;
@@ -94,7 +95,7 @@ Scene read_sdf(std::string const &path) {
                     auto matptr = find(scene1.mat_vector_, shape_mat_name);
                     std::shared_ptr<Shape> box = std::make_shared<Box>(
                             Box({p1x, p1y, p1z}, {p2x, p2y, p2z}, shape_name, matptr));
-                    scene1.shape_vector_.push_back(box);
+                    shapes.push_back(box);
 
                 } else if (type == "cylinder") {
                     std::string shape_name;
@@ -112,7 +113,7 @@ Scene read_sdf(std::string const &path) {
                     auto matptr = find(scene1.mat_vector_, shape_mat_name);
                     std::shared_ptr<Shape> cylinder = std::make_shared<Cylinder>(
                             Cylinder(glm::vec3{p1x, p1y, p1z}, glm::vec3{p2x, p2y, p2z}, r, shape_name, matptr));
-                    scene1.shape_vector_.push_back(cylinder);
+                    shapes.push_back(cylinder);
 
                 } else if (type == "cone") {
                     std::string shape_name;
@@ -132,7 +133,7 @@ Scene read_sdf(std::string const &path) {
                     auto matptr = find(scene1.mat_vector_, shape_mat_name);
                     std::shared_ptr<Shape> cone = std::make_shared<Cone>(
                             Cone(glm::vec3{px, py, pz}, {tx, ty, tz}, r, shape_name, matptr));
-                    scene1.shape_vector_.push_back(cone);
+                    shapes.push_back(cone);
 
                 } else if (type == "triangle") {
                     std::string shape_name;
@@ -152,7 +153,7 @@ Scene read_sdf(std::string const &path) {
                     auto matptr = find(scene1.mat_vector_, shape_mat_name);
                     std::shared_ptr<Shape> triangle = std::make_shared<Triangle>(
                             Triangle({p1x, p1y, p1z}, {p2x, p2y, p2z}, {p3x, p3y, p3z}, shape_name, matptr));
-                    scene1.shape_vector_.push_back(triangle);
+                    shapes.push_back(triangle);
 
                 } else if (type == "plane") {
                     std::string shape_name;
@@ -169,7 +170,7 @@ Scene read_sdf(std::string const &path) {
                     auto matptr = find(scene1.mat_vector_, shape_mat_name);
                     std::shared_ptr<Shape> plane = std::make_shared<Plane>(
                             Plane({p1x, p1y, p1z}, {p2x, p2y, p2z}, shape_name, matptr));
-                    scene1.shape_vector_.push_back(plane);
+                    shapes.push_back(plane);
 
                 } else if (type == "composite") {
                     std::string shape_name;
@@ -179,20 +180,25 @@ Scene read_sdf(std::string const &path) {
                     Composite composite;
                     composite.name_ = shape_name;
                     line_string_stream >> next_shape_name;
+                    std::string last = next_shape_name;
                     while (valid) {
-                        std::string last = next_shape_name;
-                        std::shared_ptr<Shape> found = find(scene1.shape_vector_, next_shape_name);
-                        if (last == next_shape_name) {
-                            break;
-                        }
+                        last = next_shape_name;
+                        std::shared_ptr<Shape> found = find(shapes, next_shape_name);
+                        line_string_stream >> next_shape_name;
+
                         if (found != nullptr) {
                             composite.add_shape(found);
                         } else {
                             valid = false;
                         }
-                        line_string_stream >> next_shape_name;
+                        if (last == next_shape_name) {
+                            break;
+                        }
                     }
-                    scene1.shape_vector_.push_back(std::make_shared<Composite>(composite));
+                    if (shape_name == "root") {
+                        scene1.composite = std::make_shared<Composite>(composite);
+                    } else
+                        shapes.push_back(std::make_shared<Composite>(composite));
                 }
 
             } else if (identifier == "light") {
@@ -245,8 +251,8 @@ Scene read_sdf(std::string const &path) {
             std::string name;
             line_string_stream >> name;
 
-            if (find(scene1.shape_vector_, name) != nullptr) {
-                std::shared_ptr<Shape> shape_ptr = find(scene1.shape_vector_, name);
+            if (find(shapes, name) != nullptr) {
+                std::shared_ptr<Shape> shape_ptr = find(shapes, name);
                 std::string transType;
                 line_string_stream >> transType;
                 if (transType == "translate") {
