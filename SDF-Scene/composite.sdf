@@ -46,8 +46,8 @@ transform rcone translate 180 0 0
 define camera eye   60	0 0 1000 	0 0 -10 	0 1 0
 
 #renderer
-define resolution 500 500
+define resolution 250 250
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
 define antialiasing 1
-define frames 1
+define frames 90
