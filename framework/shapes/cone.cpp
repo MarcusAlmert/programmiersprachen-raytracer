@@ -58,19 +58,12 @@ Hitpoint Cone::intersect(Ray const &ray) const {
     } else {
         radius_direction = glm::normalize(glm::vec3{cone_direction.z, 0.0f, -1.0f * cone_direction.x});
     }
-    //glm::vec3 radius_direction = glm::normalize(glm::vec3{cone_direction.z, 0.0f, -1.0f * cone_direction.x});
+
     glm::vec3 edge_point = base_center_pos_ + radius_ * radius_direction;
     glm::vec3 direction_to_egde = edge_point - tip_pos_;
     float cos_alpha = glm::dot(direction_to_egde, reverse_cone_direction) / glm::length(direction_to_egde) * glm::length(reverse_cone_direction); 
     float cos_apha_squared = powf(cos_alpha, 2.0f);
     float sin_aplha_squared = powf(sinf(acosf(cos_alpha)), 2.0f);
-
-    //glm::vec3 v = {pos_.x, pos_.y + height_, pos_.z};
-    /*
-    a = pow(ray.direction_.x, 2) + pow(ray.direction_.y, 2) - pow(ray.direction_.z, 2);
-    b = 2 * ray.origin_.x * ray.direction_.x + 2 * ray.origin_.y * ray.direction_.y -
-        2 * ray.origin_.z * ray.direction_.z;
-    c = pow(ray.origin_.x, 2) + pow(ray.origin_.y, 2) - pow(ray.origin_.z, 2); */
 
     float dot_v_va = glm::dot(ray_direction, cone_direction);
     float dot_dp_va = glm::dot(delta_p, cone_direction);
@@ -80,9 +73,6 @@ Hitpoint Cone::intersect(Ray const &ray) const {
               2.0f * sin_aplha_squared * dot_v_va * dot_dp_va;
     float C = cos_apha_squared * powf(glm::length((delta_p - dot_dp_va * cone_direction)), 2.0f) -
               sin_aplha_squared * powf(glm::length(dot_dp_va), 2.0f);
-
-    //t1 = (-b + sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
-    //t2 = (-b - sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
 
     // solving the square equation with a-b-c-formula
     float t1 = -1.0f;
@@ -94,7 +84,6 @@ Hitpoint Cone::intersect(Ray const &ray) const {
         t2 = (-1.0f * B - inside_sqrt) / doubled_a;
     }
 
-    // container for hit candidates (min = 0, max = 3);
     std::vector<Hitpoint> candidates;
 
     if (t1 > 0.00001){

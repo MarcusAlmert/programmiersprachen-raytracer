@@ -22,24 +22,22 @@ void Renderer::render(Scene const &scene) {
         glm::mat4x4 rotation = glm::rotate((float) angle * i, glm::vec3{0.0f, 1.0f, 0.0f});
         glm::vec4 n_4 = glm::vec4{rotate_scene.camera_.direction, 0} * rotation;
         glm::vec4 up_4 = glm::vec4{rotate_scene.camera_.upVector, 0} * rotation;
-        glm::vec3 n = glm::normalize(glm::vec3{n_4.x, n_4.y, n_4.z});
+        glm::vec3 dir = glm::normalize(glm::vec3{n_4.x, n_4.y, n_4.z});
         glm::vec3 up = glm::vec3{up_4.x, up_4.y, up_4.z};
-        glm::vec3 u = glm::normalize(glm::cross(n, up));
-        glm::vec3 v = glm::normalize(glm::cross(u, n));
+        glm::vec3 u = glm::normalize(glm::cross(dir, up));
+        glm::vec3 v = glm::normalize(glm::cross(u, dir));
         float x = (glm::vec4{distance, 1.0f} * rotation).x;
         float z = (glm::vec4{distance, 1.0f} * rotation).z;
         rotate_scene.camera_.transformation_ = glm::mat4{
                 glm::vec4{u, 0.0f},
                 glm::vec4{v, 0.0f},
-                glm::vec4{-n, 0.0f},
+                glm::vec4{-dir, 0.0f},
                 glm::vec4{x, 50.0f, z, 1.0f}
         };
 
         std::string picture_name = rotate_scene.filename + std::to_string(i) + ".ppm";
         float d = (width_ / 2) / tan(rotate_scene.camera_.fov / 2 * M_PI / 180);
 
-        glm::vec3 dir = glm::normalize(rotate_scene.camera_.direction);    // vector in direction of view
-        up = glm::normalize(rotate_scene.camera_.upVector);      // vector in above direction from origin
         glm::vec3 down = up;
         invert_direction(down);                // vector in down direction from origin
         glm::vec3 l = glm::normalize(glm::cross(up, dir));          // vector in left direction from origin
