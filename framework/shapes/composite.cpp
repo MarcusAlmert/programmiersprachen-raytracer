@@ -3,7 +3,6 @@
 #include "iostream"
 
 Composite::Composite() {
-    shapes_ = {nullptr};
 }
 
 Composite::Composite(std::shared_ptr<Shape> const shape, std::string name) {
