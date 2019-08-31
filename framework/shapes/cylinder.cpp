@@ -56,15 +56,6 @@ std::ostream &Cylinder::print(std::ostream &os) const {
 
 // At the current one known bug left
 Hitpoint Cylinder::intersect(Ray const &ray) const {
-    // Ray : p + v * t
-    // Centerline of Cylinder : pa + va * t
-    // (p - pa + v * t - dot(va, p -pa + v * t) * va)^2 - r^2 = 0
-    // dp = p -pa
-    // A = (v - dot(v, va) * va)^2
-    // B = 2 * dot((v - dot(v, va) * va, dp - dot(dp, va) * va
-    // C = (dp - dot(dp, va) * va)^2 - r^2
-    // -> A*t^2 + B*t + C = 0
-
     Ray transformedRay = transformRay(ray, world_transformation_inv);
     glm::vec3 cylinder_direction = glm::normalize(pos2_ - pos1_);
     glm::vec3 ray_direction = glm::normalize(transformedRay.direction_);
@@ -73,20 +64,6 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
     float B = 2 * glm::dot((ray_direction - glm::dot(ray_direction, cylinder_direction) * cylinder_direction), 
                             delta_p - glm::dot(delta_p, cylinder_direction) * cylinder_direction);
     float C = powf(glm::length(delta_p - glm::dot(delta_p, cylinder_direction) * cylinder_direction), 2.0f) - powf(radius_, 2.0f);
-    
-    /* solving the square equation with p-q-formula
-    float px = B / 2.0f;
-    float t1 = -1.0f;
-    float t2 = -1.0f;
-    float t1_half = powf(px, 2.0f) - C;
-    float t2_half = powf(px, 2.0f) - C;
-    if (t1_half >= 0.0f){
-        t1 = -(px) + sqrtf(t1_half);
-
-    }
-    if (t2_half >= 0.0f){
-        t2 = -(px) - sqrtf(t2_half);
-    } */
 
     // solving the square equation with a-b-c-formula
     float t1 = -1.0f;
@@ -156,7 +133,8 @@ Hitpoint Cylinder::intersect(Ray const &ray) const {
         if (q4_minus_p2_length_squared < powf(radius_, 2.0f)){
 
             glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point,1);
-            glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(cylinder_direction,0));
+            glm::vec4 trans_normal = glm::normalize(
+                    glm::transpose(world_transformation_inv) * glm::vec4(glm::normalize(cylinder_direction), 0));
             Hitpoint hitpoint{};
             hitpoint.hitpoint_ = {trans_cut.x,trans_cut.y,trans_cut.z};
             hitpoint.normal_ = {trans_normal.x,trans_normal.y,trans_normal.z};

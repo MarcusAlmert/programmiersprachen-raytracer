@@ -18,12 +18,12 @@ define shape triangle   gtriangle       0       0       10      50    200  50   
 # lights
 define light sun    500 800 0       1.0 1.0 1.0     10
 //define light spot1 -500 800 0       0.8 0.8 0.8     10
-//define light spot2  500 0   1000    0.8 0.8 0.8     10
+define light spot2  500 0   1000    0.8 0.8 0.8     10
 //define light spot3  0   500   1000    0.8 0.8 0.8     10
 define ambient 0.05
 
 # transformations
-transform bsphere scale 1 2 1
+transform bsphere scale 1 1 1
 transform bsphere translate -10 0 100
 transform bsphere rotate 50 1 0 0
 
@@ -35,7 +35,7 @@ transform gtriangle scale 1 2 0.5
 transform gtriangle translate 0 -200 200
 transform gtriangle rotate 160  0 1 0
 
-transform bcylinder scale 2 1.5 1
+transform bcylinder scale 2 3 1
 transform bcylinder translate 0 60 0
 transform bcylinder rotate  90 1 1 0
 
@@ -46,8 +46,8 @@ transform rcone translate 180 0 0
 define camera eye   60	0 0 2000 	0 0 -10 	0 1 0
 
 #renderer
-define resolution 1920 1080
+define resolution 1336 720
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
-define antialiasing 4
-define frames 2
+define antialiasing 1
+define frames 1
