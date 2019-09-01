@@ -61,8 +61,8 @@ define camera eye   60	0 0 1500 	0 0 -1 	0 1 0
 //define camera eye   60	1500 0 0 	0 0 0 	0 1 0
 
 #renderer
-define resolution 300 300
+define resolution 1336 720
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
-define antialiasing 1
-define frames 10
+define antialiasing 4
+define frames 6

@@ -1,12 +1,3 @@
-// -----------------------------------------------------------------------------
-// Copyright  : (C) 2014-2017 Andreas-C. Bernstein
-// License    : MIT (see the file LICENSE)
-// Maintainer : Andreas-C. Bernstein <andreas.bernstein@uni-weimar.de>
-// Stability  : experimental
-//
-// Renderer
-// -----------------------------------------------------------------------------
-
 #include <glm-0.9.5.3/glm/gtx/transform.hpp>
 #include "renderer.hpp"
 #include <thread>
@@ -24,7 +15,6 @@ void Renderer::render(Scene const &scene) {
     long elapsed_time;
 
     for (int i = 0; i < rotate_scene.frames; i++) {
-
         glm::vec3 distance{0.0f, 0.0f, 0.0f};   // additional distance for camera rotation
         glm::mat4x4 rotation = glm::rotate((float) angle * i, glm::vec3{0.0f, 1.0f, 0.0f});
         glm::vec4 n_4 = glm::vec4{rotate_scene.camera_.direction, 0} * rotation;
@@ -67,7 +57,6 @@ void Renderer::render(Scene const &scene) {
 
             for (unsigned x = 0; x < width_; ++x) {
                 Pixel p(x, y);
-
                 glm::vec3 pos = rotate_scene.camera_.position;
 
                 // calculates horizontal position of pixel
@@ -93,6 +82,7 @@ void Renderer::render(Scene const &scene) {
                     directions.push_back(dir_2);
                     directions.push_back(dir_3);
                     directions.push_back(dir_4);
+
                 } else if (rotate_scene.antialiasing_ == 8) {
                     glm::vec3 dir_1 = glm::normalize(
                             dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
@@ -118,6 +108,7 @@ void Renderer::render(Scene const &scene) {
                     directions.push_back(dir_6);
                     directions.push_back(dir_7);
                     directions.push_back(dir_8);
+
                 } else if (rotate_scene.antialiasing_ == 16) {
                     glm::vec3 dir_1 = glm::normalize(
                             dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d});
@@ -151,7 +142,6 @@ void Renderer::render(Scene const &scene) {
                             dir + glm::vec3{x - (half_width) - 0.0625f, y - (half_height) + 0.0625f, -d});
                     glm::vec3 dir_16 = glm::normalize(
                             dir + glm::vec3{x - (half_width) - 0.0625f, y - (half_height) - 0.0625f, -d});
-
                     directions.push_back(dir_1);
                     directions.push_back(dir_2);
                     directions.push_back(dir_3);
@@ -168,6 +158,7 @@ void Renderer::render(Scene const &scene) {
                     directions.push_back(dir_14);
                     directions.push_back(dir_15);
                     directions.push_back(dir_16);
+
                 } else if (rotate_scene.antialiasing_ == 1) {
                     //directions.push_back(glm::normalize(xr + yr + zr));
                     directions.push_back(glm::normalize(
@@ -192,9 +183,7 @@ void Renderer::render(Scene const &scene) {
                 }
                 p.color = aliased.color / rotate_scene.antialiasing_;
                 write(p);
-
             }
-
         }
         ppm_.save(picture_name);
         auto finish = std::chrono::high_resolution_clock::now();
@@ -229,7 +218,6 @@ void Renderer::write(Pixel const &p) {
     } else {
         color_buffer_[buf_pos] = p.color;
     }
-
     ppm_.write(p);
 }
 
