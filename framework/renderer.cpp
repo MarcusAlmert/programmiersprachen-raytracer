@@ -9,11 +9,14 @@
 
 #include <glm-0.9.5.3/glm/gtx/transform.hpp>
 #include "renderer.hpp"
+#include <thread>
 
 Renderer::Renderer(unsigned w, unsigned h, std::string const &file)
         : width_(w), height_(h), color_buffer_(w * h, Color(0.0, 0.0, 0.0)), filename_(file), ppm_(width_, height_) {}
 
 void Renderer::render(Scene const &scene) {
+    std::cout << "==================================" << std::endl;
+    std::cout << "                                              " << std::endl;
     Scene rotate_scene = scene;
     float angle = 360 / rotate_scene.frames;
     for (int i = 0; i < rotate_scene.frames; i++) {
@@ -185,11 +188,25 @@ void Renderer::render(Scene const &scene) {
                 }
                 p.color = aliased.color / rotate_scene.antialiasing_;
                 write(p);
+                printProgress(i, scene.frames);
             }
+
         }
         ppm_.save(picture_name);
     }
 }
+
+void printProgress(int frame, int total) {
+    float progress = (float) (frame + 1) / (float) total;
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+    int val = (int) (progress * 100);
+    int lpad = (int) (progress * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    fflush(stdout);
+}
+
 
 void Renderer::write(Pixel const &p) {
     // flip pixels, because of opengl glDrawPixels
@@ -251,7 +268,7 @@ Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) {
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
         for (auto shape : scene.shape_vector_) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 1.0f * hitpoint.normal_, vec_light_cut}).hit_;
+            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 2.0f * hitpoint.normal_, vec_light_cut}).hit_;
             if (light_not_visible) {
                 light_not_visible = true;
                 break;  // if there is atleast one shape in between light and current shape light gets blocked
@@ -282,7 +299,7 @@ Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) {
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
         for (auto shape : scene.shape_vector_) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 1.0f * hitpoint.normal_, vec_light_cut}).hit_;
+            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 2.0f * hitpoint.normal_, vec_light_cut}).hit_;
             if (light_not_visible) {
                 light_not_visible = true;
                 break;  // if there is atleast one shape in between light and current shape light gets blocked

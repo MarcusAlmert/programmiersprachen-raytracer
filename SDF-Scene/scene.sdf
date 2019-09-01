@@ -4,32 +4,35 @@ define material blue    0 0 1   0 0 1   0 0 1   100     0  0  0  0
 define material green   0 1 0   0 1 0   0 1 0   100	    0  0  0  0
 
 # shapes
-define shape box        rbox            45      75     -10     -50   -20  -50                 green
-define shape sphere     bsphere         150     100      0      100                           blue
-define shape cylinder   bcylinder      -100     100       0      -100   0  0     50           red
-define shape cone       rcone          -400     0      0     -400   300   0 100                 green
-define shape triangle   gtriangle       0       0       10      50    200  50    100 100 10   red
-//define shape plane      bplane          0       0       0       0      1   0     blue
-//define shape plane      bplane          0       -0.1       0       0      1   0     blue
+define shape box        rbox            45     75    -10     -50   -20   -50                   green
+define shape sphere     bsphere         150    100    0       100                              blue
+define shape cylinder   bcylinder      -100    100    0      -100   0     0     50             blue
+define shape cylinder   rcylinder      -100    100    0      -100   0     0     50             red
+define shape cone       rcone          -400    0      0      -400   300   0     100            red
+define shape cone       gcone          -400    0      0      -400   300   0     100            green
+define shape triangle   gtriangle       0      0      10      50    200   50    100  100  10   red
+
+//define shape plane      bplane          0      0       0       0    1     0                    blue
+//define shape plane      bplane          0     -0.1     0       0    1     0                    blue
 
 # composite
 //define shape composite root rbox bsphere bcylinder rcone gtriangle
 
 # lights
-define light sun    500 800 0       1.0 1.0 1.0     10
+define light sun    5000 800 0       1.0 1.0 1.0     10
 //define light spot1 -500 800 0       0.8 0.8 0.8     10
 define light spot2  500 0   1000    0.8 0.8 0.8     10
-//define light spot3  0   500   1000    0.8 0.8 0.8     10
+define light spot3  0   -5000   1000    0.8 0.8 0.8     10
 define ambient 0.05
 
 # transformations
-transform bsphere scale 1 2 1
+transform bsphere scale 1 2.5 1.5
 transform bsphere translate 200 0 0
 transform bsphere rotate 50 1 0 0
 
-transform rbox scale 2 2 1
+transform rbox scale 2 2.5 1
 transform rbox rotate 50 0 1 0
-transform rbox translate -400 0 0
+transform rbox translate 400 300 -200
 
 transform gtriangle scale 1 2 0.5
 transform gtriangle translate 700 -50 0
@@ -39,15 +42,26 @@ transform bcylinder scale 2 3 1
 transform bcylinder translate -100 -20 0
 //transform bcylinder rotate  90 1 1 0
 
+transform rcylinder scale 2 3 1
+transform rcylinder translate -250 160 0
+transform rcylinder rotate  90 1 1 0
+
+transform rcylinder translate 100 0 50
+
+transform rcone translate 800 330 500
+transform rcone rotate 180 1 0 0
 transform rcone scale 2 1 1
-transform rcone translate 400 -50 0
-//transform rcone rotate 90 0 1 0
+
+transform gcone scale 2 1 1
+transform gcone translate 400 -260 500
+transform gcone rotate 0 1 0 0
 
 # camera
-define camera eye   60	0 0 1500 	0 0 -10 	0 1 0
+define camera eye   60	0 0 1500 	0 0 -1 	0 1 0
+//define camera eye   60	1500 0 0 	0 0 0 	0 1 0
 
 #renderer
-define resolution 300 300
+define resolution 500 500
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
 define antialiasing 1

@@ -1,7 +1,8 @@
 #include "cone.hpp"
 
 Cone::Cone() :
-    base_center_pos_{glm::vec3{0.0f, 0.0f, 0.0f}}, tip_pos_{glm::vec3{0.0f, 0.0f, 0.0f}}, radius_{0}
+        base_center_pos_{glm::vec3{0.0f, 0.0f, 0.0f}},
+        tip_pos_{glm::vec3{0.0f, 0.0f, 0.0f}}, radius_{0}
     {}
 
 Cone::Cone(glm::vec3 const &base_pos, glm::vec3 const& tip_pos, float radius) :
@@ -49,7 +50,6 @@ Hitpoint Cone::intersect(Ray const &ray) const {
     glm::vec3 cone_direction = glm::normalize(tip_pos_ - base_center_pos_);
     glm::vec3 reverse_cone_direction = -1.0f * cone_direction;
     glm::vec3 ray_direction = glm::normalize(transformedRay.direction_);
-    //float a, b, c;
     glm::vec3 v{tip_pos_};
     glm::vec3 delta_p = transformedRay.origin_ - tip_pos_;
     glm::vec3 radius_direction;
@@ -127,7 +127,7 @@ Hitpoint Cone::intersect(Ray const &ray) const {
             hitpoint.hitpoint_ = glm::vec3{trans_cut.x, trans_cut.y, trans_cut.z};
             hitpoint.normal_ = glm::vec3{trans_normal.x, trans_normal.y, trans_normal.z};
             hitpoint.hit_ = true;
-            hitpoint.distance_ = t3;
+            hitpoint.distance_ = glm::length(hitpoint.hitpoint_ - ray.origin_);
             candidates.emplace_back(hitpoint);
         }
     }

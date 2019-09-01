@@ -50,4 +50,4 @@ define resolution 300 300
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
 define antialiasing 1
-define frames 120
+define frames 1
