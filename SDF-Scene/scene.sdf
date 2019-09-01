@@ -1,13 +1,13 @@
 # materials
-define material red     1 0 0   1 0 0   1 0 0   10 	    0  0  0  0
+define material red     1 0 0   1 0 0   1 0 0   10 	    0.5  0  0  0
 define material blue    0 0 1   0 0 1   0 0 1   100     0  0  0  0
 define material green   0 1 0   0 1 0   0 1 0   100	    0  0  0  0
 
 # shapes
-define shape box        rbox            45     75    -10     -50   -20   -50                   green
+define shape box        rbox            100    100   -100     0     0     0                    green
 define shape sphere     bsphere         150    100    0       100                              blue
-define shape cylinder   bcylinder      -100    100    0      -100   0     0     50             blue
-define shape cylinder   rcylinder      -100    100    0      -100   0     0     50             red
+define shape cylinder   bcylinder      -100    100    0      -100   0     0     100             blue
+define shape cylinder   rcylinder      -100    100    0      -100   0     0     100            red
 define shape cone       rcone          -400    0      0      -400   300   0     100            red
 define shape cone       gcone          -400    0      0      -400   300   0     100            green
 define shape triangle   gtriangle       0      0      10      50    200   50    100  100  10   red
@@ -61,8 +61,8 @@ define camera eye   60	0 0 1500 	0 0 -1 	0 1 0
 //define camera eye   60	1500 0 0 	0 0 0 	0 1 0
 
 #renderer
-define resolution 500 500
+define resolution 300 300
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
 define antialiasing 1
-define frames 120
+define frames 1

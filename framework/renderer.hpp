@@ -39,7 +39,7 @@ private:
     std::string filename_;
     PpmWriter ppm_;
 
-    Color calc_color(Hitpoint const& hitpoint, Scene const &scene, unsigned int reflaction_steps);
+    Color calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigned int reflection_steps);
 
     Color calc_ambient(std::shared_ptr<Material> material, Scene const& scene);
     Color calc_diffuse(Hitpoint const& hitpoint, Scene const &scene);

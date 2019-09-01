@@ -178,7 +178,7 @@ void Renderer::render(Scene const &scene) {
 
                     // Entweder es wurde ein Objekt getroffen oder der Pixel bekommt die Hintergrundfarbe zugewiesen
                     if (first_hit.hit_) {
-                        Color raytracer_color = calc_color(first_hit, rotate_scene, 1);
+                        Color raytracer_color = calc_color(first_hit, rotate_scene, 3);
                         tone_mapping(raytracer_color);
                         p.color = raytracer_color;
                     } else {
@@ -224,7 +224,7 @@ void Renderer::write(Pixel const &p) {
 }
 
 // Farbwertberechnung, TODO !
-Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigned int reflaction_steps) {
+Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigned int reflection_steps) {
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
     Color ambient = calc_ambient(hitpoint.material_, scene);
     Color diffuse = calc_diffuse(hitpoint, scene);
@@ -235,11 +235,11 @@ Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigne
     if (hitpoint.material_->glossy_ > 0 && hitpoint.material_->opacity_ > 0) {           // transparent and reflactive
         float kr = calc_fresnel_reflection_ratio(hitpoint, scene);
         float ko = 1 - kr;
-        Color reflection = calc_reflection(hitpoint, scene, reflaction_steps);
-        Color refraction = calc_refraction(hitpoint, scene, false, reflaction_steps);
+        Color reflection = calc_reflection(hitpoint, scene, reflection_steps);
+        Color refraction = calc_refraction(hitpoint, scene, false, reflection_steps);
         raytracer_value = (kr * reflection + ko * refraction);
     } else if (hitpoint.material_->glossy_ > 0) {                                        // reflactive
-        Color reflection = calc_reflection(hitpoint, scene, reflaction_steps);
+        Color reflection = calc_reflection(hitpoint, scene, reflection_steps);
         Color phong = ambient + diffuse + specular;
         raytracer_value = (phong * (1 - hitpoint.material_->glossy_) + reflection * hitpoint.material_->glossy_);
     } //else if (hitpoint.material_->opacity_ > 0){} 
@@ -329,7 +329,7 @@ Color Renderer::calc_reflection(Hitpoint const &hitpoint, Scene const &scene, un
     glm::vec3 incoming_direction = glm::normalize(hitpoint.direction_);
     glm::vec3 normal = glm::normalize(hitpoint.normal_);
     glm::vec3 reflaction_ray_direction = incoming_direction - 2 * (glm::dot(normal, incoming_direction)) * normal;
-    Ray reflaction_ray{hitpoint.hitpoint_, glm::normalize(reflaction_ray_direction)};
+    Ray reflaction_ray{hitpoint.hitpoint_ + 1.0f, glm::normalize(reflaction_ray_direction)};
     Hitpoint next_hit = fire_ray(scene, reflaction_ray);
 
     // return of background color in case of no hit, no color in case of reaching maximum recursive depth
