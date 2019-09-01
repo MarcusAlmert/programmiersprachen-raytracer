@@ -10,15 +10,19 @@
 #include <glm-0.9.5.3/glm/gtx/transform.hpp>
 #include "renderer.hpp"
 #include <thread>
+#include <chrono>
 
 Renderer::Renderer(unsigned w, unsigned h, std::string const &file)
         : width_(w), height_(h), color_buffer_(w * h, Color(0.0, 0.0, 0.0)), filename_(file), ppm_(width_, height_) {}
 
 void Renderer::render(Scene const &scene) {
+    auto start = std::chrono::high_resolution_clock::now();
     std::cout << "==================================" << std::endl;
     std::cout << "                                              " << std::endl;
     Scene rotate_scene = scene;
     float angle = 360 / rotate_scene.frames;
+    long elapsed_time;
+
     for (int i = 0; i < rotate_scene.frames; i++) {
 
         glm::vec3 distance{0.0f, 0.0f, 0.0f};   // additional distance for camera rotation
@@ -188,22 +192,28 @@ void Renderer::render(Scene const &scene) {
                 }
                 p.color = aliased.color / rotate_scene.antialiasing_;
                 write(p);
-                printProgress(i, scene.frames);
+
             }
 
         }
         ppm_.save(picture_name);
+        auto finish = std::chrono::high_resolution_clock::now();
+        elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count();
+        printProgress(i, scene.frames, elapsed_time);
     }
 }
 
-void printProgress(int frame, int total) {
+void printProgress(int frame, int total, long time) {
     float progress = (float) (frame + 1) / (float) total;
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
     int val = (int) (progress * 100);
     int lpad = (int) (progress * PBWIDTH);
     int rpad = PBWIDTH - lpad;
+    float avg_time_left = (time * (1 / progress - 1)) / 60000;
+    long avg_time_left_sec = (avg_time_left - floor(avg_time_left)) * 60;
     printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    std::cout << " remaining: " << floor(avg_time_left) << "m" << avg_time_left_sec << "s";
     fflush(stdout);
 }
 

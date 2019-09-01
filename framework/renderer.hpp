@@ -54,5 +54,5 @@ private:
     void tone_mapping(Color & color);
 };
 
-void printProgress(int frame, int total);
+void printProgress(int frame, int total, long time);
 #endif // #ifndef BUW_RENDERER_HPP
