@@ -334,7 +334,7 @@ Color Renderer::calc_reflection(Hitpoint const &hitpoint, Scene const &scene, un
     if (!next_hit.hit_) {
         return scene.backgroundcolor_;
     } else {
-        if (recursive_boundary > 0) {
+        if (recursive_boundary > 0 && next_hit.hit_) {
             Color reflected_color = calc_color(next_hit, scene, recursive_boundary - 1) * 0.8f;
             return reflected_color;
         } else {
@@ -369,21 +369,22 @@ Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool ins
     }
 
     // calulating the refrected ray
-    float cos2 = sqrtf(1.0f - eta * eta * (1.0f - cos1 * cos1));
-    glm::vec3 refrection_direction = eta * hitpoint.direction_ + (eta * cos1 - cos2) * hitpoint.normal_;
+    //float cos2 = sqrtf(1.0f - eta * eta * (1.0f - cos1 * cos1));
+    //sglm::vec3 refrection_direction = eta * hitpoint.direction_ + (eta * cos1 - cos2) * hitpoint.normal_;
+    glm::vec3 refrection_dir = glm::normalize(glm::refract(glm::normalize(hitpoint.direction_), glm::normalize(hitpoint.normal_), eta));
     glm::vec3 refrection_origin = hitpoint.hitpoint_ - 0.1f * hitpoint.normal_;
-    Ray refrected_ray{refrection_origin, refrection_direction};
+    Ray refrected_ray{refrection_origin, refrection_dir};
 
     // fires the refracted ray
-    Hitpoint hit = fire_ray(scene, refrected_ray);
+    Hitpoint newhit = fire_ray(scene, refrected_ray);
 
     // if the new ray hitted the object again(from inside), another new object or non at all
-    if (hitpoint.hit_ && hitpoint.name_ != hit.name_) {
-        return calc_color(hit, scene, 3);
-    } else if (hit.hit_) {
-        return calc_refraction(hit, scene, true, recursive_boundary);
+    if (newhit.hit_ && hitpoint.name_ != newhit.name_) {
+        return calc_color(newhit, scene, 3);
+    } else if (newhit.hit_) {
+        return calc_refraction(newhit, scene, true, recursive_boundary);
     } else {
-        return Color{0.0f, 0.0f, 0.0f};
+        return scene.backgroundcolor_;
     }
 
 }

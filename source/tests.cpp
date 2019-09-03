@@ -365,6 +365,17 @@ TEST_CASE("Cone functions", "Cone") {
     Ray r1{glm::vec3{0.0f, 5.0f, 10.0f}, glm::vec3{0.0f, 0.0f, -1.0f}};
     Hitpoint hitpoint1 = co3.intersect(r1);
     CHECK(hitpoint1.hit_);
+    Ray r2{glm::vec3{7.0f, 7.0f, 0.0f}, glm::vec3{-0.5f, -0.5f, 0.0f}};
+    Hitpoint hitpoint2 = co3.intersect(r2);
+    CHECK(hitpoint2.hit_);
+    Ray r3{glm::vec3{0.0f, -5.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f}};
+    Hitpoint hitpoint3 = co3.intersect(r3);
+    CHECK(hitpoint3.hit_);
+    Ray r4{glm::vec3{0.0f, 20.0f, 0.0f}, glm::vec3{0.0f, -1.0f, 0.0f}};
+    Hitpoint hitpoint4 = co3.intersect(r4);
+    CHECK(hitpoint4.hit_);
+    Cone co4 = Cone(glm::vec3{5.0f, 0.0f ,5.0f}, glm::vec3{5.0f, 12.0f, 5.0f}, 6.0f);
+    //Ray r5{}
 }
 
 TEST_CASE("Triangle functions", "Triangle") {
