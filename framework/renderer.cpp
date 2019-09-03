@@ -3,6 +3,7 @@
 #include <thread>
 #include <chrono>
 
+
 Renderer::Renderer(unsigned w, unsigned h, std::string const &file)
         : width_(w), height_(h), color_buffer_(w * h, Color(0.0, 0.0, 0.0)), filename_(file), ppm_(width_, height_) {}
 
@@ -13,6 +14,7 @@ void Renderer::render(Scene const &scene) {
     Scene rotate_scene = scene;
     float angle = 360 / rotate_scene.frames;
     long elapsed_time;
+    long overall_time = 0;
 
     for (int i = 0; i < rotate_scene.frames; i++) {
         glm::vec3 distance{0.0f, 0.0f, 0.0f};   // additional distance for camera rotation
@@ -259,21 +261,24 @@ Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights_) {
-        bool light_not_visible = false;
+        Hitpoint light_not_visible;
         glm::vec3 cut_point;
         glm::vec3 new_normal;
         glm::vec3 vec_light_cut = glm::normalize(light.position_ - hitpoint.hitpoint_);
+        bool light_visible_not = false;
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
         for (auto shape : scene.shape_vector_) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 2.0f * hitpoint.normal_, vec_light_cut}).hit_;
-            if (light_not_visible) {
-                light_not_visible = true;
-                break;  // if there is atleast one shape in between light and current shape light gets blocked
+            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 2.0f * hitpoint.normal_, vec_light_cut});
+            if (light_not_visible.hit_) {
+                if (light_not_visible.material_->opacity_ < 0.001) {
+                    light_visible_not = true;
+                    break;  // if there is atleast one shape in between light and current shape light gets blocked
+                }
             }
         }
         // if there is no light blocking shape
-        if (light_not_visible == false) {
+        if (light_visible_not == false) {
             float o = glm::dot(vec_light_cut, glm::normalize(hitpoint.normal_));
             Color i_p = light.color_ * light.brightness_;
             Color k_d = hitpoint.material_->kd_;
@@ -290,21 +295,25 @@ Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights_) {
-        bool light_not_visible = false;
+        Hitpoint light_not_visible;
+        bool no_light;
+        float light_opacity;
         glm::vec3 cut_point;
         glm::vec3 new_normal;
         glm::vec3 vec_light_cut = glm::normalize(light.position_ - hitpoint.hitpoint_);
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
         for (auto shape : scene.shape_vector_) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 2.0f * hitpoint.normal_, vec_light_cut}).hit_;
-            if (light_not_visible) {
-                light_not_visible = true;
-                break;  // if there is atleast one shape in between light and current shape light gets blocked
+            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 2.0f * hitpoint.normal_, vec_light_cut});
+            if (light_not_visible.hit_) {
+                if (light_not_visible.material_->opacity_ < 0.0001) {
+                    no_light = true;
+                    break;  // if there is atleast one shape in between light and current shape light gets blocked
+                }
             }
         }
         // if there is no light blocking shape
-        if (light_not_visible == false) {
+        if (no_light == false) {
             glm::vec3 camera_hitpoint = glm::normalize(camera_hitpoint - hitpoint.hitpoint_);
             glm::vec3 r = glm::dot(hitpoint.normal_, vec_light_cut) * 2.0f * hitpoint.normal_ - vec_light_cut;
             float p = abs(glm::dot(r, camera_hitpoint));
@@ -372,7 +381,7 @@ Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool ins
     //float cos2 = sqrtf(1.0f - eta * eta * (1.0f - cos1 * cos1));
     //sglm::vec3 refrection_direction = eta * hitpoint.direction_ + (eta * cos1 - cos2) * hitpoint.normal_;
     glm::vec3 refrection_dir = glm::normalize(glm::refract(glm::normalize(hitpoint.direction_), glm::normalize(hitpoint.normal_), eta));
-    glm::vec3 refrection_origin = hitpoint.hitpoint_ - 0.1f * hitpoint.normal_;
+    glm::vec3 refrection_origin = hitpoint.hitpoint_ + 1.0f * hitpoint.normal_;
     Ray refrected_ray{refrection_origin, refrection_dir};
 
     // fires the refracted ray
