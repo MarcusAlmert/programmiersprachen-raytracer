@@ -92,7 +92,7 @@ Hitpoint Cone::intersect(Ray const &ray) const {
         glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point, 1);
         hitpoint.hitpoint_ = glm::vec3{trans_cut.x, trans_cut.y, trans_cut.z};
         hitpoint.distance_ = glm::length(ray.origin_ - hitpoint.hitpoint_);
-        if (glm::dot(cone_direction, hit_point - base_center_pos_) > 0 && 
+        if (glm::dot(cone_direction, hit_point - base_center_pos_) > 0 &&
             glm::dot(cone_direction, hit_point - tip_pos_) < 0){
                 hitpoint.hit_ = true;
                 hitpoint.normal_ = calc_normal_corpus(hit_point);
@@ -101,12 +101,12 @@ Hitpoint Cone::intersect(Ray const &ray) const {
     }
     if (t2 > 0.00001){
         Hitpoint hitpoint{};
-        glm::vec3 hit_point = transformedRay.origin_ + cone_direction * t2;
+        glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t2;
         glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point, 1);
         hitpoint.hitpoint_ = glm::vec3{trans_cut.x, trans_cut.y, trans_cut.z};
         hitpoint.hit_ = true;
         hitpoint.distance_ = glm::length(ray.origin_ - hitpoint.hitpoint_);
-        if (glm::dot(cone_direction, hit_point - base_center_pos_) > 0 && 
+        if (glm::dot(cone_direction, hit_point - base_center_pos_) > 0 &&
             glm::dot(cone_direction, hit_point - tip_pos_) < 0){
                 hitpoint.hit_ = true;
                 hitpoint.normal_ = calc_normal_corpus(hit_point);
