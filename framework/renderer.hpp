@@ -13,7 +13,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <memory>
-#include <math.h>
+#include <cmath>
 #include "color.hpp"
 #include "pixel.hpp"
 #include "ppmwriter.hpp"
@@ -42,7 +42,7 @@ private:
     // function group for the calculation of th pixel color
     Color calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigned int reflection_steps) const;
 
-    Color calc_ambient(std::shared_ptr<Material> material, Scene const &scene) const;
+    Color calc_ambient(std::shared_ptr<Material> const &material, Scene const &scene) const;
 
     Color calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) const;
 

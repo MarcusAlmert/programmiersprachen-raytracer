@@ -12,7 +12,7 @@ void Renderer::render(Scene const &scene) {
     std::cout << "==================================" << std::endl;
     std::cout << "                                              " << std::endl;
     Scene rotate_scene = scene;
-    float angle = 360 / rotate_scene.frames;
+    float angle = 360.0f / (float) rotate_scene.frames;
     long elapsed_time;
 
     for (int i = 0; i < rotate_scene.frames; i++) {
@@ -34,7 +34,7 @@ void Renderer::render(Scene const &scene) {
         };
 
         std::string picture_name = rotate_scene.filename + std::to_string(i) + ".ppm";
-        float d = (width_ / 2) / tan(rotate_scene.camera_.fov / 2 * M_PI / 180);
+        float d = (width_ / 2.0f) / tanf(rotate_scene.camera_.fov / 2 * M_PI / 180);
 
         glm::vec3 down = -1.0f * up;                                // vector in down direction from origin
         //invert_direction(down);
@@ -254,7 +254,7 @@ Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigne
 }
 
 // Diese Funktion ist in soweit fertig holt nur ka aus dem Material
-Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &scene) const {
+Color Renderer::calc_ambient(std::shared_ptr<Material> const &material, Scene const &scene) const {
     Color ambient = Color{scene.ambient_, scene.ambient_, scene.ambient_};
     return (material->ka_ * ambient);
 }
@@ -281,7 +281,7 @@ Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) const
             }
         }
         // if there is no light blocking shape
-        if (light_visible_not == false) {
+        if (!light_visible_not) {
             float o = glm::dot(vec_light_cut, glm::normalize(hitpoint.normal_));
             Color i_p = light.color_ * light.brightness_;
             Color k_d = hitpoint.material_->kd_;
@@ -316,12 +316,12 @@ Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) cons
             }
         }
         // if there is no light blocking shape
-        if (no_light == false) {
+        if (!no_light) {
             glm::vec3 camera_hitpoint = glm::normalize(camera_hitpoint - hitpoint.hitpoint_);
             glm::vec3 r = glm::dot(hitpoint.normal_, vec_light_cut) * 2.0f * hitpoint.normal_ - vec_light_cut;
             float p = abs(glm::dot(r, camera_hitpoint));
             float cos = pow(p, hitpoint.material_->m_);
-            float m_pi = (hitpoint.material_->m_ + 2) / (2 * M_PI);
+            float m_pi = (hitpoint.material_->m_ + 2.0f) / (2 * M_PI);
             Color i_p = light.color_ * light.brightness_;
             Color k_s = hitpoint.material_->ks_;
             lights_color.push_back(k_s * m_pi * cos * i_p);
