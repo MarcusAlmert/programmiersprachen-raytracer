@@ -404,4 +404,14 @@ TEST_CASE("Plane functions"){
     std::cout << plane;
 }
 
+TEST_CASE("Extra test cases.", "[EXTRA]"){
+    Sphere sp1 = Sphere(glm::vec3{0.0f, 0.0f, 0.0f}, 100.0f);
+    Ray r1{glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{0.0f, 0.0f, -1.0f}};
+    Hitpoint hitpoint1 = sp1.intersect(r1);
+    std::cout << hitpoint1 << std::endl;
+    Ray r2{glm::vec3{60.0f, 0.0f, 200.0f}, glm::vec3{0.0f, 0.0f, -1.0f}};
+    Hitpoint hitpoint2 = sp1.intersect(r2);
+    std::cout << hitpoint2 << std::endl;
+}
+
 

@@ -242,7 +242,11 @@ Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigne
         Color reflection = calc_reflection(hitpoint, scene, reflection_steps);
         Color phong = ambient + diffuse + specular;
         raytracer_value = (phong * (1 - hitpoint.material_->glossy_) + reflection * hitpoint.material_->glossy_);
-    } //else if (hitpoint.material_->opacity_ > 0){} 
+    } else if (hitpoint.material_->opacity_ > 0){
+        Color refrection = calc_refraction(hitpoint, scene, false, reflection_steps);
+        Color phong = ambient + diffuse + specular;
+        raytracer_value = hitpoint.material_->opacity_ * refrection + (1 - hitpoint.material_->opacity_) * phong;
+    }
     else {                                                                              // default phong
         raytracer_value = (ambient + diffuse + specular);
     }
@@ -355,6 +359,9 @@ Color Renderer::calc_reflection(Hitpoint const &hitpoint, Scene const &scene, un
 // calculates the refraction, not tested yet
 Color
 Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool inside, unsigned int recursive_boundary) {
+    if (recursive_boundary == 0){
+        return Color{1, 1, 1};
+    }
     float eta;
 
     // check if ray is coming from outside or inside the object
@@ -378,24 +385,28 @@ Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool ins
     }
 
     // calulating the refrected ray
-    //float cos2 = sqrtf(1.0f - eta * eta * (1.0f - cos1 * cos1));
-    //sglm::vec3 refrection_direction = eta * hitpoint.direction_ + (eta * cos1 - cos2) * hitpoint.normal_;
-    glm::vec3 refrection_dir = glm::normalize(glm::refract(glm::normalize(hitpoint.direction_), glm::normalize(hitpoint.normal_), eta));
-    glm::vec3 refrection_origin = hitpoint.hitpoint_ + 1.0f * hitpoint.normal_;
-    Ray refrected_ray{refrection_origin, refrection_dir};
+    float cos2 = sqrtf(1.0f - eta * eta * (1.0f - cos1 * cos1));
+    glm::vec3 refraction_direction = eta * hitpoint.direction_ + (eta * cos1 - cos2) * hitpoint.normal_;
+    //glm::vec3 refraction_direction = glm::normalize(glm::refract(glm::normalize(hitpoint.direction_), glm::normalize(hitpoint.normal_), eta));
+    glm::vec3 refraction_origin;
+    if (inside){
+        refraction_origin = hitpoint.hitpoint_ + 1.0f * glm::normalize(hitpoint.normal_);
+    } else {
+        refraction_origin = hitpoint.hitpoint_ - 1.0f * glm::normalize(hitpoint.normal_);
+    }
+    Ray refracted_ray{refraction_origin, glm::normalize(refraction_direction)};
 
     // fires the refracted ray
-    Hitpoint newhit = fire_ray(scene, refrected_ray);
+    Hitpoint newhit = fire_ray(scene, refracted_ray);
 
     // if the new ray hitted the object again(from inside), another new object or non at all
     if (newhit.hit_ && hitpoint.name_ != newhit.name_) {
-        return calc_color(newhit, scene, 3);
+        return calc_color(newhit, scene, recursive_boundary);
     } else if (newhit.hit_) {
-        return calc_refraction(newhit, scene, true, recursive_boundary);
+        return calc_refraction(newhit, scene, true, recursive_boundary - 1);
     } else {
         return scene.backgroundcolor_;
     }
-
 }
 
 float Renderer::calc_fresnel_reflection_ratio(Hitpoint const &hitpoint, Scene const &scene) {
