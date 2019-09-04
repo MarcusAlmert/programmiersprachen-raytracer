@@ -272,7 +272,7 @@ Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) {
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
         for (auto shape : scene.shape_vector_) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 2.0f * hitpoint.normal_, vec_light_cut});
+            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 3.0f * hitpoint.normal_, vec_light_cut});
             if (light_not_visible.hit_) {
                 if (light_not_visible.material_->opacity_ < 0.001) {
                     light_visible_not = true;
@@ -307,7 +307,7 @@ Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) {
 
         //überprüfen ob zwischen objekt und Punktlichtquelle andere Objekte liegen
         for (auto shape : scene.shape_vector_) {
-            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 2.0f * hitpoint.normal_, vec_light_cut});
+            light_not_visible = shape->intersect(Ray{hitpoint.hitpoint_ + 3.0f * hitpoint.normal_, vec_light_cut});
             if (light_not_visible.hit_) {
                 if (light_not_visible.material_->opacity_ < 0.0001) {
                     no_light = true;
