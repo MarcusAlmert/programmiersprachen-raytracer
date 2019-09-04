@@ -14,7 +14,6 @@ void Renderer::render(Scene const &scene) {
     Scene rotate_scene = scene;
     float angle = 360 / rotate_scene.frames;
     long elapsed_time;
-    long overall_time = 0;
 
     for (int i = 0; i < rotate_scene.frames; i++) {
         glm::vec3 distance{0.0f, 0.0f, 0.0f};   // additional distance for camera rotation

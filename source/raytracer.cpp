@@ -6,8 +6,10 @@
 #include <utility>
 #include <cmath>
 #include "../framework/read_sdf.hpp"
+#include <chrono>
 
 int main(int argc, char *argv[]) {
+    auto start = std::chrono::high_resolution_clock::now();
 
     Scene scene = read_sdf("../../SDF-Scene/ppoint.sdf");   // alle lieben relative Pfade
 
@@ -22,6 +24,13 @@ int main(int argc, char *argv[]) {
     // dem renderer wird hier die eingelesene Szene gegeben
     renderer.render(scene);
 
+    auto finish = std::chrono::high_resolution_clock::now();
+    auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count();
+
+    float min = (float) elapsed_time / 60000.0f;
+    long sec = (min - floor(min)) * 60;
+    std::cout << "\nelapsed time: " << floor(min) << "m" << sec << "s";
+
     Window window{{image_width, image_height}};
 
     while (!window.should_close()) {
@@ -33,5 +42,6 @@ int main(int argc, char *argv[]) {
 
     //"join" threads, i.e. synchronize main thread with render_thread
     //render_thread.join();
+
     return 0;
 }
