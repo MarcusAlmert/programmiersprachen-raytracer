@@ -14,7 +14,7 @@ Cylinder::Cylinder(glm::vec3 const &pos1, glm::vec3 const& pos2, float radius) :
     }
 
 Cylinder::Cylinder(glm::vec3 const &pos1, glm::vec3 const& pos2, float radius, std::string const &name,
-                   std::shared_ptr<Material> const mat_ptr) :
+                   std::shared_ptr<Material> const &mat_ptr) :
     pos1_{pos1}, pos2_{pos2}, radius_{radius} {
         name_ = name;
         material_ = mat_ptr;
@@ -54,7 +54,6 @@ std::ostream &Cylinder::print(std::ostream &os) const {
     }
 }
 
-// At the current one known bug left
 Hitpoint Cylinder::intersect(Ray const &ray) const {
     Ray transformedRay = transformRay(ray, world_transformation_inv);
     glm::vec3 cylinder_direction = glm::normalize(pos2_ - pos1_);

@@ -18,7 +18,7 @@ struct Hitpoint {
     friend std::ostream &operator<<(std::ostream &os, Hitpoint const &hitpoint) {
         os << "name:        " << hitpoint.name_ << "\nobject type: Hitpoint\n" <<
            "hit:         " << hitpoint.hit_ << std::endl;
-        if (hitpoint.hit_ == false) {
+        if (!hitpoint.hit_) {
             os << "--------------------" << std::endl;
             return os;
         } else {
@@ -37,7 +37,6 @@ struct Hitpoint {
             os  << "\n--------------------" << std::endl;
             return os;
         }
-
     }
 };
 

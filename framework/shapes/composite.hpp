@@ -10,11 +10,11 @@ public:
 
     Composite(std::vector<std::shared_ptr<Shape>> const &shapes, std::string name);
 
-    Composite(std::shared_ptr<Shape> const shape, std::string name);
+    Composite(std::shared_ptr<Shape> const &shape, std::string name);
 
     ~Composite();
 
-    void add_shape(std::shared_ptr<Shape> const shape);
+    void add_shape(std::shared_ptr<Shape> const &shape);
 
 
     virtual float area() const override;

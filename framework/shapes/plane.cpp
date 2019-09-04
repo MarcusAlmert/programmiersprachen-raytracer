@@ -12,7 +12,7 @@ Plane::Plane(glm::vec3 const &p1, glm::vec3 const &normal) {
 }
 
 Plane::Plane(glm::vec3 const &p, glm::vec3 const &normal, std::string const &name,
-             std::shared_ptr<Material> const mat_ptr) {
+             std::shared_ptr<Material> const &mat_ptr) {
     point_ = p;
     normal_ = normal;
     name_ = name;
@@ -30,13 +30,15 @@ float Plane::area() const {
 }
 
 std::ostream& Plane::print(std::ostream &os) const {
-         os << "Name: " << name_ << " (Plane)" << std::endl;
+    os << "Name:     " << name_ << " (Plane)" << std::endl;
          if (material_ != nullptr) {
-             os << "Material: " << "[" << material_->name_ << "]" << std::endl;}
-         else {
+             os << "Material: " << "[" << material_->name_ << "]" << std::endl
+                << "--------------------" << std::endl;
+         } else {
              os << "Material: " << "[" << "No Material" << "]" << std::endl
-                << "Point : " << "[" << point_.x << ", " << point_.y << ", " << point_.z << "]" << std::endl
-                << "Normal: " << "[" << normal_.x << ", " << normal_.y << ", " << normal_.z << "]" << std::endl;
+                << "Point :   " << "[" << point_.x << ", " << point_.y << ", " << point_.z << "]" << std::endl
+                << "Normal:   " << "[" << normal_.x << ", " << normal_.y << ", " << normal_.z << "]" << std::endl
+                << "--------------------" << std::endl;
          }
         return os;
 }

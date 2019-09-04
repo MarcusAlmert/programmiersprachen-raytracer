@@ -23,11 +23,11 @@ Sphere::~Sphere() {
 }
 
 float Sphere::area() const {
-    return (M_PI * 4 * pow(radius_, 2));
+    return (M_PI * 4.0f * powf(radius_, 2.0f));
 }
 
 float Sphere::volume() const {
-    return (4.0f / 3.0f) * M_PI * pow(radius_, 3);
+    return (4.0f / 3.0f) * M_PI * powf(radius_, 3.0f);
 }
 
 std::ostream &Sphere::print(std::ostream &os) const {

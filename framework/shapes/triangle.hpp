@@ -12,17 +12,17 @@ public:
     Triangle(glm::vec3 const &p1, glm::vec3 const &p2, glm::vec3 const &p3);
 
     Triangle(glm::vec3 const &p1, glm::vec3 const &p2, glm::vec3 const &p3, std::string const &name,
-             std::shared_ptr<Material> const mat_ptr);
+             std::shared_ptr<Material> const &mat_ptr);
 
     ~Triangle();
 
-    virtual float area() const override;
+    float area() const override;
 
-    virtual float volume() const override;
+    float volume() const override;
 
-    virtual std::ostream &print(std::ostream &os) const override;
+    std::ostream &print(std::ostream &os) const override;
 
-    virtual Hitpoint intersect(Ray const &ray) const override;
+    Hitpoint intersect(Ray const &ray) const override;
 
 private:
     glm::vec3 p1_;

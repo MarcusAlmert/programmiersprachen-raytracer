@@ -5,7 +5,7 @@
 Composite::Composite() {
 }
 
-Composite::Composite(std::shared_ptr<Shape> const shape, std::string name) {
+Composite::Composite(std::shared_ptr<Shape> const &shape, std::string name) {
     shapes_.push_back(shape);
     name_ = name;
 }
@@ -21,7 +21,7 @@ Composite::~Composite() {
     shapes_.clear();
 }
 
-void Composite::add_shape(std::shared_ptr<Shape> const shape) {
+void Composite::add_shape(std::shared_ptr<Shape> const &shape) {
     shapes_.push_back(shape);
 }
 

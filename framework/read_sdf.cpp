@@ -28,7 +28,6 @@ Scene read_sdf(std::string const &path) {
         if ("define" == identifier) {
             line_string_stream >> identifier;
             if ("resolution" == identifier) {
-                unsigned int h, w;
                 line_string_stream >> scene1.width;
                 line_string_stream >> scene1.height;
             } else if ("frames" == identifier) {

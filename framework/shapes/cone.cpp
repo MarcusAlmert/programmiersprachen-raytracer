@@ -66,9 +66,9 @@ Hitpoint Cone::intersect(Ray const &ray) const {
     float cos_alpha = glm::dot(direction_to_egde, reverse_cone_direction) / glm::length(direction_to_egde) * glm::length(reverse_cone_direction); 
     float cos_apha_squared = powf(cos_alpha, 2.0f);
     float sin_aplha_squared = powf(sinf(acosf(cos_alpha)), 2.0f);
-
     float dot_v_va = glm::dot(ray_direction, cone_direction);
     float dot_dp_va = glm::dot(delta_p, cone_direction);
+
     float A = cos_apha_squared * powf(glm::length(ray_direction - dot_v_va *cone_direction), 2.0f) -
               sin_aplha_squared * powf(dot_v_va, 2.0f);
     float B = 2.0f * cos_apha_squared * glm::dot(ray_direction - dot_v_va * cone_direction, delta_p - dot_dp_va * cone_direction) - 
@@ -86,8 +86,10 @@ Hitpoint Cone::intersect(Ray const &ray) const {
         t2 = (-1.0f * B - inside_sqrt) / doubled_a;
     }
 
+    // container for hitpoint candidates (max = 2, min = 0)
     std::vector<Hitpoint> candidates;
 
+    // t1 and t2 distances for possible hits on corpus
     if (t1 > 0.00001){
         Hitpoint hitpoint{};
         glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t1;
@@ -116,13 +118,14 @@ Hitpoint Cone::intersect(Ray const &ray) const {
             }
     }
 
+    // intersection calculation with base plane
     float t3 = (glm::dot(cone_direction, base_center_pos_) - glm::dot(cone_direction, transformedRay.origin_)) / glm::dot(cone_direction, ray_direction);
 
+    // check if hit in base plane lies inside the cone base
     if (t3 > 0.00001){
         glm::vec3 hit_point = transformedRay.origin_ + ray_direction * t3;
         float q3_minus_base_center_length_squared = powf(glm::length(hit_point - base_center_pos_), 2.0f);
         if (q3_minus_base_center_length_squared < powf(radius_, 2.0f)){
-
             Hitpoint hitpoint{};
             glm::vec4 trans_cut = world_transformation_ * glm::vec4(hit_point, 1.0f);
             glm::vec4 trans_normal = glm::normalize(glm::transpose(world_transformation_inv) * glm::vec4(glm::normalize(base_center_pos_ - tip_pos_),0));

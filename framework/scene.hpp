@@ -26,7 +26,6 @@ struct Scene {
     unsigned int frames = 1;
 };
 
-
 Scene read_sdf(std::string const &path);
 
 std::shared_ptr<Material> find(std::vector<std::shared_ptr<Material>> const &mat, std::string const &name);

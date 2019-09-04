@@ -17,7 +17,7 @@ Triangle::Triangle(glm::vec3 const &p1, glm::vec3 const &p2, glm::vec3 const &p3
 }
 
 Triangle::Triangle(glm::vec3 const &p1, glm::vec3 const &p2, glm::vec3 const &p3, std::string const &name,
-                   std::shared_ptr<Material> const mat_ptr) {
+                   std::shared_ptr<Material> const &mat_ptr) {
     p1_ = p1;
     p2_ = p2;
     p3_ = p3;
@@ -70,7 +70,7 @@ Hitpoint Triangle::intersect(Ray const &ray) const {
     w0 = transformedRay.origin_ - p1_;
     a = -glm::dot(n, w0);
     b = glm::dot(n, transformedRay.direction_);
-    if (fabs(b) < 0.00000001) {     // ray is  parallel to triangle plane
+    if (std::fabs(b) < 0.00000001) {     // ray is  parallel to triangle plane
         if (a == 0)                 // ray lies in triangle plane
             return Hitpoint{};
         else return Hitpoint{};     // ray disjoint from plane
