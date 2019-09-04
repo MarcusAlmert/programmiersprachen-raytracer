@@ -10,7 +10,7 @@ Cone::Cone(glm::vec3 const &base_pos, glm::vec3 const& tip_pos, float radius) :
     {}
 
 Cone::Cone(glm::vec3 const &base_pos, glm::vec3 const& tip_pos, float radius, std::string const &name,
-           std::shared_ptr<Material> const mat_ptr) :
+           std::shared_ptr<Material> const &mat_ptr) :
            base_center_pos_{base_pos}, tip_pos_{tip_pos}, radius_{radius}
            {
                name_ = name;
@@ -53,6 +53,8 @@ Hitpoint Cone::intersect(Ray const &ray) const {
     glm::vec3 v{tip_pos_};
     glm::vec3 delta_p = transformedRay.origin_ - tip_pos_;
     glm::vec3 radius_direction;
+
+    // special case when base center is at [0,0,0]
     if (cone_direction.x == 0.0f && cone_direction.z == 0.0f){
         radius_direction = glm::vec3{1.0f, 0.0f, 0.0f};
     } else {

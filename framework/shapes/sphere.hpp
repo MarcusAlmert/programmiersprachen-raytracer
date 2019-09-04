@@ -15,13 +15,17 @@ private:
 public:
     Sphere();
     Sphere(glm::vec3 const &mid, float rad);
-    Sphere(glm::vec3 const &mid, float rad, std::string const &name, std::shared_ptr<Material> const mat_ptr);
+
+    Sphere(glm::vec3 const &mid, float rad, std::string const &name, std::shared_ptr<Material> const &mat_ptr);
     ~Sphere();//override ;
 
-    virtual float area() const override;
-    virtual float volume() const override;
-    virtual std::ostream &print(std::ostream &os) const override;
-    virtual Hitpoint intersect(Ray const &ray) const override;
+    float area() const override;
+
+    float volume() const override;
+
+    std::ostream &print(std::ostream &os) const override;
+
+    Hitpoint intersect(Ray const &ray) const override;
 };
 
 #endif //RAYTRACER_SPHERE_HPP
