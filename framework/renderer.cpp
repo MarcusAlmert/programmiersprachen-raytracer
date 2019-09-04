@@ -359,7 +359,7 @@ Color Renderer::calc_reflection(Hitpoint const &hitpoint, Scene const &scene, un
 Color
 Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool inside, unsigned int recursive_boundary) {
     if (recursive_boundary == 0){
-        return Color{1, 1, 1};
+        return Color{0, 0, 0};
     }
     float eta;
 
