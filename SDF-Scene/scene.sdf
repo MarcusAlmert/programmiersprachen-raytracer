@@ -1,5 +1,5 @@
 # materials
-define material red     1 0 0   1 0 0   1 0 0   10 	    0    0    0
+define material red     1 0 0   1 0 0   1 0 0   100	    0    0    0
 define material blue    0 0 1   0 0 1   0 0 1   100     0    0    0
 define material reflect    0 0 1   0 0 1   0 0 1   100     1    1    1.5
 define material green   0 1 0   0 1 0   0 1 0   100	    0    0    0
@@ -10,8 +10,11 @@ define shape box        rbox            100    100   -100     0     0     0     
 define shape sphere     bsphere         150    100    0       100                              blue
 define shape cylinder   bcylinder      -100    100    0      -100   0     0     100            blue
 define shape cylinder   rcylinder      -100    100    0      -100   0     0     100            red
+define shape cylinder   dcylinder       0       100    0      0   0     0     100            mirror
 define shape cone       rcone          -400    0      0      -400   300   0     100            red
 define shape cone       gcone          -400    0      0      -400   300   0     100            green
+define shape cone       bcone           0    0      0           0   300   0     100            mirror
+define shape cone       dcone           0    0      0           0   300   0     100            blue
 define shape triangle   gtriangle       0      0      10      50    200   50    100  100  10   red
 
 define shape plane      bplane          0      -300       0       0    1     0                    mirror
@@ -37,7 +40,7 @@ transform rbox rotate 50 0 1 0
 transform rbox translate 400 300 -200
 
 transform gtriangle scale 1 2 0.5
-transform gtriangle translate 700 -50 0
+transform gtriangle translate 700 -100 0
 transform gtriangle rotate 160  0 1 0
 
 transform bcylinder scale 2 3 1
@@ -58,13 +61,26 @@ transform gcone scale 2 1 1
 transform gcone translate 400 -260 500
 transform gcone rotate 0 1 0 0
 
+transform bcone translate -700 0 100
+transform bcone scale  1 4 5
+transform bcone rotate 180  0 1 1
+
+transform dcone translate 800 0 400
+transform dcone scale  2 2 2
+transform dcone rotate 0  0 1 1
+
+transform dcylinder translate 800 -200 400
+transform dcylinder scale  2 2 2
+transform dcylinder rotate 0  0 1 1
+
 # camera
 define camera eye   60	0 0 2500 	0 0 -1 	0 1 0
 //define camera eye   60	1500 0 0 	0 0 0 	0 1 0
 
 #renderer
-define resolution 1280 720
+//define resolution 640 360
+define resolution 1920 1080
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
-define antialiasing 4
-define frames 180
+define antialiasing 1
+define frames 1
