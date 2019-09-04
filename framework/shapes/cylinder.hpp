@@ -13,17 +13,17 @@ public:
     Cylinder(glm::vec3 const &pos1, glm::vec3 const& pos2, float radius);
 
     Cylinder(glm::vec3 const &pos1, glm::vec3 const& pos2, float radius, std::string const &name,
-             std::shared_ptr<Material> const mat_ptr);
+             std::shared_ptr<Material> const &mat_ptr);
 
     ~Cylinder();
 
-    virtual float area() const override;
+    float area() const override;
 
-    virtual float volume() const override;
+    float volume() const override;
 
-    virtual std::ostream &print(std::ostream &os) const override;
+    std::ostream &print(std::ostream &os) const override;
 
-    virtual Hitpoint intersect(Ray const &ray) const override;
+    Hitpoint intersect(Ray const &ray) const override;
 
     float get_height() const;
 

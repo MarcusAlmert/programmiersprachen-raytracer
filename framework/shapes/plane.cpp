@@ -12,7 +12,7 @@ Plane::Plane(glm::vec3 const &p1, glm::vec3 const &normal) {
 }
 
 Plane::Plane(glm::vec3 const &p, glm::vec3 const &normal, std::string const &name,
-             std::shared_ptr<Material> const mat_ptr) {
+             std::shared_ptr<Material> const &mat_ptr) {
     point_ = p;
     normal_ = normal;
     name_ = name;

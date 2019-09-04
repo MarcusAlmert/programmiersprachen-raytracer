@@ -26,8 +26,9 @@ public :
     unsigned int x = 0;
     unsigned int y = 0;
     Color color = {1.0, 1.0, 1.0};
+
+    friend std::ostream &operator<<(std::ostream &, const Pixel &);
 };
 
-std::ostream &operator<<(std::ostream &, const Pixel &);
 
 #endif // BUW_PIXEL_HPP

@@ -45,13 +45,13 @@ void autocorrection(glm::vec3 &min, glm::vec3 &max) {
 }
 
 float Box::area() const {
-    return (2 * abs(max_.x - min_.x) * abs(max_.y - min_.y) +
-            2 * abs(max_.x - min_.x) * abs(max_.z - min_.z) +
-            2 * abs(max_.z - min_.z) * abs(max_.y - min_.y));
+    return (2 * std::abs(max_.x - min_.x) * std::abs(max_.y - min_.y) +
+            2 * std::abs(max_.x - min_.x) * std::abs(max_.z - min_.z) +
+            2 * std::abs(max_.z - min_.z) * std::abs(max_.y - min_.y));
 }
 
 float Box::volume() const {
-    return (abs(max_.x - min_.x) * abs(max_.y - min_.y) * abs(max_.z - min_.z));
+    return (std::abs(max_.x - min_.x) * std::abs(max_.y - min_.y) * std::abs(max_.z - min_.z));
 }
 
 std::ostream &Box::print(std::ostream &os) const {
@@ -154,7 +154,7 @@ Hitpoint Box::intersect(Ray const &ray) const {
         }
     }
 
-    if (hitted == true) {
+    if (hitted) {
         glm::vec4 transformed_point = world_transformation_ * glm::vec4{hit.hitpoint_, 1};
         glm::vec4 transformed_normal = glm::normalize(
                 glm::transpose(world_transformation_inv) * glm::vec4{hit.normal_, 0});

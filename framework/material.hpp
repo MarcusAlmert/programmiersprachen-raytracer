@@ -14,15 +14,20 @@ struct Material {
     float glossy_ = 0.0f;
     float opacity_ = 0.0f;
     float refractive_index_ = 0.0f;
+
+    friend std::ostream &operator<<(std::ostream &os, Material const &mat);
+
+    friend bool operator<(std::shared_ptr<Material> const &lhs,
+                          std::shared_ptr<Material> const &rhs);
+
+    friend bool operator==(std::shared_ptr<Material> const &lhs,
+                           std::shared_ptr<Material> const &rhs);
 };
 
-std::ostream &operator<<(std::ostream &os, Material const &mat);
 
-bool operator<(std::shared_ptr<Material> const &lhs,
-               std::shared_ptr<Material> const &rhs);
 
-bool operator==(std::shared_ptr<Material> const &lhs,
-                std::shared_ptr<Material> const &rhs);
+
+
 
 
 #endif //RAYTRACER_MATERIAL_HPP
