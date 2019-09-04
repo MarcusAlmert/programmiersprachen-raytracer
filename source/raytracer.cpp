@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[]) {
 
-    Scene scene = read_sdf("../../SDF-Scene/scene.sdf");   // alle lieben relative Pfade
+    Scene scene = read_sdf("../../SDF-Scene/ppoint.sdf");   // alle lieben relative Pfade
 
     unsigned const image_width = scene.width;
     unsigned const image_height = scene.height;

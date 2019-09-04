@@ -1,0 +1,38 @@
+# materials
+define material red     1 0 0   1 0 0   1 0 0   100	    0.1    0.6    0.5
+define material blue    0 0 1   0 0 1   0 0 1   100     0    0    0
+define material reflect    0 0 1   0 0 1   0 0 1   100     1    1    1.5
+define material green   0 1 0   0 1 0   0 1 0   100	    0    0    0
+define material mirror   0 1 0   0 1 0   0 1 0   100	    1    0    0
+
+# shapes
+define shape sphere     bsphere         0    0    0       100                              red
+//define shape cylinder   bcylinder      -100    100    0      -100   0     0     100            blue
+define shape cone       gcone          0   0      400      0   400   400     100            green
+
+//define shape plane      bplane          0      -300       0       0    1     0                    mirror
+
+
+
+# lights
+define light sun    5000 800 0       1.0 1.0 1.0     1
+define light spot1 -500 800 0       0.8 0.8 0.8     1
+define light spot2  0  0   10000    0.8 0.8 0.8     1
+define light spot3  -1000   -100   0    0.8 0.8 0.8     1
+define ambient 0.05
+
+# transformations
+transform bsphere scale 1 1 1
+transform bsphere translate 0 0 700
+transform bsphere rotate 0 0 0 0
+
+# camera
+define camera eye   60	0 0 1000 	0 0 -1 	0 1 0
+//define camera eye   60	1500 0 0 	0 0 0 	0 1 0
+
+#renderer
+define resolution 100 100
+define filename ./../../animation/Test
+define backgroundcolor 0.1 0.1 0.1
+define antialiasing 1
+define frames 1

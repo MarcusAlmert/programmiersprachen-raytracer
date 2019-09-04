@@ -232,13 +232,13 @@ Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigne
     //TODO fix SegFault
 
     // Experimentelle Berechnung, durchsichtigkeit und Spiegelung nicht ausgereift
-    if (hitpoint.material_->glossy_ > 0 && hitpoint.material_->opacity_ > 0) {           // transparent and reflactive
+    if (hitpoint.material_->glossy_ > 0 && hitpoint.material_->opacity_ > 0) {           // transparent and reflective
         float kr = calc_fresnel_reflection_ratio(hitpoint, scene);
         float ko = 1 - kr;
         Color reflection = calc_reflection(hitpoint, scene, reflection_steps);
         Color refraction = calc_refraction(hitpoint, scene, false, reflection_steps);
         raytracer_value = (kr * reflection + ko * refraction);
-    } else if (hitpoint.material_->glossy_ > 0) {                                        // reflactive
+    } else if (hitpoint.material_->glossy_ > 0) {                                        // reflective
         Color reflection = calc_reflection(hitpoint, scene, reflection_steps);
         Color phong = ambient + diffuse + specular;
         raytracer_value = (phong * (1 - hitpoint.material_->glossy_) + reflection * hitpoint.material_->glossy_);
