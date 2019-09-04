@@ -39,5 +39,4 @@ public:
 
 std::ostream &operator<<(std::ostream &os, Shape const &s);
 
-
 #endif //RAYTRACER_SHAPE_HPP
