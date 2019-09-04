@@ -36,8 +36,8 @@ void Renderer::render(Scene const &scene) {
         std::string picture_name = rotate_scene.filename + std::to_string(i) + ".ppm";
         float d = (width_ / 2) / tan(rotate_scene.camera_.fov / 2 * M_PI / 180);
 
-        glm::vec3 down = up;
-        invert_direction(down);                // vector in down direction from origin
+        glm::vec3 down = -1.0f * up;                                // vector in down direction from origin
+        //invert_direction(down);
         glm::vec3 l = glm::normalize(glm::cross(up, dir));          // vector in left direction from origin
         glm::vec3 r = glm::normalize(glm::cross(dir, up));          // vector in right direction from origin
 
@@ -223,7 +223,7 @@ void Renderer::write(Pixel const &p) {
 }
 
 // Farbwertberechnung, TODO !
-Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigned int reflection_steps) {
+Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigned int reflection_steps) const {
     Color raytracer_value = Color(0.0f, 0.0f, 0.0f);
     Color ambient = calc_ambient(hitpoint.material_, scene);
     Color diffuse = calc_diffuse(hitpoint, scene);
@@ -254,13 +254,13 @@ Color Renderer::calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigne
 }
 
 // Diese Funktion ist in soweit fertig holt nur ka aus dem Material
-Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &scene) {
+Color Renderer::calc_ambient(std::shared_ptr<Material> material, Scene const &scene) const {
     Color ambient = Color{scene.ambient_, scene.ambient_, scene.ambient_};
     return (material->ka_ * ambient);
 }
 
 // TODO fix graphical bug // maybe fixed
-Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) {
+Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) const {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights_) {
@@ -294,7 +294,7 @@ Color Renderer::calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) {
     return final;
 }
 
-Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) {
+Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) const {
     Color final{0, 0, 0};
     std::vector<Color> lights_color;
     for (auto light: scene.lights_) {
@@ -334,7 +334,7 @@ Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) {
 }
 
 // Working. No graphical testing yet
-Color Renderer::calc_reflection(Hitpoint const &hitpoint, Scene const &scene, unsigned int recursive_boundary) {
+Color Renderer::calc_reflection(Hitpoint const &hitpoint, Scene const &scene, unsigned int recursive_boundary) const {
     Color final{0, 0, 0};
     glm::vec3 incoming_direction = glm::normalize(hitpoint.direction_);
     glm::vec3 normal = glm::normalize(hitpoint.normal_);
@@ -357,7 +357,8 @@ Color Renderer::calc_reflection(Hitpoint const &hitpoint, Scene const &scene, un
 
 // calculates the refraction, not tested yet
 Color
-Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool inside, unsigned int recursive_boundary) {
+Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool inside,
+                          unsigned int recursive_boundary) const {
     if (recursive_boundary == 0){
         return Color{0, 0, 0};
     }
@@ -374,7 +375,7 @@ Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool ins
     float cos1 = glm::dot(hitpoint.normal_, hitpoint.direction_);
     glm::vec3 n = hitpoint.normal_;
     if (cos1 < 0) {
-        invert_direction(n);
+        n = n + -1.0f;
     }
 
     // check for case of total reflection
@@ -408,7 +409,7 @@ Renderer::calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool ins
     }
 }
 
-float Renderer::calc_fresnel_reflection_ratio(Hitpoint const &hitpoint, Scene const &scene) {
+float Renderer::calc_fresnel_reflection_ratio(Hitpoint const &hitpoint, Scene const &scene) const {
 
     float cos1 = glm::clamp(-1.0f, 1.0f, glm::dot(hitpoint.direction_, hitpoint.normal_));
     float eta1 = 1;
@@ -435,7 +436,7 @@ float Renderer::calc_fresnel_reflection_ratio(Hitpoint const &hitpoint, Scene co
     }
 }
 
-Hitpoint Renderer::fire_ray(Scene const &scene, Ray const &ray) {
+Hitpoint Renderer::fire_ray(Scene const &scene, Ray const &ray) const {
     Hitpoint first_hit;
     first_hit.distance_ = FLT_MAX;
     for (int i = 0; i < scene.shape_vector_.size(); ++i) {
@@ -447,13 +448,8 @@ Hitpoint Renderer::fire_ray(Scene const &scene, Ray const &ray) {
     return first_hit;
 }
 
-// inverts a direction
-void Renderer::invert_direction(glm::vec3 &dir) {
-    dir = dir * -1.0f;
-}
-
 // Diese Funktion macht am Ende das tone mapping
-void Renderer::tone_mapping(Color &color) {
+void Renderer::tone_mapping(Color &color) const {
     color.r = color.r / (color.r + 1);
     color.g = color.g / (color.g + 1);
     color.b = color.b / (color.b + 1);

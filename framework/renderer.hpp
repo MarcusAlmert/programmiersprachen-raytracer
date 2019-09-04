@@ -39,19 +39,27 @@ private:
     std::string filename_;
     PpmWriter ppm_;
 
-    Color calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigned int reflection_steps);
+    // function group for the calculation of th pixel color
+    Color calc_color(Hitpoint const &hitpoint, Scene const &scene, unsigned int reflection_steps) const;
 
-    Color calc_ambient(std::shared_ptr<Material> material, Scene const& scene);
-    Color calc_diffuse(Hitpoint const& hitpoint, Scene const &scene);
-    Color calc_specular(Hitpoint const& hitpoint, Scene const &scene);
-    Color calc_reflection(Hitpoint const& hitpoint, Scene const& scene, unsigned int recursive_boundary);
-    Color calc_refraction(Hitpoint const& hitpoint, Scene const& scene, bool inside, unsigned int recursive_boundary);
-    float calc_fresnel_reflection_ratio(Hitpoint const& hitpoint, Scene const& scene);
+    Color calc_ambient(std::shared_ptr<Material> material, Scene const &scene) const;
 
-    Hitpoint fire_ray(Scene const& scene, Ray const& ray);
+    Color calc_diffuse(Hitpoint const &hitpoint, Scene const &scene) const;
 
-    void invert_direction(glm::vec3 & dir);
-    void tone_mapping(Color & color);
+    Color calc_specular(Hitpoint const &hitpoint, Scene const &scene) const;
+
+    Color calc_reflection(Hitpoint const &hitpoint, Scene const &scene, unsigned int recursive_boundary) const;
+
+    Color
+    calc_refraction(Hitpoint const &hitpoint, Scene const &scene, bool inside, unsigned int recursive_boundary) const;
+
+    float calc_fresnel_reflection_ratio(Hitpoint const &hitpoint, Scene const &scene) const;
+
+    // function for throwing new rays
+    Hitpoint fire_ray(Scene const &scene, Ray const &ray) const;
+
+    // simple tone mapping for all colors
+    void tone_mapping(Color &color) const;
 };
 
 void printProgress(int frame, int total, long time);

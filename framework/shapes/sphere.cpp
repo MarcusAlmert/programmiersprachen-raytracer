@@ -15,7 +15,7 @@ Sphere::Sphere(glm::vec3 const &mid, float rad) {
     radius_ = abs(rad);
 }
 
-Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name, std::shared_ptr<Material> const mat_ptr) :
+Sphere::Sphere(glm::vec3 const &mid, float rad, std::string const &name, std::shared_ptr<Material> const &mat_ptr) :
         middlePoint_{mid}, Shape{name, mat_ptr}, radius_{rad} {
 }
 
