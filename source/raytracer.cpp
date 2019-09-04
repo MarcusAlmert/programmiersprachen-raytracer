@@ -3,7 +3,6 @@
 
 #include <GLFW/glfw3.h>
 #include <thread>
-#include <utility>
 #include <cmath>
 #include "../framework/read_sdf.hpp"
 #include <chrono>

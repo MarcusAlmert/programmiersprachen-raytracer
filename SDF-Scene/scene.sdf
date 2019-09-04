@@ -80,7 +80,8 @@ define camera eye   60	0 0 2500 	0 0 -1 	0 1 0
 
 #renderer
 //define resolution 1380 720
-define resolution 1920 1080
+//define resolution 1920 1080
+define resolution 3840 2160
 define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
 define antialiasing 4
