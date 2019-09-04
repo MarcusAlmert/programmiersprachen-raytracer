@@ -14,7 +14,7 @@ define shape cylinder   rcylinder      -100    100    0      -100   0     0     
 define shape cylinder   dcylinder       0       100    0      0   0     0     100              yellow
 define shape cone       rcone          -400    0      0      -400   300   0     100            red
 define shape cone       gcone          -400    0      0      -400   300   0     100            green
-//define shape cone       bcone           0    0      0           0   300   0     100            mirror
+define shape cone       bcone           0    0      0           0   300   0     100            mirror
 define shape cone       dcone           0    0      0           0   300   0     100            blue
 define shape triangle   gtriangle       0      0      10      50    200   50    100  100  10   red
 
@@ -79,9 +79,9 @@ define camera eye   60	0 0 2500 	0 0 -1 	0 1 0
 //define camera eye   60	1500 0 0 	0 0 0 	0 1 0
 
 #renderer
-define resolution 1380 720
-//define resolution 1920 1080
-define filename ./../../animation/new_pp/Test
+//define resolution 1380 720
+define resolution 1920 1080
+define filename ./../../animation/Test
 define backgroundcolor 0.1 0.1 0.1
-define antialiasing 1
-define frames 180
+define antialiasing 4
+define frames 1
