@@ -30,7 +30,7 @@ void Renderer::render(Scene const &scene) {
                 glm::vec4{u, 0.0f},
                 glm::vec4{v, 0.0f},
                 glm::vec4{-dir, 0.0f},
-                glm::vec4{x, 50.0f, z, 1.0f}
+                glm::vec4{x, 0.0f, z, 1.0f}
         };
 
         std::string picture_name = rotate_scene.filename + std::to_string(i) + ".ppm";
@@ -50,6 +50,8 @@ void Renderer::render(Scene const &scene) {
         for (unsigned y = 0; y < height_; ++y) {
 
             // calculates vertical position of pixel
+
+
             if (y < half_height) {
                 yr = down * -(y - half_height);
             } else if (y > half_height) {
@@ -59,6 +61,7 @@ void Renderer::render(Scene const &scene) {
             for (unsigned x = 0; x < width_; ++x) {
                 Pixel p(x, y);
                 glm::vec3 pos = rotate_scene.camera_.position;
+
 
                 // calculates horizontal position of pixel
                 if (x < half_width) {
@@ -161,15 +164,21 @@ void Renderer::render(Scene const &scene) {
                     directions.push_back(dir_16);
 
                 } else if (rotate_scene.antialiasing_ == 1) {
-                    //directions.push_back(glm::normalize(xr + yr + zr));
-                    directions.push_back(glm::normalize(
-                            dir + glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d}));
+                    directions.push_back(glm::normalize(xr + yr + zr));
+                    //directions.push_back(glm::normalize(
+                    //       glm::vec3{x - (half_width) + 0.5f, y - (half_height) + 0.5f, -d}));
                 }
 
                 Pixel aliased;
                 for (int i = 0; i < directions.size(); i++) {
                     // in dieser Schleife wird der Schnittpunkt mit dem ersten Objekt den der Strahl trifft berechnet
-                    Hitpoint first_hit = fire_ray(rotate_scene, transformRay(Ray{pos, glm::normalize(directions[i])},
+
+
+
+                    auto curr_dir = glm::normalize(directions[i]);
+
+
+                    Hitpoint first_hit = fire_ray(rotate_scene, transformRay(Ray{pos, curr_dir},
                                                                              rotate_scene.camera_.transformation_));
 
                     // Entweder es wurde ein Objekt getroffen oder der Pixel bekommt die Hintergrundfarbe zugewiesen
@@ -317,19 +326,29 @@ Color Renderer::calc_specular(Hitpoint const &hitpoint, Scene const &scene) cons
         }
         // if there is no light blocking shape
         if (!no_light) {
-            glm::vec3 camera_hitpoint = glm::normalize(camera_hitpoint - hitpoint.hitpoint_);
-            glm::vec3 r = glm::dot(hitpoint.normal_, vec_light_cut) * 2.0f * hitpoint.normal_ - vec_light_cut;
-            float p = abs(glm::dot(r, camera_hitpoint));
+            glm::vec3 view_ray = glm::normalize(scene.camera_.position - hitpoint.hitpoint_);
+            glm::vec3 r = glm::reflect(-vec_light_cut,
+                                       hitpoint.normal_);//glm::dot(hitpoint.normal_, vec_light_cut) * 2.0f * hitpoint.normal_ - vec_light_cut;
+            float p = glm::max(0.0f, glm::dot(r, view_ray));
             float cos = pow(p, hitpoint.material_->m_);
-            float m_pi = (hitpoint.material_->m_ + 2.0f) / (2 * M_PI);
+
             Color i_p = light.color_ * light.brightness_;
             Color k_s = hitpoint.material_->ks_;
-            lights_color.push_back(k_s * m_pi * cos * i_p);
+            lights_color.push_back(k_s * cos * i_p);
+
+            //std::cout << k_s << std::endl;
         }
+
+
     }
+
+
     for (auto color: lights_color) {
         final += color;
     }
+
+    //auto mapped_normal = (hitpoint.normal_ * 0.5f) + 0.5f;
+    //return Color{mapped_normal[0], mapped_normal[1], mapped_normal[2] };
     return final;
 }
 

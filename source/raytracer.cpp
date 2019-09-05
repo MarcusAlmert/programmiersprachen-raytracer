@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     auto start = std::chrono::high_resolution_clock::now();
     Scene scene;
     if (argc < 2) {
-        scene = read_sdf("../../SDF-Scene/scene.sdf");   // alle lieben relative Pfade
+        scene = read_sdf("../../SDF-Scene/ppoint.sdf");   // alle lieben relative Pfade
     } else {
         scene = read_sdf(argv[1]);   // alle lieben relative Pfade
         if (scene.shape_vector_.empty()) {

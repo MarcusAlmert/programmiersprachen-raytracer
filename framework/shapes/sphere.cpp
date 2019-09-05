@@ -49,6 +49,7 @@ std::ostream &Sphere::print(std::ostream &os) const {
 
 Hitpoint Sphere::intersect(Ray const &ray) const {
     Ray transformedRay_ = transformRay(ray,world_transformation_inv);
+    
     Hitpoint hitp;
     float distance;
     glm::vec3 cutpoint;
