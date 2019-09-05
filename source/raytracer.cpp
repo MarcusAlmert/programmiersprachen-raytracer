@@ -1,6 +1,5 @@
 #include <renderer.hpp>
 #include <window.hpp>
-
 #include <GLFW/glfw3.h>
 #include <thread>
 #include <cmath>
@@ -9,8 +8,17 @@
 
 int main(int argc, char *argv[]) {
     auto start = std::chrono::high_resolution_clock::now();
-
-    Scene scene = read_sdf("../../SDF-Scene/scene.sdf");   // alle lieben relative Pfade
+    Scene scene;
+    if (argc < 2) {
+        scene = read_sdf("../../SDF-Scene/scene.sdf");   // alle lieben relative Pfade
+    } else {
+        scene = read_sdf(argv[1]);   // alle lieben relative Pfade
+        if (scene.shape_vector_.empty()) {
+            std::cerr << "\033[1;31mERROR in \033[0m" << argv[0] << std::endl
+                      << "\033[1;32mUsage:\033[0m" << " argv[1] = path_to_sdf" << std::endl;
+            return -1;
+        }
+    }
 
     unsigned const image_width = scene.width;
     unsigned const image_height = scene.height;
@@ -28,7 +36,7 @@ int main(int argc, char *argv[]) {
 
     float min = (float) elapsed_time / 60000.0f;
     long sec = (min - floor(min)) * 60;
-    std::cout << "\nelapsed time: " << floor(min) << "m" << sec << "s";
+    std::cout << "\nelapsed time: " << floor(min) << "m" << sec << "s" << std::endl;
 
     Window window{{image_width, image_height}};
 

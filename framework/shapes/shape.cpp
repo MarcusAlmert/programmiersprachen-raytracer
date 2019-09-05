@@ -2,6 +2,8 @@
 // Created by marcus on 24.06.19.
 //
 #include "shape.hpp"
+
+#define GLM_FORCE_RADIANS
 #include <glm/gtx/transform.hpp>
 
 Shape::Shape() {
@@ -29,7 +31,7 @@ void Shape::transformation(float const rotateAngle, glm::vec3 const& rotateAxis,
                                              glm::vec4{translate.x, translate.y, translate.z, 1.0f}};
 
     if(rotateAngle != 0){
-        glm::mat4x4 RotMat = glm::rotate(rotateAngle,rotateAxis);
+        glm::mat4x4 RotMat = glm::rotate(glm::radians(rotateAngle), rotateAxis);
         world_transformation_ = world_transformation_ * translationMat * RotMat * scaleMat;
 
     } else{
