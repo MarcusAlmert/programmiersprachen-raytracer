@@ -5,7 +5,22 @@ add_dependencies(example glfw ${FRAMEWORK_NAME} ${COPY_BINARY})
 
 install(TARGETS example DESTINATION .)
 
-add_executable(raytracer raytracer.cpp)
+add_executable(raytracer
+        raytracer.cpp
+        ../framework/shapes/sphere.cpp
+        ../framework/shapes/box.cpp
+        ../framework/shapes/shape.cpp
+        ../framework/material.cpp
+        ../framework/read_sdf.cpp
+        ../framework/scene.cpp
+        ../framework/shapes/cylinder.cpp
+        ../framework/shapes/cone.cpp
+        ../framework/shapes/triangle.cpp
+        ../framework/shapes/composite.cpp
+        ../framework/shapes/composite.hpp
+        ../framework/ray.cpp
+        ../framework/shapes/plane.cpp
+        )
 
 target_link_libraries(raytracer ${FRAMEWORK_NAME} ${LIBRARIES}
   glfw
@@ -18,12 +33,18 @@ install(TARGETS raytracer DESTINATION .)
 # Build tests
 add_executable(tests
         tests.cpp
-        ../framework/sphere.cpp
-        ../framework/box.cpp
-        ../framework/shape.cpp
+        ../framework/shapes/sphere.cpp
+        ../framework/shapes/box.cpp
+        ../framework/shapes/shape.cpp
         ../framework/material.cpp
         ../framework/read_sdf.cpp
-        ../framework/scene.cpp)
+        ../framework/scene.cpp
+        ../framework/shapes/cylinder.cpp
+        ../framework/shapes/cone.cpp
+        ../framework/shapes/triangle.cpp
+        ../framework/shapes/composite.cpp
+        ../framework/ray.cpp
+        ../framework/shapes/plane.cpp)
 
 
 target_link_libraries(tests

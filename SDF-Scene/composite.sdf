@@ -1,0 +1,53 @@
+# materials
+define material red     1 0 0   1 0 0   1 0 0   10 	    0  0  0  0
+define material blue    0 0 1   0 0 1   0 0 1   100     0  0  0  0
+define material green   0 1 0   0 1 0   0 1 0   100	    0  0  0  0
+
+# shapes
+define shape box        rbox            45      75     -10     -50   -20  -50                 green
+define shape sphere     bsphere         150     0      -60      100                           blue
+define shape cylinder   bcylinder      -100     0       0      -100   100  0     50           red
+define shape cone       rcone          -400     0      -10     -400   300   -10 100                 green
+define shape triangle   gtriangle       0       0       10      50    200  50    100 100 10   red
+//define shape plane      bplane          0       0       0       0      1   0     blue
+//define shape plane      bplane          0       -0.1       0       0      1   0     blue
+
+# composite
+//define shape composite root rbox bsphere bcylinder rcone gtriangle
+
+# lights
+define light sun    500 800 0       1.0 1.0 1.0     10
+//define light spot1 -500 800 0       0.8 0.8 0.8     10
+define light spot2  500 0   1000    0.8 0.8 0.8     10
+//define light spot3  0   500   1000    0.8 0.8 0.8     10
+define ambient 0.05
+
+# transformations
+transform bsphere scale 1 1 1
+transform bsphere translate -10 0 100
+transform bsphere rotate 50 1 0 0
+
+transform rbox scale 2 2 1
+transform rbox rotate 50 0 1 0
+transform rbox translate -200 100 300
+
+transform gtriangle scale 1 2 0.5
+transform gtriangle translate 0 -200 -200
+transform gtriangle rotate 160  0 1 0
+
+transform bcylinder scale 2 3 1
+transform bcylinder translate 0 60 0
+transform bcylinder rotate  90 1 1 0
+
+transform rcone scale 2 1 1
+transform rcone translate 400 100 -300
+
+# camera
+define camera eye   60	0 0 1500 	0 0 -10 	0 1 0
+
+#renderer
+define resolution 300 300
+define filename ./../../animation/Test
+define backgroundcolor 0.1 0.1 0.1
+define antialiasing 1
+define frames 1
